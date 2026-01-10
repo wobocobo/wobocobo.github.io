@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.hero {
+  background: linear-gradient(135deg, #020617, #020617);
+  border-bottom: 1px solid #1e293b;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+}
+
+.hero h2 {
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  color: #64748b;
+}
+
+section {
+  margin-bottom: 3rem;
+}
+
+h3 {
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
+  border-left: 4px solid #38bdf8;
+  padding-left: 0.8rem;
+}
+
+.card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.card h4 {
+  margin-bottom: 0.3rem;
+}
+
+.role {
+  display: block;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 0.6rem;
+}
+
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tags li {
+  background: #1e293b;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.links a {
+  margin-right: 1rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+}
