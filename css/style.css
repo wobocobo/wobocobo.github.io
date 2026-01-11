@@ -20,11 +20,7 @@ a:hover {
   text-decoration: underline;
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-}
+
 
 .hero {
   background: linear-gradient(135deg, #020617, #020617);
@@ -93,9 +89,93 @@ h3 {
   margin-right: 1rem;
 }
 
-footer {
-  text-align: center;
-  padding: 1.5rem;
+.footer {
   border-top: 1px solid #1e293b;
+  padding: 3rem 1.5rem 1.5rem;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 180px;
+}
+
+.footer-column h5 {
+  margin-bottom: 0.6rem;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.footer-column a {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.footer-column a:hover {
+  color: #38bdf8;
+}
+
+.footer-copy {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.8rem;
   color: #64748b;
 }
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #38bdf8;
+  color: #020617;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  display: none;
+  cursor: pointer;
+}
+
+.about-text {
+  max-width: 800px;
+}
+
+.about-text p {
+  margin-bottom: 1.2rem;
+  color: #cbd5f5;
+}
+
+.experience-card {
+  position: relative; /* IMPORTANTE */
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 2.5rem 2rem;
+  overflow: hidden; /* evita que se salga */
+}
+
+.experience-logo {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 20%;
+  max-width: 140px;
+  max-height: 60px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
