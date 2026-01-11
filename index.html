@@ -1,108 +1,258 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu Nombre – Desarrollador Backend</title>
+  <title>Wobocobo</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-  <header class="hero">
-    <div class="container">
-      <h1>Wobocobo</h1>
-      <h2>Desarrollador Backend / Web</h2>
-      <p class="subtitle">APIs · E-commerce · Sistemas internos</p>
+  <header class="hero text-center">
+    <div class="container py-5">
+      <h1 class="mb-2">Wobocobo</h1>
+      <h2 class="mb-3">Backend Developer</h2>
+      <p class="subtitle">
+        APIs · E-commerce · Sistemas internos · Producción
+      </p>
     </div>
   </header>
 
-  <main class="container">
 
-    <section id="about">
-      <h3>Sobre mí</h3>
-      <p>
-        Desarrollador backend y web con experiencia en entornos productivos,
-        especializado en aplicaciones internas, integración de APIs y
-        plataformas e-commerce.
-      </p>
-      <p>
-        Experiencia en agencia digital y empresa tecnológica, participando en
-        sistemas críticos relacionados con logística, facturación,
-        administración y marketplaces.
-      </p>
+  <main class="container main-container">
+
+    <section id="about" class="section" data-aos="fade-up">
+      <div class="container">
+        <h3>Sobre mí</h3>
+
+        <div class="about-text">
+          <p>
+            Desarrollador Backend / Web con experiencia en entornos productivos,
+            especializado en el desarrollo y mantenimiento de aplicaciones internas,
+            integración de APIs y plataformas e-commerce.
+          </p>
+
+          <p>
+            He trabajado tanto en entorno de agencia digital como en empresa
+            tecnológica, participando en proyectos reales con impacto directo en
+            procesos de negocio como logística, facturación, administración y
+            gestión operativa.
+          </p>
+
+          <p>
+            Mi perfil está orientado principalmente a backend y sistemas, con
+            experiencia en Java y PHP, trabajo con código legacy, aplicaciones en
+            producción y plataformas e-commerce. He participado en integraciones
+            con marketplaces y servicios externos, incluyendo Amazon SP-API, así
+            como en procesos de auditoría y cumplimiento de requisitos de seguridad.
+          </p>
+
+          <p>
+            Acostumbrado a trabajar con sistemas críticos, análisis de procesos
+            empresariales, documentación técnica y control de accesos. He asumido
+            responsabilidades técnicas dentro de la empresa, incluyendo la
+            supervisión y formación de personal.
+          </p>
+
+          <p>
+            Me caracterizo por un enfoque práctico, autonomía técnica y capacidad
+            de adaptación a nuevos entornos y tecnologías, siempre con especial
+            atención a la estabilidad, seguridad y mantenimiento de los sistemas.
+          </p>
+        </div>
+      </div>
     </section>
 
-    <section id="experience">
-      <h3>Experiencia</h3>
+    <section id="experience" class="section">
+      <div class="container">
+        <h3 data-aos="fade-up">Experiencia</h3>
 
-      <article class="card">
-        <h4>Z-Bombilla</h4>
-        <span class="role">Desarrollador Backend · Sistemas internos</span>
-        <p>
-          Desarrollo y mantenimiento de aplicaciones internas multiplataforma,
-          integración de APIs externas (marketplaces y logística),
-          mantenimiento de plataformas e-commerce y procesos de seguridad.
+        <!-- Z-Bombilla -->
+        <div class="experience-card row align-items-center mt-5" data-aos="fade-right">
+
+          <img src="https://shipping.z-bombilla.com/assets/img/Banner_top.png" alt="Z-Bombilla" class="experience-logo">
+
+          <div class="col-12">
+            <h4>Z-Bombilla</h4>
+            <span class="role">Backend Developer · Sistemas internos</span>
+
+            <p>
+              Responsable técnico del área informática y de desarrollo dentro de
+              la empresa.
+            </p>
+
+            <p>
+              Desarrollo y mantenimiento de una aplicación interna multiplataforma
+              que soporta procesos clave del negocio incluyendo logística,
+              facturación y gestión administrativa.
+            </p>
+
+            <p>
+              Soporte técnico y evolución de sistemas internos orientados a la
+              automatización de flujos operativos y conciliación de datos entre
+              plataformas.
+            </p>
+
+            <p>
+              Integración y gestión de APIs externas orientadas a marketplaces y
+              servicios logísticos, incluyendo Amazon SP-API.
+            </p>
+
+            <p>
+              Participación en procesos de auditoría y cumplimiento de requisitos
+              de seguridad: documentación técnica, controles de acceso, permisos
+              y requisitos de seguridad.
+            </p>
+
+            <p>
+              Supervisión y formación de personal, actuando como referencia técnica.
+            </p>
+
+            <a href="https://www.shipping.z-bombilla.com" target="_blank" class="btn btn-outline-info btn-sm mt-2">
+              + Info
+            </a>
+          </div>
+        </div>
+
+        <!-- Difusión -->
+        <div class="experience-card row align-items-center mt-5" data-aos="fade-left">
+
+          <img src="https://www.difusioncomunicacion.es/wp-content/uploads/2021/10/cropped-logo-difusion.png"
+            alt="Difusión Comunicación" class="experience-logo">
+
+          <div class="col-12">
+            <h4>Difusión Comunicación</h4>
+            <span class="role">Desarrollador Web / Backend</span>
+
+            <p>
+              Desarrollo y mantenimiento de proyectos web en entorno de agencia
+              digital, trabajando tanto en frontend como en backend.
+            </p>
+
+            <p>
+              Implementación y personalización avanzada de WordPress a nivel de
+              código, incluyendo desarrollo de funcionalidades a medida en themes
+              y plugins.
+            </p>
+
+            <p>
+              Desarrollo de aplicaciones web a medida con Laravel, definiendo
+              estructura, lógica de negocio y persistencia de datos.
+            </p>
+
+            <p>
+              Mantenimiento y adaptación de plataformas e-commerce basadas en
+              PrestaShop y Magento, así como intervención sobre bases de datos y
+              soporte a proyectos en producción.
+            </p>
+
+            <a href="https://www.difusioncomunicacion.es" target="_blank" class="btn btn-outline-info btn-sm mt-2">
+              + Info
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="videos" class="section bg-dark-soft">
+      <div class="container">
+        <h3 data-aos="fade-up">Vídeos y contenido audiovisual</h3>
+
+        <p class="mb-4" data-aos="fade-up">
+          Además del desarrollo, he grabado y editado vídeos promocionales
+          para eventos, empresas y competiciones deportivas.
         </p>
-      </article>
 
-      <article class="card">
-        <h4>Difusión Comunicación</h4>
-        <span class="role">Desarrollador Web / Backend</span>
-        <p>
-          Desarrollo de proyectos web a medida, WordPress a nivel de código,
-          backend con Laravel y mantenimiento de e-commerce en entorno de agencia.
-        </p>
-      </article>
+        <div class="row g-4">
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/I4qaG9yU7j0" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/wXzioxPtkW8" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/-NEuWT3fPSs" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="col-md-6" data-aos="fade-up">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/A-bc1A94dRA" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="projects">
-      <h3>Proyectos</h3>
 
-      <article class="card">
-        <h4>Aplicación interna de gestión</h4>
-        <p>
-          Automatización de procesos internos (logística, facturación y gestión
-          operativa). Backend en producción con uso diario.
-        </p>
-      </article>
+    <footer class="footer">
+      <div class="container footer-container">
 
-      <article class="card">
-        <h4>Integraciones con marketplaces</h4>
-        <p>
-          Integración de APIs externas para sincronización de pedidos,
-          envíos y estados, con foco en estabilidad y mantenimiento.
-        </p>
-      </article>
-    </section>
+        <div class="footer-column">
+          <h5>Secciones</h5>
+          <a href="#about">Sobre mí</a>
+          <a href="#experience">Experiencia</a>
+          <a href="#videos">Vídeos</a>
+        </div>
 
-    <section id="skills">
-      <h3>Tecnologías</h3>
-      <ul class="tags">
-        <li>Java</li>
-        <li>PHP</li>
-        <li>Laravel</li>
-        <li>APIs REST</li>
-        <li>Amazon SP-API</li>
-        <li>PrestaShop</li>
-        <li>WordPress</li>
-        <li>Git</li>
-        <li>Linux</li>
-      </ul>
-    </section>
+        <div class="footer-column">
+          <h5>Contacto</h5>
+          <a href="https://linkedin.com/in/alejandro-ortega-hernández">LinkedIn</a>
+          <a href="https://github.com/wobocobo">GitHub</a>
+        </div>
 
-    <section id="contact">
-      <h3>Contacto</h3>
-      <p class="links">
-        <a href="www.linkedin.com/in/alejandro-ortega-hernández" target="_blank">LinkedIn</a>
-        <a href="https://github.com/wobocobo" target="_blank">GitHub</a>
-      </p>
-    </section>
+      </div>
 
-  </main>
+      <p class="footer-copy">© 2026 · Wobocobo</p>
+    </footer>
 
-  <footer>
-    <p>© 2026 · Tu Nombre</p>
-  </footer>
+
+
+    <button id="backToTop">↑</button>
+
+    <script>
+      const btn = document.getElementById('backToTop');
+
+      window.addEventListener('scroll', () => {
+        btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+      });
+
+      btn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        once: true,
+        duration: 800,
+        easing: 'ease-out-cubic'
+      });
+    </script>
 
 </body>
+
 </html>
