@@ -269,3 +269,52 @@ h3 {
 section {
   scroll-margin-top: 70px;
 }
+
+/* =========================
+   HEADER RESPONSIVE
+   ========================= */
+@media (max-width: 768px) {
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .nav {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .nav a,
+  .dropdown-toggle {
+    font-size: 0.95rem;
+    padding: 0.3rem 0;
+  }
+
+  /* Dropdown en móvil: siempre visible */
+  .dropdown-menu {
+    position: static;
+    display: block;
+    border: none;
+    padding-left: 0.8rem;
+    margin-top: 0.2rem;
+  }
+
+  .dropdown-menu a {
+    padding: 0.3rem 0;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-toggle {
+    color: #e5e7eb;
+    cursor: default;
+  }
+
+  /* Quitar hover en móvil */
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+}
