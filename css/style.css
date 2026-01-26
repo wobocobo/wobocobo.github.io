@@ -179,3 +179,93 @@ h3 {
   opacity: 0.9;
 }
 
+/* HEADER */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #020617;
+  border-bottom: 1px solid #1e293b;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.5rem;
+}
+
+.brand a {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.brand a:hover {
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.nav a,
+.dropdown-toggle {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.nav a:hover,
+.dropdown-toggle:hover {
+  color: #38bdf8;
+}
+/* DROPDOWN */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* pegado al toggle */
+  right: 0;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 0.4rem 0;
+  display: none;
+  min-width: 160px;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.dropdown-menu a:hover {
+  background: #1e293b;
+  color: #38bdf8;
+}
+
+/* Hover estable */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+}
+
+
+.hero {
+  margin-top: 0;
+}
+
+.main-header + .hero {
+  border-top: none;
+}
+
+section {
+  scroll-margin-top: 70px;
+}
