@@ -20,13 +20,23 @@ a:hover {
   text-decoration: underline;
 }
 
-
-
 .hero {
-  background: linear-gradient(135deg, #020617, #020617);
+  position: relative;
+  background:
+    linear-gradient(
+      rgba(2, 6, 23, 0.85),
+      rgba(2, 6, 23, 0.85)
+    ),
+    url("../img/hero-bg.jpg") center / cover no-repeat;
+
   border-bottom: 1px solid #1e293b;
 }
-
+.hero .container {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .hero h1 {
   font-size: 2.5rem;
 }
