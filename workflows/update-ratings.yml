@@ -1,0 +1,34 @@
+name: Update Film Ratings
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install axios cheerio
+
+      - name: Run scraper
+        run: node scripts/scrape.js
+
+      - name: Commit updated JSON
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add data/ratings.json
+          git commit -m "Update ratings" || echo "No changes"
+          git push

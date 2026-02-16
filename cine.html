@@ -30,8 +30,8 @@
       </button>
 
       <nav class="nav">
-        <a href="#about">Sobre mí</a>
-        <a href="#experience">Experiencia</a>
+        <a href="index.html#about">Sobre mí</a>
+        <a href="index.html#experience">Experiencia</a>
 
         <div class="dropdown">
           <span class="dropdown-toggle">Curiosidades</span>
@@ -47,36 +47,37 @@
 
   <main class="container main-container">
 
-    <section>
-      <p>
-        Soy muy aficionado al cine y suelo registrar y valorar las películas que veo.
-        Me interesa tanto el cine comercial como el de autor, clásicos y producciones
-        menos conocidas.
-      </p>
+  <section>
+    <h3>Actividad reciente</h3>
+    <p>
+      Estas son las últimas películas que he valorado en FilmAffinity.
+    </p>
+  </section>
 
-      <p>
-        Aquí puedes ver mis valoraciones públicas en FilmAffinity.
-      </p>
-    </section>
+  <section>
+    <div id="movies" class="movies-grid"></div>
+  </section>
+
+  <section class="mt-5">
+    <h3>Mi perfil completo</h3>
     <div class="card">
-      <h4>Mi perfil en FilmAffinity</h4>
       <p>
-        Registro y valoro las películas que veo, manteniendo un histórico
-        personal de cine.
+        Puedes ver todas mis valoraciones y listas públicas en FilmAffinity.
       </p>
       <a href="https://www.filmaffinity.com/es/userratings.php?user_id=9048877&p=1&orderby=rating-date&chv=grid"
-        target="_blank">
-        Ver valoraciones →
+         target="_blank">
+        Ver todas mis valoraciones →
       </a>
     </div>
+  </section>
+
     <footer class="footer">
       <div class="container footer-container">
-
         <div class="footer-column">
           <h5>Secciones</h5>
-          <a href="#about">Sobre mí</a>
-          <a href="#experience">Experiencia</a>
-          <a href="#videos">Vídeos</a>
+          <a href="index.html#about">Sobre mí</a>
+          <a href="index.html#experience">Experiencia</a>
+          <a href="index.html#videos">Vídeos</a>
         </div>
         <div class="footer-column">
           <h5>Fuera del código</h5>
@@ -96,6 +97,7 @@
 
   </main>
   <script src="js/main.js"></script>
+  <script src="js/cine.js"></script>
 </body>
 
 </html>
