@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Ejemplo 1",
+    "year": "2024",
+    "rating": "7",
+    "poster": "https://via.placeholder.com/300x450"
+  },
+  {
+    "title": "Ejemplo 2",
+    "year": "2023",
+    "rating": "8",
+    "poster": "https://via.placeholder.com/300x450"
+  }
+]

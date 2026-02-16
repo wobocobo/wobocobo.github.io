@@ -281,54 +281,6 @@ section {
 }
 
 /* =========================
-   HEADER RESPONSIVE
-   ========================= */
-@media (max-width: 768px) {
-
-  .header-container {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .nav {
-    width: 100%;
-    display: none;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-top: 0.8rem;
-  }
-
-  .nav.active {
-    display: flex;
-  }
-
-  /* Dropdown móvil */
-  .dropdown-menu {
-    position: static;
-    display: block;
-    border: none;
-    padding-left: 1rem;
-    margin-top: 0.3rem;
-  }
-
-  .dropdown-toggle {
-    color: #e5e7eb;
-    cursor: default;
-  }
-
-  .dropdown:hover .dropdown-menu {
-    display: block;
-  }
-}
-
-
-/* =========================
    MENU HAMBURGUESA
    ========================= */
 
@@ -341,8 +293,11 @@ section {
   cursor: pointer;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
+
+  .header-container {
+    flex-wrap: wrap;
+  }
 
   .menu-toggle {
     display: block;
@@ -352,34 +307,82 @@ section {
     width: 100%;
     display: none;
     flex-direction: column;
-    gap: 0.8rem;
-    margin-top: 0.8rem;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid #1e293b;
   }
 
   .nav.active {
     display: flex;
   }
 
-  .header-container {
-    flex-wrap: wrap;
+  .nav a,
+  .dropdown-toggle {
+    font-size: 1rem;
+    padding: 0.4rem 0;
   }
 
-  /* Dropdown en móvil */
+  /* Dropdown móvil */
   .dropdown-menu {
+    display: none;
     position: static;
-    display: block;
     border: none;
     padding-left: 1rem;
     margin-top: 0.3rem;
   }
 
-  .dropdown-toggle {
-    color: #e5e7eb;
-    cursor: default;
+  .dropdown.active .dropdown-menu {
+    display: block;
   }
 
   /* Desactivar hover en móvil */
   .dropdown:hover .dropdown-menu {
-    display: block;
+    display: none;
   }
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/*PELICULAS*/
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.movie-card {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+
+.movie-card img {
+  width: 100%;
+  display: block;
+}
+
+.movie-info {
+  padding: 0.8rem;
+}
+
+.movie-info h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  color: #e5e7eb;
+}
+
+.movie-info span {
+  font-size: 0.85rem;
+  color: #38bdf8;
 }
