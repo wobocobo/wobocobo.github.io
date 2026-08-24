@@ -47,6 +47,7 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  overflow-x: hidden;
   transition:
     background 0.3s,
     color 0.3s;
@@ -251,6 +252,19 @@ a:hover {
   margin-top: -0.6rem;
   margin-bottom: 2rem;
 }
+
+/* Cabecera de sección: título + subtítulo */
+.section-head {
+  margin-bottom: 2rem;
+}
+.section-head h3 {
+  margin-bottom: 0.35rem;
+  font-size: 1.55rem;
+  line-height: 1.25;
+}
+.section-head .section-subtitle {
+  margin: 0 0 0 1.08rem;
+}
 .bg-dark-soft {
   background: var(--bg-deep);
   border-radius: 10px;
@@ -384,39 +398,147 @@ h3 {
   margin-left: 0;
 }
 
-/* ========================= EXPERIENCIA ========================= */
-.experience-card {
+/* ========================= EXPERIENCIA — TIMELINE ========================= */
+.timeline {
   position: relative;
+  margin-top: 1.5rem;
+}
+
+.timeline-track,
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 13px;
+  width: 2px;
+}
+.timeline-track {
+  height: 100%;
+  background: var(--border);
+}
+.timeline-progress {
+  height: 0;
+  background: linear-gradient(var(--accent), var(--accent-soft));
+}
+
+.timeline-item {
+  position: relative;
+  width: 100%;
+  padding-left: 2.75rem;
+  margin-bottom: 2.25rem;
+}
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Nodos */
+.timeline-marker {
+  position: absolute;
+  top: 2rem;
+  left: 7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border-mid);
+  z-index: 2;
+  transition:
+    border-color 0.25s,
+    background 0.25s,
+    box-shadow 0.25s;
+}
+.timeline-marker.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
+}
+.light-theme .timeline-marker.active {
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+}
+
+/* Tarjeta */
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 2rem;
+  padding: 1.6rem 1.8rem;
   transition: border-color 0.2s;
 }
-.experience-card + .experience-card {
-  margin-top: 1.5rem;
-}
-.experience-card:hover {
+.timeline-content:hover {
   border-color: var(--border-mid);
 }
-.experience-card p {
-  color: var(--text-body);
-  margin-bottom: 0.8rem;
+.timeline-item--current .timeline-content {
+  border-color: #1e3a5f;
 }
-.experience-card h4 {
-  margin-bottom: 0.3rem;
-  color: var(--text);
+.light-theme .timeline-item--current .timeline-content {
+  border-color: #93c5fd;
 }
 
-.experience-logo {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 20%;
-  max-width: 130px;
-  max-height: 55px;
+/* Cabecera: logo + texto */
+.timeline-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.timeline-logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 48px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--logo-bg-from), var(--logo-bg-to));
+}
+.timeline-logo-box img {
+  max-width: 50px;
+  max-height: 34px;
   object-fit: contain;
-  opacity: 0.85;
+  filter: grayscale(1) opacity(0.85);
+  transition: filter 0.25s;
+}
+.timeline-item:hover .timeline-logo-box img {
+  filter: none;
+}
+.timeline-head-text h4 {
+  color: var(--text);
+  margin: 0;
+}
+.timeline-head-text .role {
+  margin-bottom: 0;
+}
+
+.timeline-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 0.14rem 0.55rem;
+  border-radius: 99px;
+  margin-bottom: 0.35rem;
+}
+.dot-now {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
 .role {
@@ -426,12 +548,135 @@ h3 {
   margin-bottom: 0.8rem;
 }
 
-/* ========================= CASOS DE TRABAJO ========================= */
-.cases-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
+/* Bullets */
+.timeline-points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 75ch;
+}
+.timeline-points li {
+  position: relative;
+  padding-left: 1.05rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-body);
+}
+.timeline-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* Botón sitio web */
+.btn-timeline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  border: 1px solid var(--border-mid);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+.btn-timeline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.06);
+  text-decoration: none;
+}
+
+/* ========================= CASOS DE TRABAJO — CARRUSEL ========================= */
+.cases-carousel {
+  --case-w: min(680px, 86vw);
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+.cases-track {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-inline: calc(50vw - (var(--case-w) / 2));
+  scrollbar-width: none;
+}
+.cases-track::-webkit-scrollbar {
+  display: none;
+}
+.cases-track:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.case-card {
+  flex: 0 0 var(--case-w);
+  scroll-snap-align: center;
+}
+
+/* Controles */
+.cases-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.4rem;
+}
+.cases-arrow {
+  background: none;
+  border: 1px solid var(--border-mid);
+  color: var(--text-muted);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    opacity 0.2s;
+}
+.cases-arrow:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cases-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.cases-dots {
+  display: flex;
+  gap: 0.55rem;
+}
+.cases-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background: var(--border-mid);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.cases-dot.active {
+  background: var(--accent);
+  transform: scale(1.25);
 }
 
 .case-card {
@@ -457,9 +702,6 @@ h3 {
 .light-theme .case-card--featured {
   border-color: #93c5fd;
   background: #eff6ff;
-}
-.case-card--wide {
-  grid-column: 1 / -1;
 }
 
 .case-header {
@@ -491,6 +733,7 @@ h3 {
   color: var(--text-muted);
   line-height: 1.65;
   flex: 1;
+  max-width: 75ch;
 }
 
 .case-stack {
@@ -555,10 +798,10 @@ h3 {
 /* Subapp logos (Z-Bombilla ecosystem) */
 .subapp-logos {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 0.8rem;
+  margin-top: 0.4rem;
 }
 
 .subapp-logo-btn {
@@ -604,9 +847,9 @@ h3 {
 /* Agency logos grid */
 .agency-logos {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 0.7rem;
-  margin-top: 1rem;
+  margin-top: 0.4rem;
 }
 
 .agency-logo-link {
@@ -794,20 +1037,14 @@ h3 {
     display: none;
   }
 
-  .cases-grid {
-    grid-template-columns: 1fr;
-  }
-  .case-card--wide {
-    grid-column: auto;
-  }
   .hero-ctas {
     flex-direction: column;
     align-items: center;
   }
-  .experience-logo {
-    width: 28%;
-    max-width: 90px;
-    max-height: 40px;
+
+  /* Timeline más compacto en móvil */
+  .timeline-item {
+    padding-left: 2.25rem;
   }
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
@@ -822,8 +1059,16 @@ h3 {
 }
 
 @media (max-width: 480px) {
-  .experience-logo {
-    display: none;
+  .timeline-logo-box {
+    width: 48px;
+    height: 40px;
+  }
+  .timeline-logo-box img {
+    max-width: 36px;
+    max-height: 28px;
+  }
+  .timeline-head {
+    gap: 0.7rem;
   }
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
