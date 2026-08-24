@@ -55,8 +55,13 @@
     <main class="container main-container">
       <!-- SOBRE MÍ -->
       <section id="about" class="section" data-aos="fade-up">
-        <div class="about-text">
+        <div class="section-head">
           <h3>Sobre mí</h3>
+          <p class="section-subtitle">
+            Quién soy, cómo trabajo y en qué me especializo.
+          </p>
+        </div>
+        <div class="about-text">
           <p>
             Desarrollador Backend / Web con experiencia en entornos productivos,
             especializado en el desarrollo y mantenimiento de aplicaciones
@@ -70,7 +75,7 @@
           </p>
           <p>
             Mi perfil está orientado principalmente a backend y sistemas, con
-            experiencia en Java y PHP, trabajo con código legacy, aplicaciones
+            experiencia en Java y PHP, aplicaciones
             en producción y plataformas e-commerce. He participado en
             integraciones con marketplaces y servicios externos, incluyendo
             Amazon SP-API, así como en procesos de auditoría y cumplimiento de
@@ -99,7 +104,12 @@
 
       <!-- STACK — OPCIÓN B: chips con punto de categoría -->
       <section id="stack" class="section" data-aos="fade-up">
-        <h3>Stack tecnológico</h3>
+        <div class="section-head">
+          <h3>Stack tecnológico</h3>
+          <p class="section-subtitle">
+            Tecnologías con las que trabajo a diario, organizadas por área.
+          </p>
+        </div>
 
         <div class="stack-cloud">
           <!-- Backend -->
@@ -260,103 +270,153 @@
 
       <!-- EXPERIENCIA -->
       <section id="experience" class="section">
-        <h3 data-aos="fade-up">Experiencia</h3>
-
-        <div class="experience-card" data-aos="fade-right">
-          <img
-            src="assets/logos/shipping.png"
-            alt="Z-Bombilla"
-            class="experience-logo"
-            onerror="
-              this.src =
-                'https://shipping.z-bombilla.com/assets/img/Banner_top.png'
-            "
-          />
-          <h4>Z-Bombilla</h4>
-          <span class="role">Backend Developer · Sistemas internos</span>
-          <p>
-            Responsable técnico del área informática y de desarrollo dentro de
-            la empresa.
+        <div class="section-head" data-aos="fade-up">
+          <h3>Experiencia</h3>
+          <p class="section-subtitle">
+            De agencia digital a responsable técnico en empresa — siempre en
+            producción.
           </p>
-          <p>
-            Desarrollo y mantenimiento de una aplicación interna multiplataforma
-            que soporta procesos clave del negocio incluyendo logística,
-            facturación y gestión administrativa.
-          </p>
-          <p>
-            Soporte técnico y evolución de sistemas internos orientados a la
-            automatización de flujos operativos y conciliación de datos entre
-            plataformas.
-          </p>
-          <p>
-            Integración y gestión de APIs externas orientadas a marketplaces y
-            servicios logísticos, incluyendo Amazon SP-API.
-          </p>
-          <p>
-            Participación en procesos de auditoría y cumplimiento de requisitos
-            de seguridad: documentación técnica, controles de acceso, permisos y
-            requisitos de seguridad.
-          </p>
-          <p>
-            Supervisión y formación de personal, actuando como referencia
-            técnica.
-          </p>
-          <a
-            href="https://www.z-bombilla.com"
-            target="_blank"
-            class="btn btn-outline-info btn-sm mt-2"
-            >+ Info</a
-          >
         </div>
 
-        <div class="experience-card" data-aos="fade-left">
-          <img
-            src="assets/logos/difusion.png"
-            alt="Difusión Comunicación"
-            class="experience-logo"
-            onerror="
-              this.src = 'https://www.difusioncomunicacion.es/logo-difusion.png'
-            "
-          />
-          <h4>Difusión Comunicación</h4>
-          <span class="role">Desarrollador Web / Backend</span>
-          <p>
-            Desarrollo y mantenimiento de proyectos web en entorno de agencia
-            digital, trabajando tanto en frontend como en backend.
-          </p>
-          <p>
-            Implementación y personalización avanzada de WordPress a nivel de
-            código, incluyendo desarrollo de funcionalidades a medida en themes
-            y plugins.
-          </p>
-          <p>
-            Desarrollo de aplicaciones web a medida con Laravel, definiendo
-            estructura, lógica de negocio y persistencia de datos.
-          </p>
-          <p>
-            Mantenimiento y adaptación de plataformas e-commerce basadas en
-            PrestaShop y Magento, así como intervención sobre bases de datos y
-            soporte a proyectos en producción.
-          </p>
-          <a
-            href="https://www.difusioncomunicacion.es"
-            target="_blank"
-            class="btn btn-outline-info btn-sm mt-2"
-            >+ Info</a
-          >
+        <div class="timeline">
+          <div class="timeline-track"></div>
+          <div class="timeline-progress"></div>
+
+          <!-- Difusión Comunicación -->
+          <div class="timeline-item">
+            <span class="timeline-marker"></span>
+            <div class="timeline-content" data-aos="fade-right">
+              <div class="timeline-head">
+                <div class="timeline-logo-box">
+                  <img
+                    src="assets/logos/difusion.png"
+                    alt="Difusión Comunicación"
+                    onerror="this.style.display = 'none'"
+                  />
+                </div>
+                <div class="timeline-head-text">
+                  <span class="timeline-date">2021</span>
+                  <h4>Difusión Comunicación</h4>
+                  <span class="role"
+                    >Desarrollador Web / Backend · Agencia de marketing
+                    digital</span
+                  >
+                </div>
+              </div>
+              <ul class="timeline-points">
+                <li>
+                  Desarrollo y mantenimiento de webs corporativas en WordPress a
+                  nivel de código: themes, plugins y funciones a medida.
+                </li>
+                <li>
+                  Proyecto web a medida con Laravel: estructura, lógica de
+                  negocio y persistencia de datos.
+                </li>
+                <li>
+                  Mantenimiento y adaptación de e-commerce en PrestaShop y
+                  Magento, con gestión directa de bases de datos.
+                </li>
+                <li>
+                  Maquetación de plantillas HTML para campañas de email
+                  marketing (Mailchimp).
+                </li>
+              </ul>
+              <div class="case-stack">
+                <span>WordPress</span><span>Laravel</span><span>PrestaShop</span
+                ><span>Magento</span><span>MySQL</span>
+              </div>
+              <a
+                href="https://www.difusioncomunicacion.es"
+                target="_blank"
+                rel="noopener"
+                class="btn-timeline"
+                >Visitar sitio ↗</a
+              >
+            </div>
+          </div>
+
+          <!-- Z-Bombilla -->
+          <div class="timeline-item timeline-item--current">
+            <span class="timeline-marker"></span>
+            <div class="timeline-content" data-aos="fade-left">
+              <div class="timeline-head">
+                <div class="timeline-logo-box">
+                  <img
+                    src="assets/logos/shipping.png"
+                    alt="Z-Bombilla"
+                    onerror="
+                      this.src =
+                        'https://shipping.z-bombilla.com/assets/img/Banner_top.png'
+                    "
+                  />
+                </div>
+                <div class="timeline-head-text">
+                  <span class="timeline-date timeline-date--now">
+                    <i class="dot-now"></i>2022 — Actualidad</span
+                  >
+                  <h4>Z-Bombilla</h4>
+                  <span class="role"
+                    >Desarrollador Backend / Responsable técnico</span
+                  >
+                </div>
+              </div>
+              <ul class="timeline-points">
+                <li>
+                  Responsable técnico del área de informática y desarrollo de la
+                  empresa.
+                </li>
+                <li>
+                  Desarrollo y mantenimiento de la aplicación interna
+                  multiplataforma que soporta logística, facturación y
+                  administración.
+                </li>
+                <li>
+                  Evolución del core de PrestaShop y de la web
+                  corporativa.
+                </li>
+                <li>
+                  Integración de APIs externas: Amazon SP-API, UPS,
+                  Envialia/Ontime, TikTok, AliExpress y servicios de correo.
+                </li>
+                <li>
+                  Auditoría de seguridad para Amazon SP-API: documentación
+                  técnica, MFA, permisos y apoyo en pentesting.
+                </li>
+                <li>
+                  Supervisión y formación de personal en prácticas como
+                  referencia técnica.
+                </li>
+              </ul>
+              <div class="case-stack">
+                <span>Java</span><span>WildFly</span><span>PrestaShop</span
+                ><span>Amazon SP-API</span><span>REST APIs</span
+                ><span>Seguridad</span>
+              </div>
+              <a
+                href="https://www.z-bombilla.com"
+                target="_blank"
+                rel="noopener"
+                class="btn-timeline"
+                >Visitar sitio ↗</a
+              >
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- CASOS DE TRABAJO -->
       <section id="cases" class="section">
-        <h3 data-aos="fade-up">Casos de trabajo</h3>
-        <p class="section-subtitle" data-aos="fade-up">
-          Trabajo real en producción — no demos, no tutoriales.
-        </p>
+        <div class="section-head" data-aos="fade-up">
+          <h3>Casos de trabajo</h3>
+          <p class="section-subtitle">
+            Trabajo real en producción — no demos, no tutoriales.
+          </p>
+        </div>
 
-        <div class="cases-grid">
+        <div class="cases-carousel">
+          <div class="cases-track" id="casesTrack" tabindex="0" role="region" aria-label="Casos de trabajo">
           <!-- CASO 1: Ecosistema Z-Bombilla -->
-          <div class="case-card case-card--featured" data-aos="fade-up">
+          <div class="case-card case-card--featured">
             <div class="case-header">
               <div class="case-tag">Arquitectura · Sistemas internos</div>
               <div class="case-company">Z-Bombilla</div>
@@ -366,7 +426,7 @@
               Desarrollo y mantenimiento del ecosistema de herramientas internas
               que vertebra la operativa de la empresa: logística, finanzas y
               gestión de Amazon, cada una como subdominio independiente sobre
-              código PHP legacy en producción.
+              código PHP en producción.
             </p>
             <div class="case-stack">
               <span>PHP</span><span>MySQL</span><span>Amazon SP-API</span
@@ -412,8 +472,27 @@
             </div>
           </div>
 
-          <!-- CASO 2: Auditoría de seguridad -->
-          <div class="case-card" data-aos="fade-up" data-aos-delay="100">
+          <!-- CASO 2: APIs logísticas -->
+          <div class="case-card">
+            <div class="case-header">
+              <div class="case-tag">Integración · APIs</div>
+              <div class="case-company">Z-Bombilla</div>
+            </div>
+            <h4 class="case-title">Integración de APIs logísticas</h4>
+            <p class="case-desc">
+              Desarrollo de conectores con APIs de transportistas y servicios
+              logísticos para automatizar la gestión de envíos, seguimiento y
+              conciliación de datos entre plataformas. Reducción del proceso
+              manual del equipo de operaciones.
+            </p>
+            <div class="case-stack">
+              <span>PHP</span><span>REST APIs</span><span>JSON</span
+              ><span>MySQL</span>
+            </div>
+          </div>
+
+          <!-- CASO 3: Auditoría de seguridad -->
+          <div class="case-card">
             <div class="case-header">
               <div class="case-tag">Seguridad · Cumplimiento</div>
               <div class="case-company">Z-Bombilla</div>
@@ -439,8 +518,8 @@
             </div>
           </div>
 
-          <!-- CASO 3: Informe accesibilidad -->
-          <div class="case-card" data-aos="fade-up" data-aos-delay="150">
+          <!-- CASO 4: Informe accesibilidad -->
+          <div class="case-card">
             <div class="case-header">
               <div class="case-tag">Accesibilidad · Normativa</div>
               <div class="case-company">Difusión · Estrenarte</div>
@@ -465,31 +544,8 @@
             </a>
           </div>
 
-          <!-- CASO 4: APIs logísticas -->
-          <div class="case-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="case-header">
-              <div class="case-tag">Integración · APIs</div>
-              <div class="case-company">Z-Bombilla</div>
-            </div>
-            <h4 class="case-title">Integración de APIs logísticas</h4>
-            <p class="case-desc">
-              Desarrollo de conectores con APIs de transportistas y servicios
-              logísticos para automatizar la gestión de envíos, seguimiento y
-              conciliación de datos entre plataformas. Reducción del proceso
-              manual del equipo de operaciones.
-            </p>
-            <div class="case-stack">
-              <span>PHP</span><span>REST APIs</span><span>JSON</span
-              ><span>MySQL</span>
-            </div>
-          </div>
-
           <!-- CASO 5: Agencia -->
-          <div
-            class="case-card case-card--wide"
-            data-aos="fade-up"
-            data-aos-delay="250"
-          >
+          <div class="case-card">
             <div class="case-header">
               <div class="case-tag">Desarrollo web · E-commerce · RGPD</div>
               <div class="case-company">Difusión Comunicación</div>
@@ -644,16 +700,29 @@
               </a>
             </div>
           </div>
+          </div>
+
+          <div class="cases-controls">
+            <button class="cases-arrow" id="casesPrev" aria-label="Caso anterior">
+              ←
+            </button>
+            <div class="cases-dots" id="casesDots"></div>
+            <button class="cases-arrow" id="casesNext" aria-label="Caso siguiente">
+              →
+            </button>
+          </div>
         </div>
       </section>
 
       <!-- VÍDEOS -->
       <section id="videos" class="section bg-dark-soft">
-        <h3 data-aos="fade-up">Vídeos y contenido audiovisual</h3>
-        <p class="mb-4" data-aos="fade-up">
-          Además del desarrollo, he grabado y editado vídeos promocionales para
-          eventos, empresas y competiciones deportivas.
-        </p>
+        <div class="section-head" data-aos="fade-up">
+          <h3>Vídeos y contenido audiovisual</h3>
+          <p class="section-subtitle">
+            Además del desarrollo, grabación y edición de vídeos promocionales
+            para eventos, empresas y competiciones deportivas.
+          </p>
+        </div>
         <div class="row g-4">
           <div class="col-md-6" data-aos="fade-up">
             <div class="ratio ratio-16x9">
