@@ -3,7 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wobocobo</title>
+    <title>Wobocobo — Backend Developer</title>
+    <meta
+      name="description"
+      content="Portfolio de Alejandro Ortega Hernández, backend developer: sistemas internos, APIs y e-commerce en producción."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -15,390 +25,425 @@
   <body>
     <!-- HEADER -->
     <header class="main-header">
-      <div class="container header-container">
-        <div class="brand"><a href="index.html">Wobocobo</a></div>
+      <div class="boxed header-container">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a href="index.html">Wobocobo</a>
+        </div>
         <button class="menu-toggle" aria-label="Abrir menú">☰</button>
         <nav class="nav">
           <a href="#about">Sobre mí</a>
           <a href="#stack">Stack</a>
           <a href="#experience">Experiencia</a>
-          <a href="#cases">Casos de trabajo</a>
+          <a href="#cases">Casos</a>
           <div class="dropdown">
-            <span class="dropdown-toggle">Curiosidades</span>
+            <span class="dropdown-toggle" role="button">Curiosidades</span>
             <div class="dropdown-menu">
               <a href="spoti.html">Música</a>
               <a href="cine.html">Cine</a>
             </div>
           </div>
         </nav>
-        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-          ☀
-        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">☀</button>
       </div>
     </header>
 
     <!-- HERO -->
-    <header class="hero text-center">
-      <div class="container py-5">
-        <h1 class="mb-2">Wobocobo</h1>
-        <h2 class="mb-3">Backend Developer</h2>
-        <p class="subtitle">
-          APIs · E-commerce · Sistemas internos · Producción
+    <section class="hero">
+      <div class="boxed hero-inner">
+        <span class="hero-pill"><i></i> Disponible para proyectos</span>
+        <h1>Backend <span class="accent-word">Developer</span></h1>
+        <p class="hero-lead">
+          Diseño y mantengo aplicaciones internas, APIs y e-commerce que operan
+          en producción.
+        </p>
+        <p class="hero-sub">
+          Sistemas críticos · Integraciones · Seguridad y cumplimiento
         </p>
         <div class="hero-ctas">
-          <a href="#cases" class="btn-primary-custom">Ver casos de trabajo</a>
-          <a href="#about" class="btn-ghost-custom">Sobre mí</a>
+          <a href="#cases" class="btn btn--primary">Ver casos de trabajo</a>
+          <a href="#about" class="btn btn--ghost">Sobre mí</a>
         </div>
       </div>
-    </header>
+    </section>
 
-    <main class="container main-container">
+    <main class="page">
       <!-- SOBRE MÍ -->
-      <section id="about" class="section" data-aos="fade-up">
-        <div class="section-head">
-          <h3>Sobre mí</h3>
-          <p class="section-subtitle">
-            Quién soy, cómo trabajo y en qué me especializo.
-          </p>
-        </div>
-        <div class="about-text">
-          <p>
-            Desarrollador Backend / Web con experiencia en entornos productivos,
-            especializado en el desarrollo y mantenimiento de aplicaciones
-            internas, integración de APIs y plataformas e-commerce.
-          </p>
-          <p>
-            He trabajado tanto en entorno de agencia digital como en empresa
-            tecnológica, participando en proyectos reales con impacto directo en
-            procesos de negocio como logística, facturación, administración y
-            gestión operativa.
-          </p>
-          <p>
-            Mi perfil está orientado principalmente a backend y sistemas, con
-            experiencia en Java y PHP, aplicaciones
-            en producción y plataformas e-commerce. He participado en
-            integraciones con marketplaces y servicios externos, incluyendo
-            Amazon SP-API, así como en procesos de auditoría y cumplimiento de
-            requisitos de seguridad.
-          </p>
-          <p>
-            Acostumbrado a trabajar con sistemas críticos, análisis de procesos
-            empresariales, documentación técnica y control de accesos. He
-            asumido responsabilidades técnicas dentro de la empresa, incluyendo
-            la supervisión y formación de personal.
-          </p>
-          <p>
-            Me caracterizo por un enfoque práctico, autonomía técnica y
-            capacidad de adaptación a nuevos entornos y tecnologías, siempre con
-            especial atención a la estabilidad, seguridad y mantenimiento de los
-            sistemas.
-          </p>
-          <div class="about-actions mt-4">
-            <a href="#" class="btn-cv" title="Disponible próximamente">
-              <span>↓</span> Descargar CV
-              <span class="cv-badge">Próximamente</span>
-            </a>
+      <section id="about" class="section">
+        <div class="boxed">
+          <div class="section-head" data-aos="fade-up">
+            <span class="section-label">Sobre mí</span>
+            <h2 class="section-title">Quién soy y cómo trabajo</h2>
+            <p class="section-subtitle">
+              Perfil de backend y sistemas con enfoque práctico, responsable y
+              orientado a producción.
+            </p>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-text" data-aos="fade-right">
+              <p>
+                Soy <strong>Alejandro Ortega Hernández</strong>, desarrollador
+                backend con experiencia en entornos productivos: aplicaciones
+                internas, integración de APIs y plataformas e-commerce.
+              </p>
+              <p>
+                He trabajado tanto en <strong>agencia digital</strong> como en
+                <strong>empresa tecnológica</strong>, participando en proyectos
+                reales con impacto directo en procesos de negocio como
+                logística, facturación, administración y gestión operativa.
+              </p>
+              <p>
+                Acostumbrado a sistemas críticos, análisis de procesos,
+                documentación técnica y control de accesos. He asumido
+                responsabilidades técnicas dentro de la empresa, incluyendo la
+                supervisión y formación de personal.
+              </p>
+              <p>
+                Mi enfoque: <strong>estabilidad, seguridad y mantenimiento</strong>.
+                Autonomía técnica y adaptación rápida a nuevos entornos y
+                tecnologías.
+              </p>
+
+              <div class="about-facts">
+                <div class="fact">
+                  <b>2021</b>
+                  <span>Inicio profesional</span>
+                </div>
+                <div class="fact">
+                  <b>2</b>
+                  <span>Empresas: agencia y producto</span>
+                </div>
+                <div class="fact">
+                  <b>5+</b>
+                  <span>Años de experiencia real</span>
+                </div>
+                <div class="fact">
+                  <b>Prod.</b>
+                  <span>Sistemas críticos a diario</span>
+                </div>
+              </div>
+
+              <div class="about-actions mt-4">
+                <a href="#" class="btn btn--subtle" title="Disponible próximamente">
+                  ↓ Descargar CV
+                </a>
+              </div>
+            </div>
+
+            <figure class="about-media" data-aos="fade-left" id="aboutPhoto">
+              <img
+                src="assets/img/about-photo.jpg"
+                alt="Fotografía de Alejandro Ortega"
+                onerror="this.style.display='none'"
+              />
+              <span class="about-media__placeholder">
+                <b>Tu foto aquí</b>
+                assets/img/about-photo.jpg
+              </span>
+            </figure>
           </div>
         </div>
       </section>
 
-      <!-- STACK — OPCIÓN B: chips con punto de categoría -->
-      <section id="stack" class="section" data-aos="fade-up">
-        <div class="section-head">
-          <h3>Stack tecnológico</h3>
-          <p class="section-subtitle">
-            Tecnologías con las que trabajo a diario, organizadas por área.
-          </p>
-        </div>
-
-        <div class="stack-cloud">
-          <!-- Backend -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-plain.svg"
-              alt="PHP"
-            />
-            <span class="stack-chip__name">PHP</span>
-            <span class="stack-chip__dot dot-backend"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
-              alt="Java"
-            />
-            <span class="stack-chip__name">Java</span>
-            <span class="stack-chip__dot dot-backend"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg"
-              alt="Laravel"
-            />
-            <span class="stack-chip__name">Laravel</span>
-            <span class="stack-chip__dot dot-backend"></span>
+      <!-- STACK -->
+      <section id="stack" class="section section--alt">
+        <div class="boxed">
+          <div class="section-head" data-aos="fade-up">
+            <span class="section-label">Stack</span>
+            <h2 class="section-title">Tecnologías que uso a diario</h2>
+            <p class="section-subtitle">
+              Organizadas por área, con las que he construido y mantenido
+              sistemas en producción.
+            </p>
           </div>
 
-          <!-- Frontend -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
-              alt="HTML5"
-            />
-            <span class="stack-chip__name">HTML5</span>
-            <span class="stack-chip__dot dot-frontend"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
-              alt="CSS3"
-            />
-            <span class="stack-chip__name">CSS3</span>
-            <span class="stack-chip__dot dot-frontend"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-              alt="JavaScript"
-            />
-            <span class="stack-chip__name">JavaScript</span>
-            <span class="stack-chip__dot dot-frontend"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
-              alt="Vue.js"
-            />
-            <span class="stack-chip__name">Vue.js</span>
-            <span class="stack-chip__dot dot-frontend"></span>
+          <div class="stack-cloud" data-aos="fade-up">
+            <!-- Backend -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-plain.svg"
+                alt="PHP"
+              />
+              <span class="stack-chip__name">PHP</span>
+              <span class="stack-chip__dot dot-backend"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
+                alt="Java"
+              />
+              <span class="stack-chip__name">Java</span>
+              <span class="stack-chip__dot dot-backend"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg"
+                alt="Laravel"
+              />
+              <span class="stack-chip__name">Laravel</span>
+              <span class="stack-chip__dot dot-backend"></span>
+            </div>
+
+            <!-- Frontend -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+                alt="HTML5"
+              />
+              <span class="stack-chip__name">HTML5</span>
+              <span class="stack-chip__dot dot-frontend"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+                alt="CSS3"
+              />
+              <span class="stack-chip__name">CSS3</span>
+              <span class="stack-chip__dot dot-frontend"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                alt="JavaScript"
+              />
+              <span class="stack-chip__name">JavaScript</span>
+              <span class="stack-chip__dot dot-frontend"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
+                alt="Vue.js"
+              />
+              <span class="stack-chip__name">Vue.js</span>
+              <span class="stack-chip__dot dot-frontend"></span>
+            </div>
+
+            <!-- CMS / E-commerce -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
+                alt="WordPress"
+              />
+              <span class="stack-chip__name">WordPress</span>
+              <span class="stack-chip__dot dot-cms"></span>
+            </div>
+            <div class="stack-chip">
+              <span class="stack-chip__text-icon">🛒</span>
+              <span class="stack-chip__name">PrestaShop</span>
+              <span class="stack-chip__dot dot-cms"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/magento/magento-original.svg"
+                alt="Magento"
+              />
+              <span class="stack-chip__name">Magento</span>
+              <span class="stack-chip__dot dot-cms"></span>
+            </div>
+
+            <!-- Bases de datos -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
+                alt="MySQL"
+              />
+              <span class="stack-chip__name">MySQL</span>
+              <span class="stack-chip__dot dot-db"></span>
+            </div>
+
+            <!-- Servidores / Entornos -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg"
+                alt="Linux"
+              />
+              <span class="stack-chip__name">Linux</span>
+              <span class="stack-chip__dot dot-server"></span>
+            </div>
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
+                alt="Windows"
+              />
+              <span class="stack-chip__name">Windows</span>
+              <span class="stack-chip__dot dot-server"></span>
+            </div>
+            <div class="stack-chip">
+              <span class="stack-chip__text-icon">⚙</span>
+              <span class="stack-chip__name">WildFly</span>
+              <span class="stack-chip__dot dot-server"></span>
+            </div>
+            <div class="stack-chip">
+              <span class="stack-chip__text-icon">☕</span>
+              <span class="stack-chip__name">Java EE / EJB</span>
+              <span class="stack-chip__dot dot-backend"></span>
+            </div>
+
+            <!-- Herramientas -->
+            <div class="stack-chip">
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+                alt="Git"
+              />
+              <span class="stack-chip__name">Git</span>
+              <span class="stack-chip__dot dot-tools"></span>
+            </div>
           </div>
 
-          <!-- CMS / E-commerce -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/wordpress/wordpress-plain.svg"
-              alt="WordPress"
-            />
-            <span class="stack-chip__name">WordPress</span>
-            <span class="stack-chip__dot dot-cms"></span>
-          </div>
-          <div class="stack-chip">
-            <span class="stack-chip__text-icon">🛒</span>
-            <span class="stack-chip__name">PrestaShop</span>
-            <span class="stack-chip__dot dot-cms"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/magento/magento-original.svg"
-              alt="Magento"
-            />
-            <span class="stack-chip__name">Magento</span>
-            <span class="stack-chip__dot dot-cms"></span>
-          </div>
-
-          <!-- Bases de datos -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"
-              alt="MySQL"
-            />
-            <span class="stack-chip__name">MySQL</span>
-            <span class="stack-chip__dot dot-db"></span>
-          </div>
-
-          <!-- Servidores / Entornos -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg"
-              alt="Linux"
-            />
-            <span class="stack-chip__name">Linux</span>
-            <span class="stack-chip__dot dot-server"></span>
-          </div>
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg"
-              alt="Windows"
-            />
-            <span class="stack-chip__name">Windows</span>
-            <span class="stack-chip__dot dot-server"></span>
-          </div>
-          <div class="stack-chip">
-            <span class="stack-chip__text-icon">⚙</span>
-            <span class="stack-chip__name">WildFly</span>
-            <span class="stack-chip__dot dot-server"></span>
-          </div>
-          <div class="stack-chip">
-            <span class="stack-chip__text-icon">☕</span>
-            <span class="stack-chip__name">Java EE / EJB</span>
-            <span class="stack-chip__dot dot-backend"></span>
-          </div>
-
-          <!-- Herramientas -->
-          <div class="stack-chip">
-            <img
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
-              alt="Git"
-            />
-            <span class="stack-chip__name">Git</span>
-            <span class="stack-chip__dot dot-tools"></span>
-          </div>
-        </div>
-
-        <!-- Leyenda -->
-        <div class="stack-legend">
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-backend"></span> Backend
-          </div>
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-frontend"></span> Frontend
-          </div>
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-cms"></span> CMS / E-commerce
-          </div>
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-db"></span> Base de datos
-          </div>
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-server"></span> Servidores /
-            Entornos
-          </div>
-          <div class="stack-legend-item">
-            <span class="stack-chip__dot dot-tools"></span> Herramientas
+          <div class="stack-legend" data-aos="fade-up">
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-backend"></span> Backend
+            </div>
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-frontend"></span> Frontend
+            </div>
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-cms"></span> CMS / E-commerce
+            </div>
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-db"></span> Base de datos
+            </div>
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-server"></span> Servidores /
+              Entornos
+            </div>
+            <div class="stack-legend-item">
+              <span class="stack-chip__dot dot-tools"></span> Herramientas
+            </div>
           </div>
         </div>
       </section>
 
       <!-- EXPERIENCIA -->
       <section id="experience" class="section">
-        <div class="section-head" data-aos="fade-up">
-          <h3>Experiencia</h3>
-          <p class="section-subtitle">
-            De agencia digital a responsable técnico en empresa — siempre en
-            producción.
-          </p>
-        </div>
-
-        <div class="timeline">
-          <div class="timeline-track"></div>
-          <div class="timeline-progress"></div>
-
-          <!-- Difusión Comunicación -->
-          <div class="timeline-item">
-            <span class="timeline-marker"></span>
-            <div class="timeline-content" data-aos="fade-right">
-              <div class="timeline-head">
-                <div class="timeline-logo-box">
-                  <img
-                    src="assets/logos/difusion.png"
-                    alt="Difusión Comunicación"
-                    onerror="this.style.display = 'none'"
-                  />
-                </div>
-                <div class="timeline-head-text">
-                  <span class="timeline-date">2021</span>
-                  <h4>Difusión Comunicación</h4>
-                  <span class="role"
-                    >Desarrollador Web / Backend · Agencia de marketing
-                    digital</span
-                  >
-                </div>
-              </div>
-              <ul class="timeline-points">
-                <li>
-                  Desarrollo y mantenimiento de webs corporativas en WordPress a
-                  nivel de código: themes, plugins y funciones a medida.
-                </li>
-                <li>
-                  Proyecto web a medida con Laravel: estructura, lógica de
-                  negocio y persistencia de datos.
-                </li>
-                <li>
-                  Mantenimiento y adaptación de e-commerce en PrestaShop y
-                  Magento, con gestión directa de bases de datos.
-                </li>
-                <li>
-                  Maquetación de plantillas HTML para campañas de email
-                  marketing (Mailchimp).
-                </li>
-              </ul>
-              <div class="case-stack">
-                <span>WordPress</span><span>Laravel</span><span>PrestaShop</span
-                ><span>Magento</span><span>MySQL</span>
-              </div>
-              <a
-                href="https://www.difusioncomunicacion.es"
-                target="_blank"
-                rel="noopener"
-                class="btn-timeline"
-                >Visitar sitio ↗</a
-              >
-            </div>
+        <div class="boxed">
+          <div class="section-head" data-aos="fade-up">
+            <span class="section-label">Experiencia</span>
+            <h2 class="section-title">Trayectoria</h2>
+            <p class="section-subtitle">
+              De agencia digital a responsable técnico en empresa — siempre
+              cerca de producción.
+            </p>
           </div>
 
-          <!-- Z-Bombilla -->
-          <div class="timeline-item timeline-item--current">
-            <span class="timeline-marker"></span>
-            <div class="timeline-content" data-aos="fade-left">
-              <div class="timeline-head">
-                <div class="timeline-logo-box">
-                  <img
-                    src="assets/logos/shipping.png"
-                    alt="Z-Bombilla"
-                    onerror="
-                      this.src =
-                        'https://shipping.z-bombilla.com/assets/img/Banner_top.png'
-                    "
-                  />
+          <div class="timeline" data-aos="fade-up">
+            <div class="timeline-track"></div>
+            <div class="timeline-progress"></div>
+
+            <!-- Difusión Comunicación -->
+            <div class="timeline-item">
+              <span class="timeline-marker"></span>
+              <div class="timeline-content" data-aos="fade-right">
+                <div class="timeline-head">
+                  <div class="timeline-logo-box">
+                    <img
+                      src="assets/logos/difusion.png"
+                      alt="Difusión Comunicación"
+                      onerror="this.style.display = 'none'"
+                    />
+                  </div>
+                  <div class="timeline-head-text">
+                    <span class="timeline-date">2021</span>
+                    <h4>Difusión Comunicación</h4>
+                    <span class="role"
+                      >Desarrollador Web / Backend · Agencia de marketing
+                      digital</span
+                    >
+                  </div>
                 </div>
-                <div class="timeline-head-text">
-                  <span class="timeline-date timeline-date--now">
-                    <i class="dot-now"></i>2022 — Actualidad</span
-                  >
-                  <h4>Z-Bombilla</h4>
-                  <span class="role"
-                    >Desarrollador Backend / Responsable técnico</span
-                  >
+                <ul class="timeline-points">
+                  <li>
+                    Webs corporativas en WordPress a nivel de código: themes,
+                    plugins y funcionalidades a medida.
+                  </li>
+                  <li>
+                    Proyecto web a medida con Laravel: estructura, lógica de
+                    negocio y persistencia de datos.
+                  </li>
+                  <li>
+                    Mantenimiento y adaptación de e-commerce en PrestaShop y
+                    Magento, con gestión directa de bases de datos.
+                  </li>
+                  <li>
+                    Maquetación de plantillas HTML para campañas de email
+                    marketing (Mailchimp).
+                  </li>
+                </ul>
+                <div class="case-stack">
+                  <span>WordPress</span><span>Laravel</span><span>PrestaShop</span
+                  ><span>Magento</span><span>MySQL</span>
                 </div>
+                <a
+                  href="https://www.difusioncomunicacion.es"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn--subtle btn--sm"
+                  >Visitar sitio ↗</a
+                >
               </div>
-              <ul class="timeline-points">
-                <li>
-                  Responsable técnico del área de informática y desarrollo de la
-                  empresa.
-                </li>
-                <li>
-                  Desarrollo y mantenimiento de la aplicación interna
-                  multiplataforma que soporta logística, facturación y
-                  administración.
-                </li>
-                <li>
-                  Evolución del core de PrestaShop y de la web
-                  corporativa.
-                </li>
-                <li>
-                  Integración de APIs externas: Amazon SP-API, UPS,
-                  Envialia/Ontime, TikTok, AliExpress y servicios de correo.
-                </li>
-                <li>
-                  Auditoría de seguridad para Amazon SP-API: documentación
-                  técnica, MFA, permisos y apoyo en pentesting.
-                </li>
-                <li>
-                  Supervisión y formación de personal en prácticas como
-                  referencia técnica.
-                </li>
-              </ul>
-              <div class="case-stack">
-                <span>Java</span><span>WildFly</span><span>PrestaShop</span
-                ><span>Amazon SP-API</span><span>REST APIs</span
-                ><span>Seguridad</span>
+            </div>
+
+            <!-- Z-Bombilla -->
+            <div class="timeline-item timeline-item--current">
+              <span class="timeline-marker"></span>
+              <div class="timeline-content" data-aos="fade-left">
+                <div class="timeline-head">
+                  <div class="timeline-logo-box">
+                    <img
+                      src="assets/logos/shipping.png"
+                      alt="Z-Bombilla"
+                      onerror="this.style.display = 'none'"
+                    />
+                  </div>
+                  <div class="timeline-head-text">
+                    <span class="timeline-date timeline-date--now">
+                      <i class="dot-now"></i>2022 — Actualidad
+                    </span>
+                    <h4>Z-Bombilla</h4>
+                    <span class="role"
+                      >Desarrollador Backend / Responsable técnico</span
+                    >
+                  </div>
+                </div>
+                <ul class="timeline-points">
+                  <li>
+                    Responsable del área de informática y desarrollo de la
+                    empresa.
+                  </li>
+                  <li>
+                    Aplicación interna multiplataforma que soporta logística,
+                    facturación y administración.
+                  </li>
+                  <li>
+                    Evolución del core de PrestaShop y de la web corporativa.
+                  </li>
+                  <li>
+                    Integración de APIs externas: Amazon SP-API, UPS,
+                    Envialia/Ontime, TikTok, AliExpress y servicios de correo.
+                  </li>
+                  <li>
+                    Auditoría de seguridad para Amazon SP-API: documentación
+                    técnica, MFA, permisos y apoyo en pentesting.
+                  </li>
+                  <li>
+                    Supervisión y formación de personal en prácticas como
+                    referencia técnica.
+                  </li>
+                </ul>
+                <div class="case-stack">
+                  <span>Java</span><span>WildFly</span><span>PrestaShop</span
+                  ><span>Amazon SP-API</span><span>REST APIs</span
+                  ><span>Seguridad</span>
+                </div>
+                <a
+                  href="https://www.z-bombilla.com"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn--subtle btn--sm"
+                  >Visitar sitio ↗</a
+                >
               </div>
-              <a
-                href="https://www.z-bombilla.com"
-                target="_blank"
-                rel="noopener"
-                class="btn-timeline"
-                >Visitar sitio ↗</a
-              >
             </div>
           </div>
         </div>
@@ -406,354 +451,392 @@
 
       <!-- CASOS DE TRABAJO -->
       <section id="cases" class="section">
-        <div class="section-head" data-aos="fade-up">
-          <h3>Casos de trabajo</h3>
-          <p class="section-subtitle">
-            Trabajo real en producción — no demos, no tutoriales.
-          </p>
+        <div class="boxed">
+          <div class="section-head" data-aos="fade-up">
+            <span class="section-label">Casos de trabajo</span>
+            <h2 class="section-title">Trabajo real en producción</h2>
+            <p class="section-subtitle">
+              No demos, no tutoriales: proyectos que sostienen operativa real.
+            </p>
+          </div>
         </div>
 
-        <div class="cases-carousel">
-          <div class="cases-track" id="casesTrack" tabindex="0" role="region" aria-label="Casos de trabajo">
-          <!-- CASO 1: Ecosistema Z-Bombilla -->
-          <div class="case-card case-card--featured">
-            <div class="case-header">
-              <div class="case-tag">Arquitectura · Sistemas internos</div>
-              <div class="case-company">Z-Bombilla</div>
-            </div>
-            <h4 class="case-title">Ecosistema de aplicaciones internas</h4>
-            <p class="case-desc">
-              Desarrollo y mantenimiento del ecosistema de herramientas internas
-              que vertebra la operativa de la empresa: logística, finanzas y
-              gestión de Amazon, cada una como subdominio independiente sobre
-              código PHP en producción.
-            </p>
-            <div class="case-stack">
-              <span>PHP</span><span>MySQL</span><span>Amazon SP-API</span
-              ><span>APIs transportistas</span>
-            </div>
-            <div class="subapp-logos">
-              <a
-                href="https://shipping.z-bombilla.com"
-                target="_blank"
-                class="subapp-logo-btn"
-              >
-                <img
-                  src="assets/logos/shipping.png"
-                  alt="Shipping"
-                  onerror="this.style.display = 'none'"
-                />
-                <span class="subapp-logo-btn__label">shipping</span>
-              </a>
-              <a
-                href="https://finanzas.z-bombilla.com"
-                target="_blank"
-                class="subapp-logo-btn"
-              >
-                <img
-                  src="assets/logos/finanzas.png"
-                  alt="Finanzas"
-                  onerror="this.style.display = 'none'"
-                />
-                <span class="subapp-logo-btn__label">finanzas</span>
-              </a>
-              <a
-                href="https://amazon.z-bombilla.com"
-                target="_blank"
-                class="subapp-logo-btn"
-              >
-                <img
-                  src="assets/logos/amazon.png"
-                  alt="Amazon"
-                  onerror="this.style.display = 'none'"
-                />
-                <span class="subapp-logo-btn__label">amazon</span>
-              </a>
+        <div
+          class="carousel carousel--cases carousel--bleed"
+          id="casesCarousel"
+          data-carousel
+          data-aos="fade-up"
+        >
+          <div class="carousel__viewport">
+            <div class="carousel__track" data-track tabindex="0" role="region" aria-label="Casos de trabajo">
+              <!-- CASO 1 -->
+              <div class="carousel__slide">
+                <article class="case-card case-card--featured">
+                  <div class="case-body">
+                    <div class="case-header">
+                      <div class="case-tag">Arquitectura · Sistemas internos</div>
+                      <div class="case-company">Z-Bombilla</div>
+                    </div>
+                    <h3 class="case-title">Ecosistema de aplicaciones internas</h3>
+                    <p class="case-desc">
+                      Desarrollo y mantenimiento del ecosistema de herramientas
+                      internas que vertebra la operativa de la empresa:
+                      logística, finanzas y gestión de Amazon, cada una como
+                      subdominio independiente sobre código PHP en producción.
+                    </p>
+                    <div class="case-stack">
+                      <span>PHP</span><span>MySQL</span><span>Amazon SP-API</span
+                      ><span>APIs transportistas</span>
+                    </div>
+                    <div class="subapp-logos">
+                      <a
+                        href="https://shipping.z-bombilla.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="subapp-logo-btn"
+                      >
+                        <img
+                          src="assets/logos/shipping.png"
+                          alt="Shipping"
+                          onerror="this.style.display = 'none'"
+                        />
+                        <span class="subapp-logo-btn__label">shipping</span>
+                      </a>
+                      <a
+                        href="https://finanzas.z-bombilla.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="subapp-logo-btn"
+                      >
+                        <img
+                          src="assets/logos/finanzas.png"
+                          alt="Finanzas"
+                          onerror="this.style.display = 'none'"
+                        />
+                        <span class="subapp-logo-btn__label">finanzas</span>
+                      </a>
+                      <a
+                        href="https://amazon.z-bombilla.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="subapp-logo-btn"
+                      >
+                        <img
+                          src="assets/logos/amazon.png"
+                          alt="Amazon"
+                          onerror="this.style.display = 'none'"
+                        />
+                        <span class="subapp-logo-btn__label">amazon</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <!-- CASO 2 -->
+              <div class="carousel__slide">
+                <article class="case-card">
+                  <div class="case-body">
+                    <div class="case-header">
+                      <div class="case-tag">Integración · APIs</div>
+                      <div class="case-company">Z-Bombilla</div>
+                    </div>
+                    <h3 class="case-title">Integración de APIs logísticas</h3>
+                    <p class="case-desc">
+                      Conectores con APIs de transportistas y servicios
+                      logísticos para automatizar la gestión de envíos, el
+                      seguimiento y la conciliación de datos entre plataformas.
+                    </p>
+                    <div class="case-stack">
+                      <span>PHP</span><span>REST APIs</span><span>JSON</span
+                      ><span>MySQL</span>
+                    </div>
+                    <div class="case-links">
+                      <a
+                        href="mailto:placeholder@wobocobo.com"
+                        class="case-link case-link--contact"
+                        >Contactar para más detalle →</a
+                      >
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <!-- CASO 3 -->
+              <div class="carousel__slide">
+                <article class="case-card">
+                  <div class="case-body">
+                    <div class="case-header">
+                      <div class="case-tag">Seguridad · Cumplimiento</div>
+                      <div class="case-company">Z-Bombilla</div>
+                    </div>
+                    <h3 class="case-title">Auditoría de seguridad Amazon</h3>
+                    <p class="case-desc">
+                      Proceso completo de auditoría para cumplir los requisitos
+                      de Amazon SP-API: pentesting, análisis de
+                      vulnerabilidades, documentación técnica, controles de
+                      acceso y gestión de permisos.
+                    </p>
+                    <div class="case-stack">
+                      <span>Pentesting</span><span>Documentación técnica</span
+                      ><span>Control de accesos</span>
+                    </div>
+                    <div class="case-links">
+                      <a
+                        href="mailto:placeholder@wobocobo.com"
+                        class="case-link case-link--contact"
+                        >Contactar para más detalle →</a
+                      >
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <!-- CASO 4 -->
+              <div class="carousel__slide">
+                <article class="case-card">
+                  <div class="case-body">
+                    <div class="case-header">
+                      <div class="case-tag">Accesibilidad · Normativa</div>
+                      <div class="case-company">Difusión · Estrenarte</div>
+                    </div>
+                    <h3 class="case-title">Auditoría de accesibilidad web</h3>
+                    <p class="case-desc">
+                      Análisis de conformidad de accesibilidad con las
+                      herramientas del Observatorio de Accesibilidad, generando
+                      un informe técnico con el grado de cumplimiento, los
+                      issues detectados y recomendaciones de corrección.
+                    </p>
+                    <div class="case-stack">
+                      <span>WCAG</span><span>Observatorio accesibilidad</span
+                      ><span>Informe técnico</span>
+                    </div>
+                    <div class="case-links">
+                      <a
+                        href="assets/docs/informe-accesibilidad-estrenarte.pdf"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn--subtle btn--sm"
+                        >📄 Ver informe PDF</a
+                      >
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <!-- CASO 5 -->
+              <div class="carousel__slide">
+                <article class="case-card">
+                  <div class="case-body">
+                    <div class="case-header">
+                      <div class="case-tag">Desarrollo web · E-commerce · RGPD</div>
+                      <div class="case-company">Difusión Comunicación</div>
+                    </div>
+                    <h3 class="case-title">Proyectos en agencia digital</h3>
+                    <p class="case-desc">
+                      Creación y mantenimiento de webs, tiendas online y
+                      mailings para clientes reales: módulos WordPress y
+                      PrestaShop a medida, cumplimiento de ley de cookies y
+                      RGPD, gestión de contenidos y pasarelas de pago.
+                    </p>
+                    <div class="case-stack">
+                      <span>WordPress</span><span>PrestaShop</span
+                      ><span>Magento</span><span>PHP</span><span>RGPD</span
+                      ><span>Email marketing</span>
+                    </div>
+                    <div class="agency-logos">
+                      <a
+                        href="https://www.difusioncomunicacion.es"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Difusión Comunicación"
+                      >
+                        <img
+                          src="assets/logos/difusion.png"
+                          alt="Difusión Comunicación"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>difusioncomunicacion.es</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.difusionlabs.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Difusión Labs"
+                      >
+                        <img
+                          src="assets/logos/difusionlabs.png"
+                          alt="Difusión Labs"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>difusionlabs.com</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.up2access.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Up2Access"
+                      >
+                        <img
+                          src="assets/logos/up2access.png"
+                          alt="Up2Access"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>up2access.com</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://oldfarmhouses.es"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Old Farm Houses"
+                      >
+                        <img
+                          src="assets/logos/oldfarmhouses.png"
+                          alt="Old Farm Houses"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>oldfarmhouses.es</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.unjugueteunailusion.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Un Juguete Una Ilusión"
+                      >
+                        <img
+                          src="assets/logos/unjugueteunailusion.png"
+                          alt="Un Juguete Una Ilusión"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>unjugueteunailusion.com</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.laoficinamoderna.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="La Oficina Moderna"
+                      >
+                        <img
+                          src="assets/logos/laoficinamoderna.png"
+                          alt="La Oficina Moderna"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>laoficinamoderna.com</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.xarxaalcover.cat"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Xarxa Alcover"
+                      >
+                        <img
+                          src="assets/logos/xarxaalcover.png"
+                          alt="Xarxa Alcover"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>xarxaalcover.cat</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.mielmoncabrer.com"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Miel Moncabrer"
+                      >
+                        <img
+                          src="assets/logos/mielmoncabrer.png"
+                          alt="Miel Moncabrer"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>mielmoncabrer.com</span>'"
+                        />
+                      </a>
+                      <a
+                        href="https://www.estrenarte.es"
+                        target="_blank"
+                        rel="noopener"
+                        class="agency-logo-link"
+                        title="Estrenarte"
+                      >
+                        <img
+                          src="assets/logos/estrenarte.png"
+                          alt="Estrenarte"
+                          onerror="this.outerHTML = '<span class=\'agency-logo-text\'>estrenarte.es</span>'"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
 
-          <!-- CASO 2: APIs logísticas -->
-          <div class="case-card">
-            <div class="case-header">
-              <div class="case-tag">Integración · APIs</div>
-              <div class="case-company">Z-Bombilla</div>
+          <div class="boxed">
+            <div class="carousel__controls">
+              <button class="carousel__arrow" data-prev aria-label="Caso anterior">
+                ←
+              </button>
+              <div class="carousel__dots" data-dots></div>
+              <button class="carousel__arrow" data-next aria-label="Caso siguiente">
+                →
+              </button>
             </div>
-            <h4 class="case-title">Integración de APIs logísticas</h4>
-            <p class="case-desc">
-              Desarrollo de conectores con APIs de transportistas y servicios
-              logísticos para automatizar la gestión de envíos, seguimiento y
-              conciliación de datos entre plataformas. Reducción del proceso
-              manual del equipo de operaciones.
-            </p>
-            <div class="case-stack">
-              <span>PHP</span><span>REST APIs</span><span>JSON</span
-              ><span>MySQL</span>
-            </div>
-          </div>
-
-          <!-- CASO 3: Auditoría de seguridad -->
-          <div class="case-card">
-            <div class="case-header">
-              <div class="case-tag">Seguridad · Cumplimiento</div>
-              <div class="case-company">Z-Bombilla</div>
-            </div>
-            <h4 class="case-title">Auditoría de seguridad Amazon</h4>
-            <p class="case-desc">
-              Proceso completo de auditoría de seguridad para cumplimiento de
-              requisitos de Amazon: pentesting, análisis de vulnerabilidades,
-              documentación técnica, controles de acceso y gestión de permisos.
-              Definición de políticas internas de seguridad y seguimiento de
-              hallazgos.
-            </p>
-            <div class="case-stack">
-              <span>Pentesting</span><span>Documentación técnica</span
-              ><span>Control de accesos</span>
-            </div>
-            <div class="case-links">
-              <a
-                href="mailto:placeholder@wobocobo.com"
-                class="case-link case-link--contact"
-                >Contactar para más detalle →</a
-              >
-            </div>
-          </div>
-
-          <!-- CASO 4: Informe accesibilidad -->
-          <div class="case-card">
-            <div class="case-header">
-              <div class="case-tag">Accesibilidad · Normativa</div>
-              <div class="case-company">Difusión · Estrenarte</div>
-            </div>
-            <h4 class="case-title">Auditoría de accesibilidad web</h4>
-            <p class="case-desc">
-              Análisis de conformidad de accesibilidad web usando herramientas
-              del Observatorio de Accesibilidad. Generación de informe técnico
-              con nivel de cumplimiento, issues detectados y recomendaciones de
-              corrección.
-            </p>
-            <div class="case-stack">
-              <span>WCAG</span><span>Observatorio accesibilidad</span
-              ><span>Informe técnico</span>
-            </div>
-            <a
-              href="assets/docs/informe-accesibilidad-estrenarte.pdf"
-              target="_blank"
-              class="btn-pdf"
-            >
-              📄 Ver informe PDF
-            </a>
-          </div>
-
-          <!-- CASO 5: Agencia -->
-          <div class="case-card">
-            <div class="case-header">
-              <div class="case-tag">Desarrollo web · E-commerce · RGPD</div>
-              <div class="case-company">Difusión Comunicación</div>
-            </div>
-            <h4 class="case-title">Proyectos en agencia digital</h4>
-            <p class="case-desc">
-              Creación y mantenimiento de webs, tiendas online y mailings para
-              clientes de agencia. Instalación y desarrollo de módulos WordPress
-              y PrestaShop, cumplimiento de ley de cookies y RGPD, gestión de
-              contenidos y habilitación de pasarelas de pago. El contenido de
-              algunas webs ha sido actualizado posteriormente por los clientes.
-            </p>
-            <div class="case-stack">
-              <span>WordPress</span><span>PrestaShop</span><span>Magento</span>
-              <span>PHP</span><span>RGPD</span><span>Email marketing</span>
-            </div>
-            <div class="agency-logos">
-              <a
-                href="https://www.difusioncomunicacion.es"
-                target="_blank"
-                class="agency-logo-link"
-                title="Difusión Comunicación"
-              >
-                <img
-                  src="assets/logos/difusion.png"
-                  alt="Difusión Comunicación"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>difusioncomunicacion.es</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.difusionlabs.com"
-                target="_blank"
-                class="agency-logo-link"
-                title="Difusión Labs"
-              >
-                <img
-                  src="assets/logos/difusionlabs.png"
-                  alt="Difusión Labs"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>difusionlabs.com</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.up2access.com"
-                target="_blank"
-                class="agency-logo-link"
-                title="Up2Access"
-              >
-                <img
-                  src="assets/logos/up2access.png"
-                  alt="Up2Access"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>up2access.com</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://oldfarmhouses.es"
-                target="_blank"
-                class="agency-logo-link"
-                title="Old Farm Houses"
-              >
-                <img
-                  src="assets/logos/oldfarmhouses.png"
-                  alt="Old Farm Houses"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>oldfarmhouses.es</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.unjugueteunailusion.com"
-                target="_blank"
-                class="agency-logo-link"
-                title="Un Juguete Una Ilusión"
-              >
-                <img
-                  src="assets/logos/unjugueteunailusion.png"
-                  alt="Un Juguete Una Ilusión"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>unjugueteunailusion.com</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.laoficinamoderna.com"
-                target="_blank"
-                class="agency-logo-link"
-                title="La Oficina Moderna"
-              >
-                <img
-                  src="assets/logos/laoficinamoderna.png"
-                  alt="La Oficina Moderna"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>laoficinamoderna.com</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.xarxaalcover.cat"
-                target="_blank"
-                class="agency-logo-link"
-                title="Xarxa Alcover"
-              >
-                <img
-                  src="assets/logos/xarxaalcover.png"
-                  alt="Xarxa Alcover"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>xarxaalcover.cat</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.mielmoncabrer.com"
-                target="_blank"
-                class="agency-logo-link"
-                title="Miel Moncabrer"
-              >
-                <img
-                  src="assets/logos/mielmoncabrer.png"
-                  alt="Miel Moncabrer"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>mielmoncabrer.com</span>'
-                  "
-                />
-              </a>
-              <a
-                href="https://www.estrenarte.es"
-                target="_blank"
-                class="agency-logo-link"
-                title="Estrenarte"
-              >
-                <img
-                  src="assets/logos/estrenarte.png"
-                  alt="Estrenarte"
-                  onerror="
-                    this.outerHTML =
-                      '<span class=\'agency-logo-text\'>estrenarte.es</span>'
-                  "
-                />
-              </a>
-            </div>
-          </div>
-          </div>
-
-          <div class="cases-controls">
-            <button class="cases-arrow" id="casesPrev" aria-label="Caso anterior">
-              ←
-            </button>
-            <div class="cases-dots" id="casesDots"></div>
-            <button class="cases-arrow" id="casesNext" aria-label="Caso siguiente">
-              →
-            </button>
           </div>
         </div>
       </section>
 
       <!-- VÍDEOS -->
-      <section id="videos" class="section bg-dark-soft">
-        <div class="section-head" data-aos="fade-up">
-          <h3>Vídeos y contenido audiovisual</h3>
-          <p class="section-subtitle">
-            Además del desarrollo, grabación y edición de vídeos promocionales
-            para eventos, empresas y competiciones deportivas.
-          </p>
+      <section id="videos" class="section section--alt">
+        <div class="boxed">
+          <div class="section-head" data-aos="fade-up">
+            <span class="section-label">Vídeos</span>
+            <h2 class="section-title">Fuera del código</h2>
+            <p class="section-subtitle">
+              Además del desarrollo, grabo y edito vídeos promocionales para
+              eventos, empresas y competiciones deportivas.
+            </p>
+          </div>
         </div>
-        <div class="row g-4">
-          <div class="col-md-6" data-aos="fade-up">
-            <div class="ratio ratio-16x9">
-              <iframe
-                src="https://www.youtube.com/embed/I4qaG9yU7j0"
-                allowfullscreen
-              ></iframe>
+
+        <div class="boxed">
+          <div class="row g-4" data-aos="fade-up">
+            <div class="col-md-6">
+              <div class="ratio ratio-16x9 video-shell">
+                <iframe
+                  src="https://www.youtube.com/embed/I4qaG9yU7j0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6" data-aos="fade-up">
-            <div class="ratio ratio-16x9">
-              <iframe
-                src="https://www.youtube.com/embed/wXzioxPtkW8"
-                allowfullscreen
-              ></iframe>
+            <div class="col-md-6">
+              <div class="ratio ratio-16x9 video-shell">
+                <iframe
+                  src="https://www.youtube.com/embed/wXzioxPtkW8"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6" data-aos="fade-up">
-            <div class="ratio ratio-16x9">
-              <iframe
-                src="https://www.youtube.com/embed/-NEuWT3fPSs"
-                allowfullscreen
-              ></iframe>
+            <div class="col-md-6">
+              <div class="ratio ratio-16x9 video-shell">
+                <iframe
+                  src="https://www.youtube.com/embed/-NEuWT3fPSs"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
-          </div>
-          <div class="col-md-6" data-aos="fade-up">
-            <div class="ratio ratio-16x9">
-              <iframe
-                src="https://www.youtube.com/embed/A-bc1A94dRA"
-                allowfullscreen
-              ></iframe>
+            <div class="col-md-6">
+              <div class="ratio ratio-16x9 video-shell">
+                <iframe
+                  src="https://www.youtube.com/embed/A-bc1A94dRA"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -762,54 +845,34 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <div class="container footer-container">
-        <div class="footer-column">
-          <h5>Secciones</h5>
-          <a href="#about">Sobre mí</a>
-          <a href="#stack">Stack</a>
-          <a href="#experience">Experiencia</a>
-          <a href="#cases">Casos de trabajo</a>
-          <a href="#videos">Vídeos</a>
+      <div class="boxed">
+        <div class="footer-container">
+          <div class="footer-column">
+            <h5>Secciones</h5>
+            <a href="#about">Sobre mí</a>
+            <a href="#stack">Stack</a>
+            <a href="#experience">Experiencia</a>
+            <a href="#cases">Casos</a>
+            <a href="#videos">Vídeos</a>
+          </div>
+          <div class="footer-column">
+            <h5>Fuera del código</h5>
+            <a href="spoti.html">Música y playlists</a>
+            <a href="cine.html">Cine y valoraciones</a>
+          </div>
+          <div class="footer-column">
+            <h5>Contacto</h5>
+            <a href="https://linkedin.com/in/alejandro-ortega-hernández"
+              >LinkedIn</a
+            >
+            <a href="https://github.com/wobocobo">GitHub</a>
+          </div>
         </div>
-        <div class="footer-column">
-          <h5>Fuera del código</h5>
-          <a href="spoti.html">Música y playlists</a>
-          <a href="cine.html">Cine y valoraciones</a>
-        </div>
-        <div class="footer-column">
-          <h5>Contacto</h5>
-          <a href="https://linkedin.com/in/alejandro-ortega-hernández"
-            >LinkedIn</a
-          >
-          <a href="https://github.com/wobocobo">GitHub</a>
-        </div>
+        <p class="footer-copy">© 2026 · Wobocobo</p>
       </div>
-      <p class="footer-copy">© 2026 · Wobocobo</p>
     </footer>
 
-    <button id="backToTop">↑</button>
-
-    <script>
-      const btn = document.getElementById("backToTop");
-      window.addEventListener("scroll", () => {
-        btn.style.display = window.scrollY > 300 ? "block" : "none";
-      });
-      btn.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
-      const themeToggle = document.getElementById("themeToggle");
-      const savedTheme = localStorage.getItem("theme") || "dark";
-      if (savedTheme === "light") {
-        document.body.classList.add("light-theme");
-        themeToggle.textContent = "☾";
-      }
-      themeToggle.addEventListener("click", () => {
-        const isLight = document.body.classList.toggle("light-theme");
-        themeToggle.textContent = isLight ? "☾" : "☀";
-        localStorage.setItem("theme", isLight ? "light" : "dark");
-      });
-    </script>
+    <button id="backToTop" aria-label="Volver arriba">↑</button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
