@@ -36,7 +36,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
-- `assets/img/about-photo.jpg` — foto de perfil (**placeholder, falta que el usuario la ponga**)
+- `assets/img/about-photo.jpg` — foto de perfil real (la puso el usuario; origen `C:\Users\alexo\Downloads\imgYo.jpeg`)
 - `assets/logos/` — logos de empresas y clientes
 - `assets/docs/informe-accesibilidad-estrenarte.pdf`
 - `data/ratings,json` — datos FilmAffinity (ver bugs)
@@ -98,7 +98,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 4. Menú hamburguesa `.menu-toggle` + dropdown `.dropdown` (solo móvil)
 5. Timeline — `.timeline-progress` se rellena al scroll (trigger 70% viewport) y `.timeline-marker` se activa
 6. `initCarousel(root)` — carrusel genérico; se aplica a todo `[data-carousel]`
-   - Uso: `#casesCarousel` y `#videosCarousel` (marcado con `data-carousel`, track `[data-track]`, controles `[data-prev]/[data-next]/[data-dots]`)
+   - Uso: `#casesCarousel` (marcado con `data-carousel`, track `[data-track]`, controles `[data-prev]/[data-next]/[data-dots]`). `#videos` es grid fijo, NO carrusel.
 
 ---
 
@@ -115,10 +115,10 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 |---|---|---|
 | Header | — | Sticky, blur, brand con punto de acento, nav, dropdown, toggle tema |
 | Hero | — | Full-bleed, `::before` con `color-mix` + hero-bg.jpg, pill + h1 + CTAs |
-| Sobre mí | `#about` | **2 columnas**: texto + foto. Facts (2x2). El usuario pondrá la foto en `assets/img/about-photo.jpg` |
+| Sobre mí | `#about` | **2 columnas**: texto + foto. Texto + imagen alineados y centrados (sin facts). Variante compacta (`#about` overrides: menos padding/air, foto `max-height:430px`) para verlo todo sin scroll. Foto: `assets/img/about-photo.jpg` |
 | Stack | `#stack` | Chips con punto de categoría + leyenda |
-| Experiencia | `#experience` | **Timeline con línea a la izquierda** y contenido expandido a la derecha (todos los breakpoints) |
-| Casos | `#cases` | Carrusel **full-bleed** (`--cw: min(760px, 94vw)`), cards solo con texto: título pequeño-medio + descripción, stack y links |
+| Experiencia | `#experience` | **Timeline con línea a la izquierda** y contenido expandido a la derecha (todos los breakpoints). Logos destacables (sin desaturar) |
+| Casos | `#cases` | Carrusel **full-bleed** (`--cw: min(760px, 94vw)`), cards uniformes de altura igual (slide flex + `height:100%`): título pequeño-medio, descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links) |
 | Vídeos | `#videos` | Grid Bootstrap 2x2 (`row g-4` + `col-md-6`, `.ratio ratio-16x9`) |
 | Footer | — | 3 columnas + copy, `--bg-deep`, uniforme en las 3 páginas |
 
@@ -130,6 +130,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 - **BEM-ish:** `.stack-chip__name`, `.case-card--featured`, `.carousel__track`, `.section--alt`
 - **Modificadores** con `--`: `.case-card--featured`, `.timeline-item--current`, `.case-link--contact`, `.btn--primary/--ghost/--subtle/--sm`
 - **Componente carrusel reutilizado**: `.carousel__slide`, `.carousel__arrow`, `.carousel__dot`
+- **Preview PDF**: `.case-pdf-preview` (+ `__icon/__body/__open`) — caja compacta tipo documento, se abre en pestaña nueva
 - **Dots de categoría:** `.dot-backend`, `.dot-frontend`, `.dot-cms`, `.dot-db`, `.dot-server`, `.dot-tools`
 - Bootstrap utilities permitidas (`.row`, `.col-md-6`, `.text-center`, `.mt-2`, `.ratio-16x9`)
 
@@ -168,7 +169,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 3. **Layout boxed:** contenido a ancho completo con padding lateral variable (clamp). Bandas `--section--alt` a sangre completa mediante `section` sin wrapper de ancho fijo.
 4. **Timeline a la izquierda:** la línea está siempre a la izquierda y la tarjeta ocupa todo el ancho restante hacia la derecha (expandida) en todos los breakpoints.
 5. **Carrusel genérico:** CSS scroll-snap + `initCarousel()`. Arrastre con ratón/touchpad vía `pointer*` (clase `.dragging` + `.no-snap`), con **inercia y snap animado por rAF/easing**; en touch funciona el scroll nativo. Sin dependencias.
-6. **Cards de casos:** solo texto (sin imagen): título pequeño-medio (Space Grotesk, `clamp(0.95rem,1.6vw,1.15rem)`), descripción, stack chips y links.
+6. **Cards de casos:** solo texto (sin imagen), uniformes: título pequeño-medio (Space Grotesk, `clamp(0.95rem,1.6vw,1.15rem)`), descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links). Sin chips `.case-stack`.
 7. **Tipografía:** Inter + Space Grotesk traídas por Google Fonts.
 8. **Header/footer uniformes** en las 3 páginas (misma estructura `.boxed`, brand-mark, toggle tema, #backToTop).
 9. **Todo el JS en `main.js`** (sin scripts inline en HTML).
@@ -177,10 +178,9 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 
 ## Pendientes y bugs conocidos
 
-1. **`assets/img/about-photo.jpg`** — no existe, placeholder. Falta que el usuario ponga la foto.
-2. **Cards de casos** — son solo texto (sin imagen). Si el usuario quiere imágenes reales uniformes, habrá que reintroducir una media coherente.
-3. **Botón CV** — apunta a `#` con `title="Disponible próximamente"`. Falta el PDF real.
-4. **`data/ratings,json`** — nombre de archivo usa coma en vez de punto (error del filesystem).
-5. **LinkedIn URL** — en footer de las 3 páginas está `alejandro-ortega-hernández` (con tilde); AGENTS.md la tenía sin tilde. Unificar cuando se decida.
-6. **Shipping logo (`assets/logos/shipping.png`)** — ocupa 1.38MB en disco vs 17KB en la versión pequeña; probablemente requiere optimización.
-7. **Vídeos YouTube** — los IDs actuales (`I4qaG9yU7j0`, `wXzioxPtkW8`, `-NEuWT3fPSs`, `A-bc1A94dRA`) están en el carrusel; verificar que sigan siendo los deseados.
+1. **Cards de casos** — son solo texto (sin imagen). Si el usuario quiere imágenes reales uniformes, habrá que reintroducir una media coherente.
+2. **Botón CV** — apunta a `#` con `title="Disponible próximamente"`. Falta el PDF real.
+3. **`data/ratings,json`** — nombre de archivo usa coma en vez de punto (error del filesystem).
+4. **LinkedIn URL** — en footer de las 3 páginas está `alejandro-ortega-hernández` (con tilde); AGENTS.md la tenía sin tilde. Unificar cuando se decida.
+5. **Shipping logo (`assets/logos/shipping.png`)** — ocupa 1.38MB en disco vs 17KB en la versión pequeña; probablemente requiere optimización.
+6. **Vídeos YouTube** — los IDs actuales (`I4qaG9yU7j0`, `wXzioxPtkW8`, `-NEuWT3fPSs`, `A-bc1A94dRA`) están en el grid 2x2; verificar que sigan siendo los deseados.
