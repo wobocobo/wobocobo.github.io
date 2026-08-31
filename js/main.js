@@ -153,8 +153,6 @@ function initCarousel(root) {
     { passive: true }
   );
 
-  // Arrastre con ratón/touchpad: inercia + snap animado (rAF).
-  // En touch el scroll nativo ya funciona.
   track
     .querySelectorAll('img')
     .forEach((img) => img.setAttribute('draggable', 'false'));
@@ -177,7 +175,6 @@ function initCarousel(root) {
 
   const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
-  // Anima suavemente hasta quedar centrado en el slide `index`.
   const snapTo = (index, ms) => {
     const target = Math.max(0, Math.min(slides.length - 1, index)) * step();
     const from = track.scrollLeft;
@@ -212,7 +209,7 @@ function initCarousel(root) {
     if (!isDown) return;
     const now = performance.now();
     const dt = Math.max(now - lastT, 1);
-    vel = -(e.clientX - lastX) / dt; // px por ms
+    vel = -(e.clientX - lastX) / dt;
     lastX = e.clientX;
     lastT = now;
     if (Math.abs(e.clientX - startX) > 5) dragged = true;
@@ -228,11 +225,9 @@ function initCarousel(root) {
       track.classList.remove('no-snap');
       return;
     }
-    // Si el dedo llevaba tiempo quieto, sin inercia relevante
     if (performance.now() - lastT > 60) vel = 0;
 
     if (Math.abs(vel) > 0.6) {
-      // Inercia: seguir con fricción y luego centrar
       let v = vel;
       const frame = () => {
         v *= 0.92;
