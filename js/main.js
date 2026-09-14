@@ -28,6 +28,29 @@ AOS.init({
 })();
 
 /* ============================================================
+   Reloj en vivo (hora de España, Europe/Madrid)
+   ============================================================ */
+(function clock() {
+  const el = document.getElementById('headerTime');
+  if (!el) return;
+
+  const fmt = new Intl.DateTimeFormat('es-ES', {
+    timeZone: 'Europe/Madrid',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+
+  const tick = () => {
+    el.textContent = fmt.format(new Date());
+  };
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ============================================================
    Back to top
    ============================================================ */
 (function backToTop() {
