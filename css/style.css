@@ -685,22 +685,42 @@ img {
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+  padding-right: 160px;
+}
+
+/* Logo: arriba a la derecha de la card, grande, con presencia y clicable */
+.timeline-logo-link {
+  position: absolute;
+  top: 1.35rem;
+  right: 1.35rem;
+  z-index: 2;
+  display: block;
+  width: 124px;
+  height: 104px;
 }
 .timeline-logo-box {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 78px;
-  height: 62px;
-  flex-shrink: 0;
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border-mid);
+  border-radius: 18px;
   background: var(--surface-2);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--bg) 60%, transparent);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.timeline-content:hover .timeline-logo-box {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 55%, transparent);
 }
 .timeline-logo-box img {
-  max-width: 60px;
-  max-height: 42px;
+  max-width: 88px;
+  max-height: 66px;
   object-fit: contain;
+  filter: drop-shadow(0 3px 8px color-mix(in srgb, var(--bg) 55%, transparent));
 }
 .timeline-head-text h4 {
   font-size: 1.12rem;
@@ -761,6 +781,97 @@ img {
 
 .timeline-content .btn--sm {
   margin-top: 1.1rem;
+}
+
+/* ---- Efectos de logo por empresa ---- */
+
+/* Z-Bombilla: glow cian + pulso radar (empresa activa) */
+.timeline-item--z .timeline-logo-box {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border-mid));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
+    0 0 24px color-mix(in srgb, var(--accent) 30%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.timeline-item--z .timeline-logo-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    130% 130% at 50% 100%,
+    color-mix(in srgb, var(--accent) 18%, transparent),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+.timeline-item--z .timeline-logo-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  animation: logo-radar 3.2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes logo-radar {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+/* Difusión Comunicación: arco de gradiente girando por el borde + barrido */
+@property --logo-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.timeline-item--dc .timeline-logo-box {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
+    conic-gradient(
+      from var(--logo-angle),
+      transparent 0deg,
+      transparent 320deg,
+      var(--grad-2) 345deg,
+      var(--grad-1) 360deg
+    ) border-box;
+  animation: logo-rotate 7s linear infinite;
+}
+@keyframes logo-rotate {
+  to {
+    --logo-angle: 360deg;
+  }
+}
+.timeline-item--dc .timeline-logo-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(
+    105deg,
+    transparent 44%,
+    color-mix(in srgb, var(--text) 9%, transparent) 50%,
+    transparent 56%
+  );
+  background-size: 240% 100%;
+  animation: logo-shimmer 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes logo-shimmer {
+  0% {
+    background-position: 220% 0;
+  }
+  100% {
+    background-position: -220% 0;
+  }
 }
 
 /* Timeline: línea a la izquierda y contenido expandido a la derecha
@@ -1456,16 +1567,25 @@ img {
   .header-time {
     display: none;
   }
+  .timeline-head {
+    padding-right: 108px;
+  }
+  .timeline-logo-link {
+    top: 1rem;
+    right: 1rem;
+    width: 84px;
+    height: 72px;
+  }
   .timeline-logo-box {
-    width: 60px;
-    height: 48px;
+    border-radius: 14px;
   }
   .timeline-logo-box img {
-    max-width: 46px;
-    max-height: 32px;
+    max-width: 60px;
+    max-height: 46px;
   }
-  .timeline-head {
-    gap: 0.7rem;
+  .timeline-item--dc .timeline-logo-box::after,
+  .timeline-item--z .timeline-logo-box::after {
+    border-radius: 12px;
   }
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
