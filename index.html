@@ -47,7 +47,15 @@
         </nav>
         <div class="header-end">
           <time class="header-time" id="headerTime">--:--:--</time>
-          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">☀</button>
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a tema claro">
+            <svg class="theme-icon theme-icon--sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="theme-icon theme-icon--moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </header>
@@ -133,8 +141,8 @@
             <span class="section-label">Experiencia</span>
             <h2 class="section-title">Trayectoria</h2>
             <p class="section-subtitle">
-              Agencia digital y empresa tecnológica, siempre con el código en
-              producción.
+              Formación, agencia digital y empresa tecnológica, siempre con
+              el código en producción.
             </p>
           </div>
 
@@ -260,6 +268,76 @@
                   >Visitar sitio ↗</a
                 >
               </div>
+            </div>
+
+            <!-- Alto Rendimiento -->
+            <div class="timeline-item timeline-item--ar">
+              <span class="timeline-marker"></span>
+              <div class="timeline-content" data-aos="fade-right">
+                <div class="timeline-head">
+                  <a
+                    href="https://www.altorendimiento.com"
+                    target="_blank"
+                    rel="noopener"
+                    class="timeline-logo-link"
+                    aria-label="Abrir el sitio web de Alto Rendimiento"
+                  >
+                    <div class="timeline-logo-box">
+                      <img
+                        src="assets/logos/altorendimiento.png"
+                        alt="Alto Rendimiento"
+                        onerror="this.style.display = 'none'"
+                      />
+                    </div>
+                  </a>
+                  <div class="timeline-head-text">
+                    <span class="timeline-date">abr. 2018 — jun. 2018</span>
+                    <h4>Alto Rendimiento</h4>
+                    <span class="role"
+                      >Prácticas formativas · Soporte TI y web</span
+                    >
+                  </div>
+                </div>
+                <ul class="timeline-points">
+                  <li>
+                    Inventario y diagnóstico de equipos informáticos: registro
+                    de fallos, clasificación y preparación para uso en aula.
+                  </li>
+                  <li>
+                    Montaje de aula de formación presencial con cableado de red
+                    para conexión de todos los equipos.
+                  </li>
+                  <li>
+                    Contenido web: creación de posts, gestión de usuarios y
+                    cursos en la plataforma del centro.
+                  </li>
+                  <li>
+                    Respuesta a consultas recibidas a través de la web.
+                  </li>
+                </ul>
+                <a
+                  href="https://www.altorendimiento.com"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn--subtle btn--sm"
+                  >Visitar sitio ↗</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-stats" data-aos="fade-up">
+            <div class="exp-stats__label">Experiencia total acumulada</div>
+            <div class="exp-stats__values">
+              <span class="exp-stat">
+                <b id="expYears">--</b> <span>años</span>
+              </span>
+              <span class="exp-stat">
+                <b id="expMonths">--</b> <span>meses</span>
+              </span>
+              <span class="exp-stat">
+                <b id="expDays">--</b> <span>días</span>
+              </span>
             </div>
           </div>
         </div>
