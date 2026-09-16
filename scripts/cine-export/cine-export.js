@@ -5,6 +5,7 @@
   }
 
   var KEY = '__wobocobo_cine_ratings';
+  var MODE = '__wobocobo_cine_mode';
   var acc;
   try { acc = JSON.parse(sessionStorage.getItem(KEY) || '[]'); } catch (e) { acc = []; }
   if (!Array.isArray(acc)) acc = [];
@@ -53,6 +54,17 @@
   var curM = location.search.match(/[?&]p=(\d+)/);
   if (curM) cur = parseInt(curM[1], 10);
 
+  var mode = sessionStorage.getItem(MODE);
+  if (!mode && cur === 1) {
+    mode = confirm('Solo la primera pagina (~50 votos recientes) o todas las 13?\nAceptar = primera pagina (descarga ahora)\nCancelar = todas las paginas') ? 'first' : 'full';
+    sessionStorage.setItem(MODE, mode);
+  }
+
+  if (mode === 'first') {
+    finalize();
+    return;
+  }
+
   var links = Array.prototype.slice.call(document.querySelectorAll('.pager-bs .pagination a.page-link'));
   var next = null;
   links.some(function (a) {
@@ -71,15 +83,20 @@
     return;
   }
 
-  var blob = new Blob([JSON.stringify(acc, null, 2)], { type: 'application/json' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'wobocobo-cine-ratings.json';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-  sessionStorage.removeItem(KEY);
-  alert('Exportadas ' + acc.length + ' valoraciones. Guarda el JSON en data/ratings.json');
+  finalize();
+
+  function finalize() {
+    var blob = new Blob([JSON.stringify(acc, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'wobocobo-cine-ratings.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    sessionStorage.removeItem(KEY);
+    sessionStorage.removeItem(MODE);
+    alert('Exportadas ' + acc.length + ' valoraciones. Guarda el JSON en data/ratings.json');
+  }
 
   function showOverlay(msg) {
     var el = document.createElement('div');
