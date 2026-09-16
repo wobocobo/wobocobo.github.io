@@ -837,50 +837,6 @@ img {
   margin-top: 1.1rem;
 }
 
-/* ===================== CONTADOR DE EXPERIENCIA ===================== */
-.exp-stats {
-  margin-top: clamp(2rem, 4vw, 3rem);
-  padding-top: clamp(1.5rem, 3vw, 2.2rem);
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
-.exp-stats__label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 0.9rem;
-}
-.exp-stats__values {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: clamp(1.2rem, 3vw, 2.2rem);
-  flex-wrap: wrap;
-}
-.exp-stat {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.4rem;
-}
-.exp-stat b {
-  font-family: var(--font-head);
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  background: linear-gradient(120deg, var(--grad-1), var(--grad-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-.exp-stat span {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
 /* ---- Efectos de logo por empresa ---- */
 
 /* Z-Bombilla: glow cian + pulso radar (empresa activa) */
@@ -1863,9 +1819,6 @@ img {
   }
   .carousel__controls {
     gap: 0.8rem;
-  }
-  .exp-stats__values {
-    gap: 1rem;
   }
 }
 
