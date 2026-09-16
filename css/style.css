@@ -274,6 +274,30 @@ img {
 .theme-toggle:hover {
   transform: rotate(15deg);
 }
+
+/* Iconos SVG del toggle de tema (sol ↔ luna con crossfade) */
+.theme-toggle .theme-icon {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  opacity: 0;
+  transform: scale(0.6) rotate(-90deg);
+  transition:
+    opacity 0.3s,
+    transform 0.35s ease;
+}
+.theme-toggle .theme-icon--sun {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+.light-theme .theme-toggle .theme-icon--sun {
+  opacity: 0;
+  transform: scale(0.6) rotate(-90deg);
+}
+.light-theme .theme-toggle .theme-icon--moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
 .menu-toggle {
   display: none;
 }
@@ -496,7 +520,7 @@ img {
   aspect-ratio: 4 / 5;
   max-height: 520px;
   border-radius: var(--radius-lg);
-  border: 2px dashed var(--border-mid);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 28%, var(--border-mid));
   background:
     linear-gradient(
       150deg,
@@ -505,7 +529,20 @@ img {
     );
   display: grid;
   place-items: center;
-  overflow: hidden;
+  box-shadow:
+    0 30px 60px -18px color-mix(in srgb, var(--bg) 75%, transparent),
+    0 16px 42px -22px color-mix(in srgb, var(--accent) 45%, transparent);
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s;
+}
+.about-media:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border-mid));
+  box-shadow:
+    0 36px 70px -20px color-mix(in srgb, var(--bg) 75%, transparent),
+    0 20px 52px -18px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 .about-media img {
   position: absolute;
@@ -513,6 +550,22 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Sombreado interior inferior para dar profundidad */
+.about-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    205deg,
+    transparent 55%,
+    color-mix(in srgb, var(--bg) 38%, transparent)
+  );
+  pointer-events: none;
+  z-index: 2;
 }
 .about-media__placeholder {
   text-align: center;
@@ -784,6 +837,50 @@ img {
   margin-top: 1.1rem;
 }
 
+/* ===================== CONTADOR DE EXPERIENCIA ===================== */
+.exp-stats {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.5rem, 3vw, 2.2rem);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.exp-stats__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.9rem;
+}
+.exp-stats__values {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: clamp(1.2rem, 3vw, 2.2rem);
+  flex-wrap: wrap;
+}
+.exp-stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.exp-stat b {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--grad-1), var(--grad-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.exp-stat span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
 /* ---- Efectos de logo por empresa ---- */
 
 /* Z-Bombilla: glow cian + pulso radar (empresa activa) */
@@ -873,6 +970,43 @@ img {
   100% {
     background-position: -220% 0;
   }
+}
+
+/* Alto Rendimiento: gradiente tenue animado (más suave que Difusión) */
+@property --logo-angle-ar {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.timeline-item--ar .timeline-logo-box {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
+    conic-gradient(
+      from var(--logo-angle-ar),
+      transparent 0deg,
+      transparent 330deg,
+      color-mix(in srgb, var(--grad-1) 50%, transparent) 350deg,
+      color-mix(in srgb, var(--grad-2) 50%, transparent) 360deg
+    ) border-box;
+  animation: logo-rotate-ar 12s linear infinite;
+}
+@keyframes logo-rotate-ar {
+  to {
+    --logo-angle-ar: 360deg;
+  }
+}
+.timeline-item--ar .timeline-logo-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    100% 100% at 50% 0%,
+    color-mix(in srgb, var(--accent) 8%, transparent),
+    transparent 55%
+  );
+  pointer-events: none;
 }
 
 /* Timeline: línea a la izquierda y contenido expandido a la derecha
@@ -1512,52 +1646,97 @@ img {
     display: grid;
   }
   .nav {
-    grid-column: 1 / -1;
-    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1001;
     display: none;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.1rem;
-    margin-top: 0.35rem;
-    padding: 0.4rem 0.5rem;
+    gap: 0.35rem;
+    padding: 0.85rem 0.9rem 1rem;
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-top: 1px solid var(--border-mid);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
     background: var(--surface);
     box-shadow: 0 16px 34px color-mix(in srgb, var(--bg) 70%, transparent);
   }
   .nav.open {
     display: flex;
   }
+
+  /* Items del menú: amplios, touch-friendly y con estado hover */
   .nav > a,
   .dropdown {
-    padding: 0.45rem 0.6rem;
-    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    transition: background 0.2s, color 0.2s;
   }
   .nav > a:hover,
-  .dropdown:hover > .dropdown-toggle {
+  .dropdown.open > .dropdown-toggle {
+    background: var(--surface-2);
     color: var(--text);
   }
   .nav > a,
   .dropdown-toggle {
-    font-size: 0.95rem;
-    padding: 0;
+    font-size: 1rem;
+    font-weight: 500;
   }
   .dropdown {
     width: 100%;
+    margin-top: 0.3rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--border);
+    border-radius: 10px;
   }
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    width: 100%;
+  }
+  .dropdown-toggle::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.25s;
+    margin-top: -3px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .dropdown.open .dropdown-toggle::after {
+    transform: rotate(225deg);
+    margin-top: 2px;
+  }
+
+  /* Submenú Curiosidades: indentado con línea de acento */
   .dropdown-menu {
     display: none;
     position: static;
-    border: none;
-    padding-left: 0.8rem;
-    margin-top: 0.25rem;
+    margin-top: 0.4rem;
+    margin-left: 0.9rem;
+    padding: 0.2rem 0 0.2rem 0.9rem;
+    border-left: 2px solid color-mix(in srgb, var(--accent) 40%, var(--border));
     background: transparent;
     box-shadow: none;
     min-width: 0;
   }
   .dropdown-menu a {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
+    display: block;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.92rem;
+    border-radius: 8px;
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+  .dropdown-menu a:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
   }
   .dropdown:hover .dropdown-menu {
     display: none;
@@ -1614,7 +1793,8 @@ img {
     max-height: 46px;
   }
   .timeline-item--dc .timeline-logo-box::after,
-  .timeline-item--z .timeline-logo-box::after {
+  .timeline-item--z .timeline-logo-box::after,
+  .timeline-item--ar .timeline-logo-box::after {
     border-radius: 12px;
   }
   .agency-logos {
@@ -1622,6 +1802,9 @@ img {
   }
   .carousel__controls {
     gap: 0.8rem;
+  }
+  .exp-stats__values {
+    gap: 1rem;
   }
 }
 
