@@ -39,8 +39,11 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 - `assets/img/about-photo.jpg` — foto de perfil real (la puso el usuario; origen `C:\Users\alexo\Downloads\imgYo.jpeg`)
 - `assets/logos/` — logos de empresas y clientes
 - `assets/docs/informe-accesibilidad-estrenarte.pdf`
-- `data/ratings,json` — datos FilmAffinity (ver bugs)
-- `scripts/scrape.js` + `workflows/update-ratings.yml` — workflow de scraping de valoraciones
+- `data/ratings.json` — votos FilmAffinity (formato: `[{id, title, year, rating, poster, url, ratedAt}]`, ordenados por fecha de voto desc). Lo genera el exportador de cine.
+- `scripts/cine-export/cine-export.js` — código fuente del marcador exportador de votos de FilmAffinity
+- `exportar-cine.html` — página de instrucciones con el bookmarklet arrastrable para generar `data/ratings.json` (se puede borrar tras el uso)
+
+> **Por qué exportador y no scraping:** FilmAffinity está detrás de Cloudflare managed challenge (`captchaType: CLOUDFARE_INVISIBLE`). Las peticiones que no sean de navegador (axios/curl/GitHub Actions) reciben `"Just a moment..."` y nunca el HTML real. La única vía fiable es extraer desde el navegador del usuario (que ya pasó el challenge): abrir el perfil en **vista lista** (`chv=list`, que sí incluye el año en `.mc-year`; la vista grid no lo tiene), pulsar el marcador en cada página (~50 votos/página → 13 páginas para los 622) y guardar el JSON descargado en `data/ratings.json`. Selectores reales: `.fa-content-card` (grupo por fecha de voto) → `.row.mb-4` → `.movie-card[data-movie-id]`, `.mc-title a`, `.mc-year`, `.fa-user-rat-box`, `.poster-col img[data-srcset]`.
 
 ---
 
@@ -180,7 +183,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 
 1. **Cards de casos** — son solo texto (sin imagen). Si el usuario quiere imágenes reales uniformes, habrá que reintroducir una media coherente.
 2. **Botón CV** — apunta a `#` con `title="Disponible próximamente"`. Falta el PDF real.
-3. **`data/ratings,json`** — nombre de archivo usa coma en vez de punto (error del filesystem).
-4. **LinkedIn URL** — en footer de las 3 páginas está `alejandro-ortega-hernández` (con tilde); AGENTS.md la tenía sin tilde. Unificar cuando se decida.
-5. **Shipping logo (`assets/logos/shipping.png`)** — ocupa 1.38MB en disco vs 17KB en la versión pequeña; probablemente requiere optimización.
-6. **Vídeos YouTube** — los IDs actuales (`I4qaG9yU7j0`, `wXzioxPtkW8`, `-NEuWT3fPSs`, `A-bc1A94dRA`) están en el grid 2x2; verificar que sigan siendo los deseados.
+3. **LinkedIn URL** — en footer de las 3 páginas está `alejandro-ortega-hernández` (con tilde); AGENTS.md la tenía sin tilde. Unificar cuando se decida.
+4. **Shipping logo (`assets/logos/shipping.png`)** — ocupa 1.38MB en disco vs 17KB en la versión pequeña; probablemente requiere optimización.
+5. **Vídeos YouTube** — los IDs actuales (`I4qaG9yU7j0`, `wXzioxPtkW8`, `-NEuWT3fPSs`, `A-bc1A94dRA`) están en el grid 2x2; verificar que sigan siendo los deseados.
+6. **`data/ratings.json`** — contiene solo la página 1 (50 votos del export). Ejecutar el marcador de `exportar-cine.html` en las 9 páginas para completar los 622. Los pósters apuntan a `pics.filmaffinity.com` (hotlink): si FA los bloquea, descargarlos a `assets/img/poster/` en el propio export.

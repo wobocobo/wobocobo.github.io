@@ -1559,6 +1559,8 @@ img {
   margin-top: 2rem;
 }
 .movie-card {
+  display: block;
+  text-decoration: none;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1584,6 +1586,7 @@ img {
   font-size: 0.92rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
+  color: var(--text);
 }
 .movie-info span {
   font-size: 0.84rem;
