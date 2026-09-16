@@ -1,0 +1,68 @@
+[
+  {
+    "id": "1005",
+    "name": "Recomendaciones",
+    "count": 27,
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1005",
+    "posters": [
+      "https://pics.filmaffinity.com/druk-153518184-mmed.jpg",
+      "https://pics.filmaffinity.com/intouchables-218166359-mmed.jpg",
+      "https://pics.filmaffinity.com/hereditary-551635712-mmed.jpg"
+    ]
+  },
+  {
+    "id": "1007",
+    "name": "Top películas vistas",
+    "count": 531,
+    "description": "Películas que he visto.",
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1007",
+    "posters": [
+      "https://pics.filmaffinity.com/king_kong-631986787-mmed.jpg",
+      "https://pics.filmaffinity.com/the_grudge-506441083-mmed.jpg",
+      "https://pics.filmaffinity.com/mad_max_fury_road-429261909-mmed.jpg"
+    ]
+  },
+  {
+    "id": "1004",
+    "name": "Películas de 10",
+    "count": 2,
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1004",
+    "posters": [
+      "https://pics.filmaffinity.com/gisaengchung-432616131-mmed.jpg",
+      "https://pics.filmaffinity.com/joker-790658206-mmed.jpg"
+    ]
+  },
+  {
+    "id": "1008",
+    "name": "Top series vistas",
+    "count": 49,
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1008",
+    "posters": [
+      "https://pics.filmaffinity.com/the_walking_dead-724321601-mmed.jpg",
+      "https://pics.filmaffinity.com/peaky_blinders-713495787-mmed.jpg",
+      "https://pics.filmaffinity.com/mr_robot-978107021-mmed.jpg"
+    ]
+  },
+  {
+    "id": "1006",
+    "name": "Superhéroes",
+    "count": 60,
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1006",
+    "posters": [
+      "https://pics.filmaffinity.com/avengers_infinity_war-181539353-mmed.jpg",
+      "https://pics.filmaffinity.com/the_avengers-439499921-mmed.jpg",
+      "https://pics.filmaffinity.com/avengers_age_of_ultron_the_avengers_2-182285335-mmed.jpg"
+    ]
+  },
+  {
+    "id": "1009",
+    "name": "Películas para ver",
+    "count": 182,
+    "url": "https://www.filmaffinity.com/es/userlist.php?user_id=9048877&list_id=1009",
+    "posters": [
+      "https://pics.filmaffinity.com/the_godfather-488102675-mmed.jpg",
+      "https://pics.filmaffinity.com/schindler_s_list-473662617-mmed.jpg",
+      "https://pics.filmaffinity.com/the_pianist_le_pianiste-978132965-mmed.jpg"
+    ]
+  }
+]
