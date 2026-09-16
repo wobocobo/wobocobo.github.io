@@ -1,5 +1,14 @@
 [
   {
+    "id": "339602",
+    "title": "Yo, robot",
+    "year": "2004",
+    "rating": "7",
+    "poster": "https://pics.filmaffinity.com/i_robot-964272233-large.jpg",
+    "url": "https://www.filmaffinity.com/es/film339602.html",
+    "ratedAt": "16 de septiembre de 2026"
+  },
+  {
     "id": "852705",
     "title": "Obsession",
     "year": "2025",
@@ -19,7 +28,7 @@
   },
   {
     "id": "879405",
-    "title": "La casa de papel (Serie de TV)",
+    "title": "La casa de papel",
     "year": "2017",
     "rating": "7",
     "poster": "https://pics.filmaffinity.com/la_casa_de_papel-844739080-large.jpg",
@@ -100,7 +109,7 @@
   },
   {
     "id": "679610",
-    "title": "Michael Jackson: El veredicto (Miniserie de TV)",
+    "title": "Michael Jackson: El veredicto",
     "year": "2026",
     "rating": "5",
     "poster": "https://pics.filmaffinity.com/michael_jackson_the_verdict-674435071-large.jpg",
@@ -127,7 +136,7 @@
   },
   {
     "id": "103430",
-    "title": "Dark (Serie de TV)",
+    "title": "Dark",
     "year": "2017",
     "rating": "8",
     "poster": "https://pics.filmaffinity.com/dark-111203947-large.jpg",
@@ -145,7 +154,7 @@
   },
   {
     "id": "228255",
-    "title": "Si los deseos mataran... (Serie de TV)",
+    "title": "Si los deseos mataran...",
     "year": "2026",
     "rating": "8",
     "poster": "https://pics.filmaffinity.com/girigo-100274663-large.jpg",
@@ -433,20 +442,11 @@
   },
   {
     "id": "816070",
-    "title": "Stranger Things 5 (Serie de TV)",
+    "title": "Stranger Things 5",
     "year": "2025",
     "rating": "6",
     "poster": "https://pics.filmaffinity.com/stranger_things_5-290686966-large.jpg",
     "url": "https://www.filmaffinity.com/es/film816070.html",
-    "ratedAt": "1 de enero de 2026"
-  },
-  {
-    "id": "206372",
-    "title": "Stranger Things 4 (Serie de TV)",
-    "year": "2022",
-    "rating": "8",
-    "poster": "https://pics.filmaffinity.com/stranger_things_4-530118338-large.jpg",
-    "url": "https://www.filmaffinity.com/es/film206372.html",
     "ratedAt": "1 de enero de 2026"
   }
 ]

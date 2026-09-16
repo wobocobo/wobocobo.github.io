@@ -32,7 +32,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 
 ### JS
 - `js/main.js` — TODO el JS del sitio (ver orden de carga y funciones abajo)
-- `js/cine.js` — renderiza cards de películas (solo cine.html)
+- `js/cine.js` — renderiza cards de películas y listas (solo cine.html)
 
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
@@ -40,6 +40,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 - `assets/logos/` — logos de empresas y clientes
 - `assets/docs/informe-accesibilidad-estrenarte.pdf`
 - `data/ratings.json` — votos FilmAffinity (formato: `[{id, title, year, rating, poster, url, ratedAt}]`, ordenados por fecha de voto desc). Lo genera el exportador de cine.
+- `data/lists.json` — listas públicas de FilmAffinity (formato: `[{id, name, count, description?, url, posters[]}]`). Estático, se extrae a mano de `userlists.php` (no hay paginación, 6 listas).
 - `scripts/cine-export/cine-export.js` — código fuente del marcador exportador de votos de FilmAffinity
 - `exportar-cine.html` — página de instrucciones con el bookmarklet arrastrable para generar `data/ratings.json` (se puede borrar tras el uso)
 
