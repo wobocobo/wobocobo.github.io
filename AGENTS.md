@@ -1,7 +1,7 @@
 # Wobocobo — Contexto del proyecto
 
 ## Qué es
-Portfolio web de backend developer (Alejandro Ortega Hernández), alojado en GitHub Pages como `wobocobo.github.io`. Mezcla experiencia profesional con intereses personales (cine, música).
+Portfolio web de backend developer (Alejandro Ortega Hernández), alojado en GitHub Pages con dominio propio **`wobocobo.com`** (el repo se sirve como `wobocobo.github.io` si se accede por la URL original). Mezcla experiencia profesional con intereses personales (cine, música).
 
 ## Restricción principal
 **GitHub Pages = sin herramientas de build, sin Node.js en runtime.** Solo HTML/JS/CSS puro. Librerías vía CDN están bien.
@@ -33,6 +33,9 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 ### JS
 - `js/main.js` — TODO el JS del sitio (ver orden de carga y funciones abajo)
 - `js/cine.js` — renderiza cards de películas y listas (solo cine.html)
+
+### Raíz
+- `CNAME` — contiene `wobocobo.com` (dominio personalizado de GitHub Pages). Cambiar es editarlo + pushear. Todo el sitio usa **rutas relativas**, así que no hay que tocar HTML al cambiar de dominio.
 
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
