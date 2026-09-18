@@ -36,7 +36,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 
 ### Raíz
 - `CNAME` — contiene `wobocobo.com` (dominio personalizado de GitHub Pages). Cambiar es editarlo + pushear. Todo el sitio usa **rutas relativas**, así que no hay que tocar HTML al cambiar de dominio.
-- `favicon.ico` — favicon en raíz. Enlazado en `<head>` de las 3 páginas como `type="image/x-icon" href="favicon.ico"`.
+- `favicon.ico` (blanco) y `faviconBlack.ico` (negro) — favicons en raíz. Enlazados en `<head>` de las 3 páginas con `media="(prefers-color-scheme: ...)"`: `favicon.ico` para dark (blanco sobre fondo oscuro), `faviconBlack.ico` para light (negro sobre fondo claro).
 
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
