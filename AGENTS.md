@@ -36,7 +36,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 
 ### Raíz
 - `CNAME` — contiene `wobocobo.com` (dominio personalizado de GitHub Pages). Cambiar es editarlo + pushear. Todo el sitio usa **rutas relativas**, así que no hay que tocar HTML al cambiar de dominio.
-- `favicon.ico` (blanco) y `faviconBlack.ico` (negro) — favicons en raíz. En `<head>` de las 3 páginas: un `<link rel="icon">` plano a `faviconBlack.ico` (para que Google/crawlers siempre encuentren favicon) + dos con `media="(prefers-color-scheme: ...)"`: `favicon.ico` para dark (blanco sobre fondo oscuro), `faviconBlack.ico` para light (negro sobre fondo claro). Ojo: pesan ~340KB/726KB, por encima del límite de Google (~100KB) — regenerarlos menores si no aparecen en Google.
+- `favicon.ico` (blanco) y `faviconBlack.ico` (negro) — favicons en raíz. En `<head>` de las 3 páginas: un `<link rel="icon">` plano a `faviconBlack.ico` (para que Google/crawlers siempre encuentren favicon) + dos con `media="(prefers-color-scheme: ...)"`: `favicon.ico` para dark (blanco sobre fondo oscuro), `faviconBlack.ico` para light (negro sobre fondo claro). Pesan ~19KB/66KB, OK. Contienen solo un frame de 256px: si Google no muestra el favicon, regenerarlos con un frame de 48px (múltiplo requerido).
 
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
