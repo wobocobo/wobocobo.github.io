@@ -41,7 +41,7 @@ Los 3 están en todas las páginas. El carrusel es **CSS scroll-snap puro** (sin
 ### Assets
 - `assets/img/hero-bg.jpg` — fondo del hero
 - `assets/img/about-photo.jpg` — foto de perfil real (la puso el usuario; origen `C:\Users\alexo\Downloads\imgYo.jpeg`)
-- `assets/logos/` — logos de empresas y clientes. Incluye `filmmaffinity.png` (wordmark oficial, 300x75, **letras blancas sobre transparencia** → siempre sobre el chip de fondo azul `.cine-intro__logo`, nunca sobre fondo claro). Bajado de `https://www.filmaffinity.com/images/logo4.png`; ojo, `Invoke-WebRequest` se come el challenge de Cloudflare, hay que usar `curl.exe` con UA de navegador (o `images.weserv.nl`).
+- `assets/logos/` — logos de empresas y clientes. Incluye `filmmaffinity.png` (wordmark oficial, 300x75, **letras blancas sobre transparencia** → siempre sobre el chip de fondo azul `.page-intro__logo`, nunca sobre fondo claro). Bajado de `https://www.filmaffinity.com/images/logo4.png`; ojo, `Invoke-WebRequest` se come el challenge de Cloudflare, hay que usar `curl.exe` con UA de navegador (o `images.weserv.nl`). Y `spotify.svg` (glifo oficial 2024 "logo without text", saneado de `https://upload.wikimedia.org/wikipedia/commons/a/a1/2024_Spotify_logo_without_text_(black).svg` quitando los metadatos de Inkscape y poniéndolo en blanco con `fill-rule="evenodd"` para que los 3 arcos se perforen; ~2KB, escala por `viewBox`). Ojo: **no** usar `Spotify_logo_Square.svg` de Wikimedia (es un collage de miles de glifos, varios MB).
 - `assets/docs/informe-accesibilidad-estrenarte.pdf`
 - `data/ratings.json` — votos FilmAffinity (formato: `[{id, title, year, rating, poster, url, ratedAt}]`, ordenados por fecha de voto desc). Lo genera el exportador de cine.
 - `data/lists.json` — listas públicas de FilmAffinity (formato: `[{id, name, count, description?, url, posters[]}]`). Estático, se extrae a mano de `userlists.php` (no hay paginación, 6 listas).
@@ -138,7 +138,8 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 
 ### Clases CSS
 - **BEM-ish:** `.stack-chip__name`, `.case-card--featured`, `.carousel__track`, `.section--alt`
-- **Modificadores** con `--`: `.case-card--featured`, `.timeline-item--current`, `.case-link--contact`, `.btn--primary/--ghost/--subtle/--sm/--shine` (`.btn--shine` = barrido especular `::before` + brillo inferior `::after` + flecha que se desliza; solo hover, se usa en el CTA de `cine.html`)
+- **Modificadores** con `--`: `.case-card--featured`, `.timeline-item--current`, `.case-link--contact`, `.page-intro--fa/--sp`, `.btn--primary/--ghost/--subtle/--sm/--shine` (`.btn--shine` = barrido especular `::before` + brillo inferior `::after` + flecha que se desliza; solo hover, se usa en el CTA de las intros de `cine.html` y `spoti.html`)
+- **Intro compartida** (cine + spoti): `.page-intro`, `__brand`, `__logo`, `__ring`/`__ring-value` (solo FilmAffinity), `__eq` (solo Spotify: 4 `<span>` vacios animados por CSS), `__lead`, `__actions`
 - **Componente carrusel reutilizado**: `.carousel__slide`, `.carousel__arrow`, `.carousel__dot`
 - **Preview PDF**: `.case-pdf-preview` (+ `__icon/__body/__open`) — caja compacta tipo documento, se abre en pestaña nueva
 - **Dots de categoría:** `.dot-backend`, `.dot-frontend`, `.dot-cms`, `.dot-db`, `.dot-server`, `.dot-tools`
@@ -155,7 +156,8 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 - Secciones: `#about`, `#stack`, `#experience`, `#cases`, `#videos`
 - Funcionales: `#themeToggle`, `#backToTop`, `#casesCarousel`, `#videosCarousel`, `#movies`
 - Botón CV: `#about .about-actions`
-- `cine.html` (los carga `js/cine.js`): bloque intro `#profile` (`.cine-intro`, va PRIMERO en la página) con `[data-cine-stat]` (`avg`/`rated`/`lists`, inyectados desde los JSON por `renderIntro()`), `[data-cine-ring]` + `.circle-fill` (anillo de progreso; `stroke-dashoffset = 100 - notaMedia%`, circunferencia del path r=15.9155 ≈ 100) y un único `.btn--primary` al grid de FilmAffinity. Luego `#movies` (grid, `slice(0,12)`) y `#lists` (grid **fijo de 3 columnas** — las 6 listas enteras, 3+3, no `auto-fill`; colapsa a 2 col ≤900px y 1 col ≤560px).
+- `cine.html` (los carga `js/cine.js`): bloque intro `#profile` (`.page-intro .page-intro--fa`, va PRIMERO en la página) con `[data-cine-stat]` (`avg`/`rated`/`lists`, inyectados desde los JSON por `renderIntro()`), `[data-cine-ring]` + `.circle-fill` (anillo de progreso; `stroke-dashoffset = 100 - notaMedia%`, circunferencia del path r=15.9155 ≈ 100) y un único `.btn--primary` al grid de FilmAffinity. Luego `#movies` (grid, `slice(0,12)`) y `#lists` (grid **fijo de 3 columnas** — las 6 listas enteras, 3+3, no `auto-fill`; colapsa a 2 col ≤900px y 1 col ≤560px).
+- `spoti.html` (NO carga JS propio): bloque intro `#profile` (`.page-intro .page-intro--sp`, PRIMERO también) con el glifo `assets/logos/spotify.svg` sobre chip verde + un ecualizador CSS de 4 barras (`.page-intro__eq`, `@keyframes eq-bounce`, alturas y `animation-delay` por `:nth-child`, gradiente `--grad-1/--grad-2`) y un único `.btn-spotify.btn--shine` al perfil de Spotify. Debajo, `<h3>Playlists</h3>` + `<div class="row g-4">` con los 6 `<iframe src="https://open.spotify.com/embed/playlist/...">`. **Ya no existe** el `<section class="spotify-cta">` de abajo ni su regla `.spotify-cta p` (el CTA vive solo en la intro).
 
 ---
 
@@ -184,7 +186,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 7. **Tipografía:** Inter + Space Grotesk traídas por Google Fonts.
 8. **Header/footer uniformes** en las 3 páginas (misma estructura `.boxed`, brand-mark, toggle tema, #backToTop).
 9. **Todo el JS en `main.js`** (sin scripts inline en HTML). Excepción: `js/cine.js`, que es数据和 render propio de `cine.html`.
-10. **Intro de `cine.html` (`.cine-intro`):** primer bloque de la página, card centrada con wordmark de FilmAffinity sobre chip azul (el logo es blanco) + anillo de progreso reutilizando la geometría exacta del elemento de FilmAffinity (`viewBox="0 0 36 36"`, `r=15.9155` → circunferencia ≈ 100) y la nota media dentro. Los números (`data-cine-stat`) se calculan en `renderIntro()` desde los JSON, así que solo hay un botón (el grid de FilmAffinity) y ningún número hardcodeado en el HTML.
+10. **Intro compartida de `cine.html` y `spoti.html` (`.page-intro`):** primer bloque de ambas páginas, card centrada con la misma marca + visual animado a la derecha del logo, `<h2>` + lead de 2 frases con `<br>` (que se oculta ≤900px) y un único botón `.btn--shine`. Se parametriza con modificadores: `--fa` (chip azul + wordmark FilmAffinity + anillo de progreso con la geometría exacta de su elemento, `viewBox="0 0 36 36"`, `r=15.9155` → circunferencia ≈ 100, y la nota media dentro; los números se calculan en `renderIntro()` desde los JSON, así que nada queda hardcodeado) y `--sp` (chip verde + glifo `spotify.svg` + ecualizador de 4 barras, que sustituye al anillo porque no hay nota media). La geometría de cine (`.page-intro__logo` 134.4x45.2, brand 66px de alto) debe conservarse al tocar estas reglas.
 
 ---
 
