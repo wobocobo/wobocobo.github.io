@@ -78,7 +78,46 @@
 
   <main class="container main-container">
 
-    <section>
+    <section id="profile" class="cine-intro" data-aos="fade-up">
+
+      <div class="cine-intro__brand">
+        <span class="cine-intro__logo">
+          <img src="assets/logos/filmmaffinity.png" alt="FilmAffinity" width="104" height="26">
+        </span>
+
+        <span class="cine-intro__ring" data-cine-ring role="img" aria-label="Nota media de mis valoraciones">
+          <svg viewBox="0 0 36 36" class="circular-chart" aria-hidden="true">
+            <path
+              class="circle-bg"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+            <path
+              class="circle-fill"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+          </svg>
+          <span class="cine-intro__ring-value" data-cine-stat="avg">—</span>
+        </span>
+      </div>
+
+      <h2>Soy cinefilo</h2>
+      <p class="cine-intro__lead">
+        Este es mi cuaderno de cine, apunto aquí cada película que veo con la nota que le doy, una a una.<br>
+        Además monto mis propias listas de recomendaciones con lo mejor que he visto de cada género.
+      </p>
+
+      <div class="cine-intro__actions">
+        <a
+          href="https://www.filmaffinity.com/es/userratings.php?user_id=9048877&p=1&orderby=rating-date&chv=grid"
+          target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--shine">
+          Ver todas mis valoraciones
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="mt-5">
       <h3>Actividad reciente</h3>
       <p>
         Estas son las últimas películas que he valorado en FilmAffinity.
@@ -93,19 +132,6 @@
       <h3>Listas</h3>
       <p>Mis listas públicas en FilmAffinity.</p>
       <div id="lists" class="lists-grid"></div>
-    </section>
-
-    <section class="mt-5">
-      <h3>Mi perfil completo</h3>
-      <div class="card themed p-3">
-        <p class="mb-2">
-          Puedes ver todas mis valoraciones y listas públicas en FilmAffinity.
-        </p>
-        <a href="https://www.filmaffinity.com/es/userratings.php?user_id=9048877&p=1&orderby=rating-date&chv=grid"
-          target="_blank">
-          Ver todas mis valoraciones →
-        </a>
-      </div>
     </section>
 
     </main>
@@ -126,6 +152,7 @@
       </div>
       <div class="footer-column">
         <h5>Contacto</h5>
+        <a href="mailto:hola@wobocobo.com">hola@wobocobo.com</a>
         <a href="https://linkedin.com/in/alejandro-ortega-hernández">LinkedIn</a>
         <a href="https://github.com/wobocobo">GitHub</a>
       </div>

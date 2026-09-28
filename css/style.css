@@ -439,6 +439,59 @@ img {
   transform: translateY(-4px);
   box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 50%, transparent);
 }
+
+.btn--shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn--shine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+      transparent 36%,
+      color-mix(in srgb, #fff 55%, transparent) 50%,
+      transparent 64%);
+  background-size: 260% 100%;
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+.btn--shine:hover::before,
+.btn--shine:focus-visible::before {
+  animation: btn-shine-sweep 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes btn-shine-sweep {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+.btn--shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 140% at 50% 120%,
+      color-mix(in srgb, #fff 30%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.btn--shine:hover::after,
+.btn--shine:focus-visible::after {
+  opacity: 1;
+}
+.btn--shine svg {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn--shine:hover svg,
+.btn--shine:focus-visible svg {
+  transform: translateX(5px);
+}
+
 .btn--ghost {
   background:
     radial-gradient(220px 90px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
@@ -1552,9 +1605,19 @@ img {
 
 .lists-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-top: 2rem;
+}
+@media (max-width: 900px) {
+  .lists-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .lists-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .list-card {
   display: block;
@@ -1613,6 +1676,95 @@ img {
   border: 1px solid var(--border);
   color: var(--text-body);
   border-radius: var(--radius-md);
+}
+
+.cine-intro {
+  text-align: center;
+  padding: clamp(1.6rem, 4vw, 2.6rem) clamp(1.1rem, 4vw, 2.4rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(640px 240px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 72%),
+    var(--surface);
+}
+.cine-intro__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  margin-bottom: 1.35rem;
+}
+.cine-intro__logo {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #0e2a55, #17457f);
+  box-shadow: 0 8px 22px color-mix(in srgb, #0a1c3a 45%, transparent);
+}
+.cine-intro__logo img {
+  display: block;
+  width: 104px;
+  height: 26px;
+  object-fit: contain;
+}
+.cine-intro__ring {
+  position: relative;
+  flex: 0 0 auto;
+  width: 66px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+}
+.circular-chart {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.circular-chart .circle-bg {
+  fill: none;
+  stroke: var(--border-mid);
+  stroke-width: 3.4;
+}
+.circular-chart .circle-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.cine-intro__ring-value {
+  position: absolute;
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.cine-intro h2 {
+  font-size: clamp(1.35rem, 3.2vw, 1.75rem);
+  margin-bottom: 0.6rem;
+}
+.cine-intro__lead {
+  color: var(--text-body);
+  font-size: 0.98rem;
+  max-width: 104ch;
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+  .cine-intro__lead br {
+    display: none;
+  }
+}
+.cine-intro__actions {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
 }
 
 .spotify-cta p {
