@@ -322,3 +322,92 @@ function initCarousel(root) {
 }
 
 document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+
+/* ============================================================
+   Formulario de contacto (#contact) → FormSubmit
+   Envío AJAX a formsubmit.co/ajax (reenvío a hola@wobocobo.com).
+   Saneo en cliente + honeypot _honey; antispam de FormSubmit.
+   ============================================================ */
+(function contactForm() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+
+  const status = document.getElementById('contactStatus');
+  const btn = form.querySelector('button[type="submit"]');
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const LINK_RE = /(https?:\/\/|www\.)[^\s]+/gi;
+  const MALICIOUS_RE =
+    /(<script|<\/script|<\?php|<iframe|<svg|<|<\/|javascript:|vbscript:|onerror=|onload=|onclick=|onmouseover=|eval\(|document\.cookie|DROP TABLE|UNION SELECT|ALTER TABLE)/i;
+
+  const clean = (v) =>
+    (v || '').replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, '').trim();
+  const stripTags = (v) => clean(v.replace(/<[^>]*>/g, ''));
+
+  const setStatus = (msg, ok) => {
+    status.textContent = msg;
+    status.classList.toggle('contact-form__status--ok', ok);
+    status.classList.toggle('contact-form__status--error', !ok);
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = stripTags(form.name.value);
+    const email = stripTags(form.email.value);
+    const message = stripTags(form.message.value);
+    const honey = clean(form._honey.value);
+
+    if (name.length < 2 || name.length > 100) {
+      setStatus('Revisa el nombre (2-100 caracteres).', false);
+      return;
+    }
+    if (!EMAIL_RE.test(email) || email.length > 200) {
+      setStatus('Revisa el email.', false);
+      return;
+    }
+    if (message.length < 10 || message.length > 2000) {
+      setStatus('El mensaje debe tener entre 10 y 2000 caracteres.', false);
+      return;
+    }
+    if ((message.match(LINK_RE) || []).length > 3) {
+      setStatus('Demasiados enlaces en el mensaje.', false);
+      return;
+    }
+    if ([name, email, message].some((s) => MALICIOUS_RE.test(s))) {
+      setStatus('Contenido no admitido. Elimina código o enlaces sospechosos del mensaje.', false);
+      return;
+    }
+    if (honey) return;
+
+    btn.disabled = true;
+    btn.classList.add('btn--disabled');
+    setStatus('Enviando…', false);
+
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/hola@wobocobo.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _subject: 'Nuevo mensaje desde wobocobo.com',
+          _honey: honey,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success === 'true') {
+        form.reset();
+        setStatus('Mensaje enviado, responderé cuanto antes.', true);
+      } else {
+        setStatus(data.message || 'No se pudo enviar. Inténtalo de nuevo.', false);
+      }
+    } catch {
+      setStatus('Error de conexión. Inténtalo de nuevo en unos segundos.', false);
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('btn--disabled');
+    }
+  });
+})();
