@@ -1735,6 +1735,245 @@ img {
   margin-top: 0.3rem;
 }
 
+/* ===================== PLAYLISTS DE SPOTIFY (spoti.html) ===================== */
+.pl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 560px) {
+  .pl-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+}
+.pl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.pl-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-mid);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--bg) 55%, transparent);
+}
+.pl-card__cover {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+}
+.pl-card__cover::before {
+  content: '';
+  width: 30%;
+  aspect-ratio: 1;
+  background: url('../assets/logos/spotify.svg') center / contain no-repeat;
+  filter: brightness(0) invert(1);
+  opacity: 0.45;
+}
+.light-theme .pl-card__cover::before {
+  filter: brightness(0);
+  opacity: 0.3;
+}
+.pl-card__cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.pl-card__cover img.is-loaded {
+  opacity: 1;
+}
+.pl-card__play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #04140b;
+  cursor: pointer;
+}
+.pl-card__play svg {
+  width: 3.4rem;
+  height: 3.4rem;
+  padding: 0.85rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1ed760, #1db954);
+  color: #04140b;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transform: translateY(6px) scale(0.8);
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.pl-card__play:hover svg,
+.pl-card__play:focus-visible svg {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+@media (hover: none) {
+  .pl-card__play svg {
+    transform: none;
+    opacity: 1;
+  }
+}
+.pl-card__info {
+  padding: 0.7rem 0.85rem 0.8rem;
+}
+.pl-card__title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+.pl-card__note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+/* card seleccionada: se marca con el acento, sin cambiar el layout */
+.pl-card--active {
+  border-color: color-mix(in srgb, #1db954 60%, var(--border-mid));
+  box-shadow: 0 0 0 1px color-mix(in srgb, #1db954 45%, transparent);
+}
+.pl-card--active .pl-card__play svg {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.pl-card--active .pl-card__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid #1db954;
+  pointer-events: none;
+}
+
+/* ---------- reproductor fijo sobre el grid ---------- */
+.pl-player {
+  margin-top: 1.5rem;
+  padding: 0.85rem 0.85rem 0;
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 55%, transparent);
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+.pl-player__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem 0.85rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.85rem;
+}
+.pl-player__eq {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.pl-player__eq span {
+  display: block;
+  width: 4px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #1ed760, #1db954);
+  animation: eq-bounce 1.05s ease-in-out infinite;
+}
+.pl-player__eq span:nth-child(1) {
+  height: 30%;
+  animation-delay: -0.72s;
+}
+.pl-player__eq span:nth-child(2) {
+  height: 60%;
+  animation-delay: -0.3s;
+}
+.pl-player__eq span:nth-child(3) {
+  height: 42%;
+  animation-delay: -0.52s;
+}
+.pl-player__eq span:nth-child(4) {
+  height: 24%;
+  animation-delay: -0.12s;
+}
+.pl-player__label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #1db954;
+  width: 100%;
+}
+.pl-player__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-right: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pl-player__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-mid);
+  background: var(--surface-2);
+  color: var(--text-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+.pl-player__close svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.pl-player__close:hover {
+  border-color: #1db954;
+  color: #1db954;
+  background: color-mix(in srgb, #1db954 10%, var(--surface-2));
+}
+.pl-player__embed iframe {
+  display: block;
+}
+@media (max-width: 560px) {
+  .pl-player {
+    padding: 0.7rem 0.7rem 0;
+  }
+  .pl-player__title {
+    font-size: 0.92rem;
+  }
+}
+.pl-empty {
+  color: var(--text-faint);
+  margin-top: 1.5rem;
+}
+
 .card.themed {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1792,6 +2031,23 @@ img {
   height: 66px;
   display: grid;
   place-items: center;
+}
+.page-intro__avatar {
+  flex: 0 0 auto;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--surface-2);
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px color-mix(in srgb, #1db954 65%, transparent);
+}
+.page-intro__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .page-intro__eq {
   flex: 0 0 auto;
