@@ -127,14 +127,15 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 
 | Bloque | ID | Descripción |
 |---|---|---|
-| Header | — | Sticky, blur, brand con punto de acento, nav, dropdown, toggle tema |
+| Header | — | Sticky, blur, brand con punto de acento, nav, dropdown, toggle tema. La nav tiene 4 entradas: Sobre mí, Experiencia, Trabajo y el dropdown **Curiosidades** (Música, Cine), y **Contacto siempre el último** |
 | Hero | — | Full-bleed, `::before` con `color-mix` + hero-bg.jpg, pill + h1 + CTAs |
 | Sobre mí | `#about` | **2 columnas**: texto + foto. Texto + imagen alineados y centrados (sin facts). Variante compacta (`#about` overrides: menos padding/air, foto `max-height:430px`) para verlo todo sin scroll. Foto: `assets/img/about-photo.jpg` |
 | Stack | `#stack` | Chips con punto de categoría + leyenda |
 | Experiencia | `#experience` | **Timeline con línea a la izquierda** y contenido expandido a la derecha (todos los breakpoints). Logos destacables (sin desaturar) |
 | Casos | `#cases` | Carrusel **full-bleed** (`--cw: min(760px, 94vw)`), cards uniformes de altura igual (slide flex + `height:100%`): título pequeño-medio, descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links) |
 | Vídeos | `#videos` | Grid Bootstrap 2x2 (`row g-4` + `col-md-6`, `.ratio ratio-16x9`) |
-| Footer | — | 3 columnas + copy, `--bg-deep`, uniforme en las 3 páginas |
+| Contacto | `#contact` | Banda `section--alt` con `section-head` + `#contactForm` (FormSubmit). **Solo existe en `index.html`** |
+| Footer | — | 3 columnas + copy, `--bg-deep`, uniforme en las 3 páginas. La columna *Secciones* lista Sobre mí, Experiencia, Trabajo, Vídeos y Contacto |
 
 ---
 
@@ -158,7 +159,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 - Menú dropdown solo se togglea con click si `window.innerWidth <= 768`.
 
 ### IDs usados
-- Secciones: `#about`, `#stack`, `#experience`, `#cases`, `#videos`
+- Secciones: `#about`, `#stack`, `#experience`, `#cases`, `#videos`, `#contact` (esta última solo en `index.html`)
 - Funcionales: `#themeToggle`, `#backToTop`, `#casesCarousel`, `#videosCarousel`, `#movies`
 - Botón CV: `#about .about-actions`
 - `cine.html` (los carga `js/cine.js`): bloque intro `#profile` (`.page-intro .page-intro--fa`, va PRIMERO en la página) con `[data-cine-stat]` (`avg`/`rated`/`lists`, inyectados desde los JSON por `renderIntro()`), `[data-cine-ring]` + `.circle-fill` (anillo de progreso; `stroke-dashoffset = 100 - notaMedia%`, circunferencia del path r=15.9155 ≈ 100) y un único `.btn--primary` al grid de FilmAffinity. Luego `#movies` (grid, `slice(0,12)`) y `#lists` (grid **fijo de 3 columnas** — las 6 listas enteras, 3+3, no `auto-fill`; colapsa a 2 col ≤900px y 1 col ≤560px).
