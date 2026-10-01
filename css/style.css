@@ -1302,6 +1302,69 @@ img {
   transform: translateY(-2px);
 }
 
+/* Logo del cliente en el caso de accesibilidad: banda centrada sobre la caja
+   del PDF. El logo es de tinta negra, así que va sobre fondo blanco (igual
+   que los marketplaces), no sobre el azul. */
+.case-links--split {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.7rem;
+}
+.case-client-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  align-self: stretch;
+  padding: 1.05rem 1.1rem;
+  border: 1.5px solid var(--border-mid);
+  border-radius: 16px;
+  background: #ffffff;
+  transition:
+    border-color 0.2s,
+    transform 0.18s,
+    box-shadow 0.18s;
+}
+.case-client-logo:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 25%, transparent);
+  text-decoration: none;
+}
+.case-client-logo img {
+  max-width: 132px;
+  height: auto;
+  max-height: 46px;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+.case-client-logo:hover img {
+  transform: scale(1.05);
+}
+.case-client-logo__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #0d1526;
+}
+
+/* Móvil: el chip se mantiene centrado y el PDF se queda con el alto sobrante */
+@media (max-width: 560px) {
+  .case-client-logo {
+    padding: 0.9rem 1rem;
+    gap: 0.5rem;
+  }
+  .case-client-logo img {
+    max-width: 116px;
+    max-height: 34px;
+  }
+  .case-pdf-preview {
+    min-height: 130px;
+  }
+}
+
 .subapp-logos {
   display: flex;
   flex-wrap: wrap;
@@ -1357,6 +1420,8 @@ img {
   gap: 0.65rem;
   margin-top: 0.5rem;
 }
+/* Agencias: azul claro para que se lean los logos oscuros; el único logo que
+   venía blanco (mielmoncabrer) se recoloreó a tinta oscura. */
 .agency-logo-link {
   display: flex;
   align-items: center;
@@ -1368,8 +1433,8 @@ img {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(200px 90px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    var(--surface-2);
+    radial-gradient(200px 90px at 50% 0%, color-mix(in srgb, #ffffff 55%, transparent), transparent 70%),
+    color-mix(in srgb, var(--accent) 22%, #ffffff);
   transition:
     border-color 0.2s,
     transform 0.18s,
@@ -1386,14 +1451,12 @@ img {
   width: auto;
   max-width: 120px;
   object-fit: contain;
-  filter: grayscale(0.3);
-  opacity: 0.85;
-  transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+  filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.35));
+  transition: transform 0.2s, filter 0.2s;
 }
 .agency-logo-link:hover img {
   transform: scale(1.06);
-  filter: grayscale(0);
-  opacity: 1;
+  filter: drop-shadow(0 3px 8px rgb(0 0 0 / 0.45));
 }
 .agency-logo-text {
   font-size: 0.72rem;
@@ -2067,9 +2130,9 @@ img {
   .case-links:has(.case-pdf-preview) {
     flex: 1;
   }
-  .case-pdf-preview {
-    height: 100%;
-    min-height: 140px;
+  .case-links--split .case-pdf-preview {
+    flex: 1 1 auto;
+    min-height: 130px;
   }
   .carousel__controls {
     gap: 0.8rem;
