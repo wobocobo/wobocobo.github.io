@@ -806,6 +806,7 @@ img {
   height: 104px;
 }
 .timeline-logo-box {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1997,26 +1998,66 @@ img {
   .header-time {
     font-size: 0.75rem;
   }
+  /* Trayectoria en móvil: el logo deja de flotar en la esquina y pasa a ser
+     un chip inline a la izquierda del texto, para que el h4 y el rol dispongan
+     de todo el ancho. */
+  .timeline-item {
+    padding-left: 2.4rem;
+    margin-bottom: 2.2rem;
+  }
+  /* Sin card: el texto va directo sobre el fondo para ganar ancho */
+  .timeline-content,
+  .timeline-content:hover {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+  }
   .timeline-head {
-    padding-right: 108px;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding-right: 0;
+    margin-bottom: 0.85rem;
+  }
+  .timeline-marker {
+    top: 1.05rem;
   }
   .timeline-logo-link {
-    top: 1rem;
-    right: 1rem;
-    width: 84px;
-    height: 72px;
+    position: static;
+    flex: 0 0 auto;
+    width: 56px;
+    height: 48px;
   }
   .timeline-logo-box {
-    border-radius: 14px;
+    border-radius: 12px;
   }
   .timeline-logo-box img {
-    max-width: 60px;
-    max-height: 46px;
+    max-width: 42px;
+    max-height: 34px;
   }
-  .timeline-item--dc .timeline-logo-box::after,
-  .timeline-item--z .timeline-logo-box::after,
-  .timeline-item--ar .timeline-logo-box::after {
-    border-radius: 12px;
+  .timeline-date {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.55rem;
+    margin-bottom: 0.35rem;
+  }
+  .timeline-head-text h4 {
+    font-size: 1rem;
+  }
+  .role {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+  .timeline-points {
+    gap: 0.55rem;
+  }
+  .timeline-points li {
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+  .timeline-content .btn--sm {
+    margin-top: 0.9rem;
   }
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
