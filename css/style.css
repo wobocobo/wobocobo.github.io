@@ -2062,6 +2062,15 @@ img {
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
   }
+  /* Casos: la caja del PDF absorbe el alto sobrante de la card en lugar de
+     dejar un hueco entre la descripción y el botón. */
+  .case-links:has(.case-pdf-preview) {
+    flex: 1;
+  }
+  .case-pdf-preview {
+    height: 100%;
+    min-height: 140px;
+  }
   .carousel__controls {
     gap: 0.8rem;
   }
