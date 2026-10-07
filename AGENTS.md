@@ -113,6 +113,12 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 5. Timeline — `.timeline-progress` se rellena al scroll (trigger 70% viewport) y `.timeline-marker` se activa
 6. `initCarousel(root)` — carrusel genérico; se aplica a todo `[data-carousel]`
    - Uso: `#casesCarousel` (marcado con `data-carousel`, track `[data-track]`, controles `[data-prev]/[data-next]/[data-dots]`). `#videos` es grid fijo, NO carrusel.
+   - **Centrado**: `.carousel__slide { scroll-snap-align: center }`; `.carousel--bleed .carousel__track` lleva `padding-inline: calc(50vw - (var(--cw, min(880px, 92vw)) / 2))` (a `#cases`, `--cw: min(760px, 94vw)`). Con ese sangrado, `scrollLeft = p * step()` centra el slide de la posición `p`; el track es `width: 100vw; margin-left: calc(50% - 50vw)`, y `body` lleva `overflow-x: hidden` para que la barra no desborde. Resultado: siempre hay una card centrada con las vecinas asomando, también con la primera y la última.
+   - **Rotativo con `data-wrap`** (lo lleva `#casesCarousel`), **sin clonar nada**: en el DOM solo están los 5 casos reales, una vez cada uno. `order` = índice lógico del slide en la posición 0 del DOM; `domOf()`/`currentIndex()` traducen entre lógico y posición. `rotateForward()/rotateBack()` reordenan los MISMOS nodos y compensan `scrollLeft` lo mismo que se desplaza el DOM, así que el dibujo en pantalla no cambia y la fila parece no tener fin (el usuario ve solo el deslizamiento). **Ojo crítico**: el scroll se lee ANTES de mutar el DOM y se escribe como valor absoluto (`from ± step()`), porque una lectura posterior fuerza reflow y el navegador re-snapea el track (la compensación partiría de un valor ya movido → huecos y dobles saltos).
+   - `goTo(logical)`: en modo wrap **prueba todas las rotaciones en ambas direcciones** y elige la que deja el slide pedido en una posición INTERIOR (con card a ambos lados, nunca un hueco) y con el salto más corto; `best` guarda `{r, p, d, interior}` y `r` puede ser negativo (rotar hacia atrás). En modo no-wrap clampa con `min/max(total-1)`.
+   - Al iniciar, con `data-wrap` se hace **una** `rotateBack()` para que, con la primera centrada, la última asome por la izquierda. `step()` = ancho del slide + `columnGap` (782.4 px a 1440px de viewport).
+   - **Arrastre**: `pointer*` con clase `.dragging` + `.no-snap`, inercia por rAF —al llegar al extremo rota el DOM y el gesto sigue con el slide siguiente; la velocidad se acota a ±3 px/ms—; en touch funciona el scroll nativo. `settle()` cancela la rAF previa (`stopFrame()`), y en un arrastre lento que suelte pegado al extremo avanza una card en el sentido del gesto. Las flechas nunca se desactivan en modo wrap.
+   - La animación es rAF + `easeOutQuint` (`ms = 260 + (steps-1)*150`), con `no-snap` durante el viaje.
 
 ---
 
@@ -121,7 +127,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 ### Boxed
 - `.boxed` = max-width 1240px centrado con `padding-inline: clamp(1.25rem, 4.5vw, 4.5rem)`. **Ocupa ancho de pantalla con padding lateral.**
 - `.section` con `padding-block` generoso.
-- `.section--alt` = banda a lo ancho completo con `--bg-deep` (usada en #stack y #videos).
+- `.section--alt` = banda a lo ancho completo con `--bg-deep` (usada en #stack y #videos). **Solo una banda oscura por cada dos secciones**, para que la página no repita fondo: el ritmo actual es #about/#experience/#cases (claro) → #videos (`--bg-deep`) → #contact (claro) → footer (`--bg-deep`). `#contact` por eso **no** lleva `section--alt`.
 
 ### Secciones de index.html
 
@@ -129,13 +135,13 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 |---|---|---|
 | Header | — | Sticky, blur, brand con punto de acento, nav, dropdown, toggle tema. La nav tiene 4 entradas: Sobre mí, Experiencia, Trabajo y el dropdown **Curiosidades** (Música, Cine), y **Contacto siempre el último** |
 | Hero | — | Full-bleed, `::before` con `color-mix` + hero-bg.jpg, pill + h1 + CTAs |
-| Sobre mí | `#about` | **2 columnas**: texto + foto. Texto + imagen alineados y centrados (sin facts). Variante compacta (`#about` overrides: menos padding/air, foto `max-height:430px`) para verlo todo sin scroll. Foto: `assets/img/about-photo.jpg` |
+| Sobre mí | `#about` | **2 columnas**: texto + foto. Texto + imagen alineados y centrados (sin facts). Variante compacta (`#about` overrides: menos padding/air, foto `max-height:430px`) para verlo todo sin scroll. Foto: `assets/img/about-photo.jpg`. **Sin botón de CV aquí**: el aviso de que el CV no está publicado va bajo el título de `#contact` (`.section-subtitle`), que es donde está el formulario |
 | Stack | `#stack` | Chips con punto de categoría + leyenda |
 | Experiencia | `#experience` | **Timeline con línea a la izquierda** y contenido expandido a la derecha (todos los breakpoints). Logos destacables (sin desaturar) |
-| Casos | `#cases` | Carrusel **full-bleed** (`--cw: min(760px, 94vw)`), cards uniformes de altura igual (slide flex + `height:100%`): título pequeño-medio, descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links) |
+| Casos | `#cases` | Carrusel **full-bleed** (`--cw: min(760px, 94vw)`) y **rotativo** (`data-wrap`, sin clones), cards uniformes de altura igual (slide flex + `height:100%`): título pequeño-medio, descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links) |
 | Vídeos | `#videos` | Grid Bootstrap 2x2 (`row g-4` + `col-md-6`, `.ratio ratio-16x9`) |
-| Contacto | `#contact` | Banda `section--alt` con `section-head` + `#contactForm` (FormSubmit). **Solo existe en `index.html`** |
-| Footer | — | 3 columnas + copy, `--bg-deep`, uniforme en las 3 páginas. La columna *Secciones* lista Sobre mí, Experiencia, Trabajo, Vídeos y Contacto |
+| Contacto | `#contact` | `section-head` + `#contactForm` (FormSubmit) sobre el fondo claro de la página (para no repetir la banda oscura de `#videos`). **Solo existe en `index.html`** |
+| Footer | — | `Wobocobo` grande + 3 columnas + copy, `--bg-deep`, uniforme en las 3 páginas. La columna *Secciones* lista Sobre mí, Experiencia, Trabajo, Vídeos y Contacto |
 
 ---
 
@@ -146,6 +152,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 - **Modificadores** con `--`: `.case-card--featured`, `.timeline-item--current`, `.case-link--contact`, `.page-intro--fa/--sp`, `.btn--primary/--ghost/--subtle/--sm/--shine` (`.btn--shine` = barrido especular `::before` + brillo inferior `::after` + flecha que se desliza; solo hover, se usa en el CTA de las intros de `cine.html` y `spoti.html`)
 - **Intro compartida** (cine + spoti): `.page-intro`, `__brand`, `__logo`, `__avatar` (solo Spotify: foto de perfil real, redonda, `i.scdn.co/image/ab6775700000ee85ab7ccac11c25a082e6023ed4`, sacada del `og:image` del perfil; hotlinkea bien, 300×300, 24KB), `__ring`/`__ring-value` (solo FilmAffinity), `__eq` (solo Spotify: 4 `<span>` vacios animados por CSS), `__lead`, `__actions`
 - **Componente carrusel reutilizado**: `.carousel__slide`, `.carousel__arrow`, `.carousel__dot`
+- **Marca del footer** (las 3 páginas): `.footer-brand` (enlace a `index.html`, `display:flex` + `justify-content:center`, es decir **centrada y solo con la marca**, sin subtítulo) con **dos** `__mark` (uno a cada lado del nombre, simétricos; punto de acento pulsante con `@keyframes footer-dot` más un anillo que se expande con `@keyframes footer-mark-ring`) y `__name` (Space Grotesk, degradado `--grad-1/--grad-2` en movimiento con `background-clip: text`, `@keyframes footer-brand-flow` 7 s, sube 4px y crece un 2 % al hover). El brillo especular es un `::after` con `content: attr(data-text)` (el `data-text` es obligatorio en el HTML) y `@keyframes footer-brand-shine`, que recorre las letras sin tocar el fondo. Va **encima** de las 3 columnas, no como columna 4ª, para que el cierre de la página tenga el mismo gesto que el header.
 - **Preview PDF**: `.case-pdf-preview` (+ `__icon/__body/__open`) — caja compacta tipo documento, se abre en pestaña nueva
 - **Cards de playlist** (spoti): `.pl-grid`, `.pl-card` (+ `--active` = solo borde verde `#1db954` + `::after` de contorno, **no** cambia el layout) con `__cover` (portada cuadrada, `::before` = glifo Spotify como placeholder), `__play` (botón a pantalla completa sobre la portada; el badge circular sale en hover/focus y siempre en `@media (hover: none)`), `__info`, `__title`, `__note`. **Reproductor fijo** `.pl-player` (oculto con `hidden`) en `spoti.html`, por encima del grid: `.pl-player__head` (`__eq` ecualizador de 4 barras con `@keyframes eq-bounce`, `__label` "Reproduciendo", `__title` con `text-overflow: ellipsis`, `__close` = botón **con texto "Cerrar"**, no solo ✕) + `.pl-player__embed`. Decisión: el player **no** se monta dentro de la card; si se hiciera, la card tendría que expandirse a `grid-column: 1 / -1`, el grid saltaría y el reproductor abriría en un sitio distinto según la card pulsada. Con el hueco fijo el grid no se mueve nunca, el player siempre aparece en el mismo sitio, y `scroll-margin-top: calc(var(--header-h) + 1rem)` + `scrollIntoView({block:'nearest'})` lo traen a la vista sin pelearse con el header sticky. Cerrar con botón, con `Escape`, o pulsando otra vez la misma card (toggle); en los tres casos se hace `playerEmbed.replaceChildren()` — **quitar el iframe es lo que corta el audio**.
 - **Dots de categoría:** `.dot-backend`, `.dot-frontend`, `.dot-cms`, `.dot-db`, `.dot-server`, `.dot-tools`
@@ -161,7 +168,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 ### IDs usados
 - Secciones: `#about`, `#stack`, `#experience`, `#cases`, `#videos`, `#contact` (esta última solo en `index.html`)
 - Funcionales: `#themeToggle`, `#backToTop`, `#casesCarousel`, `#videosCarousel`, `#movies`
-- Botón CV: `#about .about-actions`
+- Botón CV: no existe ninguno en `#about`. El enlace `Descargar CV` (`.footer-link--cv`) vive **al final de la columna Secciones del footer**, en las 3 páginas, con `href="index.html#contact"`. La función `cvNotice()` de `main.js` lo intercepta (capture listener): en `index.html` revela el aviso oculto `#contactNote`, desplaza a `#contact` y enfoca `#contactName`; desde `cine.html`/`spoti.html` navega a `index.html#contact-cv` (marcador interno solo para la navegación) y lo revela al cargar. **El aviso solo sale al pulsar ese botón**
 - `cine.html` (los carga `js/cine.js`): bloque intro `#profile` (`.page-intro .page-intro--fa`, va PRIMERO en la página) con `[data-cine-stat]` (`avg`/`rated`/`lists`, inyectados desde los JSON por `renderIntro()`), `[data-cine-ring]` + `.circle-fill` (anillo de progreso; `stroke-dashoffset = 100 - notaMedia%`, circunferencia del path r=15.9155 ≈ 100) y un único `.btn--primary` al grid de FilmAffinity. Luego `#movies` (grid, `slice(0,12)`) y `#lists` (grid **fijo de 3 columnas** — las 6 listas enteras, 3+3, no `auto-fill`; colapsa a 2 col ≤900px y 1 col ≤560px).
 - `spoti.html` (los carga `js/spoti.js`): bloque intro `#profile` (`.page-intro .page-intro--sp`, PRIMERO también) con el glifo `assets/logos/spotify.svg` sobre chip verde + un ecualizador CSS de 4 barras (`.page-intro__eq`, `@keyframes eq-bounce`, alturas y `animation-delay` por `:nth-child`, gradiente `--grad-1/--grad-2`) y un único `.btn-spotify.btn--shine` al perfil de Spotify. Debajo, `<h3>Playlists</h3>` + `<div id="player" class="pl-player" hidden>` (el reproductor fijo, lo rellena `js/spoti.js`) + `<div id="playlists" class="pl-grid">` **vacío**: `js/spoti.js` lo rellena con una `.pl-card` por entrada de `data/spoti.json`, y monta el `<iframe>` de Spotify en `#player` al pulsarla (solo uno activo; al cerrar se **elimina el iframe**, que es lo que corta el audio). `html` lleva un `<noscript>` con enlace a Spotify. **Ya no existe** el `<section class="spotify-cta">` de abajo ni su regla `.spotify-cta p` (el CTA vive solo en la intro).
 
@@ -187,7 +194,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 2. **Hero overlay con `color-mix`:** `::before` usa `color-mix(in srgb, var(--bg) 72%, transparent)` sobre hero-bg.jpg.
 3. **Layout boxed:** contenido a ancho completo con padding lateral variable (clamp). Bandas `--section--alt` a sangre completa mediante `section` sin wrapper de ancho fijo.
 4. **Timeline a la izquierda:** la línea está siempre a la izquierda y la tarjeta ocupa todo el ancho restante hacia la derecha (expandida) en todos los breakpoints.
-5. **Carrusel genérico:** CSS scroll-snap + `initCarousel()`. Arrastre con ratón/touchpad vía `pointer*` (clase `.dragging` + `.no-snap`), con **inercia y snap animado por rAF/easing**; en touch funciona el scroll nativo. Sin dependencias.
+5. **Carrusel genérico:** CSS scroll-snap + `initCarousel()`. Arrastre con ratón/touchpad vía `pointer*` (clase `.dragging` + `.no-snap`), con **inercia y snap animado por rAF/easing**; en touch funciona el scroll nativo. Sin dependencias. `#casesCarousel` además es **rotativo** (`data-wrap`, sin clones: se reordenan los mismos nodos compensando el scroll, de modo que el dibujo no cambia y la rueda parece no finar — nunca un hueco ni al principio ni al final).
 6. **Cards de casos:** solo texto (sin imagen), uniformes: título pequeño-medio (Space Grotesk, `clamp(0.95rem,1.6vw,1.15rem)`), descripción, stack en texto (`.case-tech`) y footer (logos / preview PDF / links). Sin chips `.case-stack`.
 7. **Tipografía:** Inter + Space Grotesk traídas por Google Fonts.
 8. **Header/footer uniformes** en las 3 páginas (misma estructura `.boxed`, brand-mark, toggle tema, #backToTop).
@@ -200,7 +207,7 @@ Bootstrap CSS → AOS CSS → Google Fonts → style.css
 ## Pendientes y bugs conocidos
 
 1. **Cards de casos** — son solo texto (sin imagen). Si el usuario quiere imágenes reales uniformes, habrá que reintroducir una media coherente.
-2. **Botón CV** — apunta a `#` con `title="Disponible próximamente"`. Falta el PDF real.
+2. **Botón CV** — ya no es un placeholder: el enlace `Descargar CV` del footer lo intercepta `cvNotice()` en `main.js`, y el aviso de que el CV no está publicado (`Si quieres saber más de mí, mejor hablemos: cuéntame qué buscas y te enseño directamente lo que te interese`) vive oculto en `#contactNote` bajo `¿Hablamos?` (`#contact .section-subtitle`) y **solo se muestra al pulsar ese botón** (y al llegar desde `cine.html`/`spoti.html` con `#contact-cv`). Cuando exista el PDF real, cambiar el `href` por `assets/docs/cv.pdf` + `download` y quitar el aviso y el interceptor.
 3. **LinkedIn URL** — en footer de las 3 páginas está `alejandro-ortega-hernández` (con tilde); AGENTS.md la tenía sin tilde. Unificar cuando se decida.
 4. **Shipping logo (`assets/logos/shipping.png`)** — ocupa 1.38MB en disco vs 17KB en la versión pequeña; probablemente requiere optimización.
 5. **Vídeos YouTube** — los IDs actuales (`I4qaG9yU7j0`, `wXzioxPtkW8`, `-NEuWT3fPSs`, `A-bc1A94dRA`) están en el grid 2x2; verificar que sigan siendo los deseados.

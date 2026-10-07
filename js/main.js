@@ -153,6 +153,9 @@ if (timeline) {
    Carrusel genérico (casos + vídeos)
    Uso: <div data-carousel> con track [data-track], flechas
    [data-prev]/[data-next] y puntos [data-dots].
+   Con [data-wrap] es una RUEDA: no hay principio ni final y no
+   se clona nada, solo se rota el orden de los mismos slides en
+   el DOM (ver rotateForward/rotateBack).
    ============================================================ */
 function initCarousel(root) {
   const track = root.querySelector('[data-track]');
@@ -164,6 +167,111 @@ function initCarousel(root) {
   const nextBtn = root.querySelector('[data-next]');
   if (!dotsWrap || !prevBtn || !nextBtn) return;
 
+  const total = slides.length;
+  const wrap = root.hasAttribute('data-wrap') && total > 1;
+
+  /* Con el sangrado de `padding-inline`, el slide de la posición p queda
+     centrado justo con scrollLeft = p * step(), y el recorrido va de 0 a
+     (total - 1) * step(). */
+  const step = () =>
+    slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 0);
+  const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+  /* Ruedas: `order` es el índice lógico del slide que ocupa la posición 0 del
+     DOM. Rotar reordena los MISMOS nodos (nada de clones) y compensa el
+     scrollLeft justo lo que se han desplazado, así que el dibujo en pantalla no
+     cambia en absoluto: el usuario no ve ningún salto, solo que la fila de
+     cards parece no tener fin. */
+  let order = 0;
+  const domOf = (logical) => ((logical - order) % total + total) % total;
+  const currentIndex = () => (Math.round(track.scrollLeft / step()) + order) % total;
+
+  /* Ojo: el scroll se guarda ANTES de tocar el DOM y se escribe como valor
+     absoluto. Si se leyera después, el reflow ya habría re-snapeado el track y
+     la compensación partiría de un valor movido. */
+  const rotateForward = () => {
+    const from = track.scrollLeft;
+    track.appendChild(track.firstElementChild);
+    order = (order + 1) % total;
+    track.scrollLeft = from - step();
+  };
+  const rotateBack = () => {
+    const from = track.scrollLeft;
+    track.insertBefore(track.lastElementChild, track.firstElementChild);
+    order = (order - 1 + total) % total;
+    track.scrollLeft = from + step();
+  };
+
+  let frameRaf = null;
+  const stopFrame = () => {
+    if (frameRaf) {
+      cancelAnimationFrame(frameRaf);
+      frameRaf = null;
+    }
+  };
+  const easeOutQuint = (t) => 1 - Math.pow(1 - t, 5);
+
+/* Lleva el slide lógico pedido al centro. En modo rueda da la vuelta entre la
+     última y la primera, sin huecos ni saltos: siempre se desliza. */
+  const goTo = (logical) => {
+    const target = wrap
+      ? (((logical % total) + total) % total)
+      : Math.max(0, Math.min(total - 1, logical));
+    if (target === currentIndex() && Math.abs(track.scrollLeft % step()) < 1) {
+      track.classList.remove('no-snap');
+      return;
+    }
+
+    const here = Math.round(track.scrollLeft / step());
+    let pos = target;
+
+    if (wrap) {
+      /* Se prueban todas las rotaciones posibles (hacia delante y hacia atrás)
+         y se elige la que deja el slide pedido en una posición INTERIOR —con
+         card a ambos lados, nunca un hueco— y con el salto más corto. La
+         rotación no se ve: el scroll se compensa lo mismo que se desplaza el
+         DOM, así que la pantalla queda idéntica y luego se desliza. */
+      const better = (b, cand) =>
+        !b ||
+        (cand.interior && !b.interior) ||
+        (cand.interior === b.interior && cand.d < b.d);
+      let best = null;
+      for (let r = 0; r < total && here - r >= 0; r++) {
+        const p = (((target - order - r) % total) + total) % total;
+        const cand = { r, p, d: Math.abs(p - (here - r)), interior: p > 0 && p < total - 1 };
+        if (better(best, cand)) best = cand;
+      }
+      for (let n = 1; n < total && here + n <= total - 1; n++) {
+        const p = (((target - order + n) % total) + total) % total;
+        const cand = { r: -n, p, d: Math.abs(p - (here + n)), interior: p > 0 && p < total - 1 };
+        if (better(best, cand)) best = cand;
+      }
+      for (let k = 0; k < best.r; k++) rotateForward();
+      for (let k = 0; k < -best.r; k++) rotateBack();
+      pos = best.p;
+    }
+
+    stopFrame();
+    const from = track.scrollLeft;
+    const to = pos * step();
+    const steps = Math.max(1, Math.round(Math.abs(to - from) / step()));
+    track.classList.add('no-snap');
+    const start = performance.now();
+    const ms = 260 + (steps - 1) * 150;
+    const frame = (now) => {
+      const t = Math.min((now - start) / ms, 1);
+      track.scrollLeft = from + (to - from) * easeOutQuint(t);
+      if (t < 1) {
+        frameRaf = requestAnimationFrame(frame);
+      } else {
+        frameRaf = null;
+        track.classList.remove('no-snap');
+        sync();
+      }
+    };
+    frameRaf = requestAnimationFrame(frame);
+  };
+
   const dots = slides.map((_, i) => {
     const dot = document.createElement('button');
     dot.className = 'carousel__dot';
@@ -173,36 +281,25 @@ function initCarousel(root) {
     return dot;
   });
 
-  const step = () =>
-    slides[0].offsetWidth +
-    parseFloat(getComputedStyle(track).columnGap || 0);
-
-  const currentIndex = () => Math.round(track.scrollLeft / step());
-
-  const goTo = (i) => {
-    i = Math.max(0, Math.min(slides.length - 1, i));
-    track.scrollTo({ left: i * step(), behavior: 'smooth' });
-  };
-
   const sync = () => {
     const i = currentIndex();
     dots.forEach((dot, j) => dot.classList.toggle('active', j === i));
-    prevBtn.disabled = i === 0;
-    nextBtn.disabled = i === slides.length - 1;
+    if (!wrap) {
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === total - 1;
+    }
   };
 
   prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
   nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
 
   let raf;
-  track.addEventListener(
-    'scroll',
-    () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(sync);
-    },
-    { passive: true }
-  );
+  const onScroll = () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(sync);
+  };
+  track.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
 
   track
     .querySelectorAll('img')
@@ -215,33 +312,6 @@ function initCarousel(root) {
   let lastT = 0;
   let vel = 0;
   let dragged = false;
-  let frameRaf = null;
-
-  const stopFrame = () => {
-    if (frameRaf) {
-      cancelAnimationFrame(frameRaf);
-      frameRaf = null;
-    }
-  };
-
-  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-  const snapTo = (index, ms) => {
-    const target = Math.max(0, Math.min(slides.length - 1, index)) * step();
-    const from = track.scrollLeft;
-    const start = performance.now();
-    const frame = (now) => {
-      const t = Math.min((now - start) / ms, 1);
-      track.scrollLeft = from + (target - from) * easeOutCubic(t);
-      if (t < 1) {
-        frameRaf = requestAnimationFrame(frame);
-      } else {
-        frameRaf = null;
-        track.classList.remove('no-snap');
-      }
-    };
-    frameRaf = requestAnimationFrame(frame);
-  };
 
   const onDown = (e) => {
     if (e.pointerType === 'touch') return;
@@ -278,21 +348,38 @@ function initCarousel(root) {
     }
     if (performance.now() - lastT > 60) vel = 0;
 
+    stopFrame();
     if (Math.abs(vel) > 0.6) {
-      let v = vel;
+      /* Se acota la velocidad: sin tope, un gesto con un delta enorme en un
+         solo frame dispara la inercia durante segundos. */
+      let v = Math.max(-3, Math.min(3, vel));
       const frame = () => {
         v *= 0.92;
         track.scrollLeft += v * 16.7;
+        /* Si el empujón llega al extremo, en vez de quedarse con un hueco se
+           rota el DOM (invisible: el scroll se compensa) y el gesto sigue con la
+           card siguiente, como si la rueda no tuviera fin. */
+        const end = v > 0 ? maxScroll() : 0;
+        if (Math.abs(track.scrollLeft - end) < 1) {
+          if (v > 0) rotateForward();
+          else rotateBack();
+        }
         if (Math.abs(v) > 0.3) {
           frameRaf = requestAnimationFrame(frame);
         } else {
           frameRaf = null;
-          snapTo(currentIndex(), 380);
+          goTo(currentIndex());
         }
       };
       frameRaf = requestAnimationFrame(frame);
     } else {
-      snapTo(currentIndex(), 300);
+      /* Arrastrado lento: si se suelta pegado a un extremo se avanza una card
+         en el sentido del gesto para no dejar el hueco delante. */
+      const atMax = track.scrollLeft >= maxScroll() - 1;
+      const atMin = track.scrollLeft <= 1;
+      const dir = vel !== 0 ? Math.sign(vel) : Math.sign(startX - lastX);
+      const extra = atMax && dir > 0 ? 1 : atMin && dir < 0 ? -1 : 0;
+      goTo(currentIndex() + extra);
     }
   };
 
@@ -318,10 +405,52 @@ function initCarousel(root) {
     true
   );
 
+  /* Arranque de la rueda: se adelanta una posición para que, con el primer caso
+     ya centrado, la última card asome por la izquierda (y no un hueco). */
+  if (wrap) rotateBack();
+
   sync();
 }
 
 document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+
+/* ============================================================
+   Aviso del CV: el mensaje bajo "¿Hablamos?" solo sale cuando se
+   pulsa "Descargar CV" (enlazo del footer de las 3 páginas).
+   Desde cine/spoti navega a index.html#contact-cv; allí se
+   sustituye por #contact, se revela el aviso y se lleva al
+   formulario con el foco en el nombre.
+   ============================================================ */
+(function cvNotice() {
+  const note = document.getElementById('contactNote');
+  const contact = document.getElementById('contact');
+
+  const reveal = () => {
+    if (!note || !note.hidden) return;
+    note.hidden = false;
+    requestAnimationFrame(() => note.classList.add('is-in'));
+  };
+
+  const open = (smooth) => {
+    reveal();
+    contact.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+    const name = document.getElementById('contactName');
+    if (name) setTimeout(() => name.focus({ preventScroll: true }), smooth ? 700 : 0);
+  };
+
+  document.querySelectorAll('.footer-link--cv').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (contact) open(true);
+      else window.location.href = 'index.html#contact-cv';
+    });
+  });
+
+  if (contact && window.location.hash === '#contact-cv') {
+    history.replaceState(null, '', '#contact');
+    open(false);
+  }
+})();
 
 /* ============================================================
    Formulario de contacto (#contact) → FormSubmit

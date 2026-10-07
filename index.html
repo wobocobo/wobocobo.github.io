@@ -164,12 +164,6 @@
                                 Si hace falta una tecnología que no conozco, la aprendo y la pongo a
                                 trabajar.
                             </p>
-
-                            <div class="about-actions mt-4">
-                                <a href="#" class="btn btn--subtle" title="Disponible próximamente">
-                                    ↓ Descargar CV
-                                </a>
-                            </div>
                         </div>
 
                         <figure class="about-media" data-aos="fade-left" id="aboutPhoto">
@@ -395,6 +389,7 @@
                     class="carousel carousel--cases carousel--bleed"
                     id="casesCarousel"
                     data-carousel
+                    data-wrap
                     data-aos="fade-up"
                 >
                     <div class="carousel__viewport">
@@ -923,12 +918,17 @@
         </main>
 
         <!-- CONTACTO -->
-        <section id="contact" class="section section--alt">
+        <section id="contact" class="section">
             <div class="boxed">
                 <div class="section-head" data-aos="fade-up">
                     <span class="section-label">Contacto</span>
                     <h2 class="section-title">¿Hablamos?</h2>
                 </div>
+
+                <p class="contact-note" id="contactNote" hidden>
+                    Si quieres saber más de mí, mejor hablemos: cuéntame qué buscas y te enseño
+                    directamente lo que te interese.
+                </p>
 
                 <form
                     id="contactForm"
@@ -1006,6 +1006,11 @@
         <!-- FOOTER -->
         <footer class="footer">
             <div class="boxed">
+                <a href="index.html" class="footer-brand" aria-label="Wobocobo, ir al inicio">
+<span class="footer-brand__mark" aria-hidden="true"></span>
+                <span class="footer-brand__name" data-text="Wobocobo">Wobocobo</span>
+                <span class="footer-brand__mark" aria-hidden="true"></span>
+                </a>
                 <div class="footer-container">
                     <div class="footer-column">
                         <h5>Secciones</h5>
@@ -1014,6 +1019,7 @@
                         <a href="#cases">Trabajo</a>
                         <a href="#videos">Vídeos</a>
                         <a href="#contact">Contacto</a>
+                        <a class="footer-link--cv" href="index.html#contact">Descargar CV</a>
                     </div>
                     <div class="footer-column">
                         <h5>Fuera del código</h5>
