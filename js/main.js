@@ -738,6 +738,120 @@ document.querySelectorAll('[data-frame-tabs]').forEach((frame) => {
 })();
 
 /* ============================================================
+   Vídeos (#videos): reproductor principal + lista de miniaturas
+   desde data/videos.json ([{id, title}], id de YouTube). El
+   principal empieza como portada (miniatura + botón) y el iframe
+   de youtube-nocookie solo se crea al reproducir. Pulsar una
+   miniatura la pasa al principal y arranca.
+   ============================================================ */
+(function videoHub() {
+  const hub = document.getElementById('videoHub');
+  if (!hub) return;
+
+  const player = hub.querySelector('[data-video-player]');
+  const titleEl = hub.querySelector('[data-video-title]');
+  const list = hub.querySelector('[data-video-list]');
+  const countEl = hub.querySelector('[data-video-count]');
+
+  const PLAY_SVG =
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.1v13.8a1 1 0 0 0 1.5.9l11-6.9a1 1 0 0 0 0-1.7l-11-6.9A1 1 0 0 0 8 5.1z"></path></svg>';
+  const thumb = (id, size) => `https://i.ytimg.com/vi/${encodeURIComponent(id)}/${size}.jpg`;
+
+  let items = [];
+
+  const play = (video) => {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.id)}?autoplay=1&rel=0`;
+    iframe.title = video.title;
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.setAttribute('allowfullscreen', '');
+    player.replaceChildren(iframe);
+  };
+
+  /* Portada del principal: maxresdefault y, si no existe (404), hqdefault */
+  const poster = (video) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'video-hub__poster';
+    btn.setAttribute('aria-label', 'Reproducir: ' + video.title);
+
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.src = thumb(video.id, 'maxresdefault');
+    img.addEventListener('error', () => {
+      if (!img.src.includes('hqdefault')) img.src = thumb(video.id, 'hqdefault');
+    });
+
+    const icon = document.createElement('span');
+    icon.className = 'video-hub__play';
+    icon.innerHTML = PLAY_SVG;
+
+    btn.append(img, icon);
+    btn.addEventListener('click', () => play(video));
+    return btn;
+  };
+
+  const select = (video, autoplay) => {
+    titleEl.textContent = video.title;
+    items.forEach(({ entry, btn, badge }) => {
+      const on = entry === video;
+      btn.setAttribute('aria-current', String(on));
+      badge.hidden = !on;
+    });
+    if (autoplay) play(video);
+    else player.replaceChildren(poster(video));
+  };
+
+  const buildItem = (video) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'video-hub__item';
+    btn.setAttribute('aria-current', 'false');
+
+    const frame = document.createElement('span');
+    frame.className = 'video-hub__thumb';
+    const img = document.createElement('img');
+    img.src = thumb(video.id, 'hqdefault');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    const badge = document.createElement('span');
+    badge.className = 'video-hub__now';
+    badge.textContent = 'Ahora';
+    badge.hidden = true;
+    frame.append(img, badge);
+
+    const title = document.createElement('span');
+    title.className = 'video-hub__item-title';
+    title.textContent = video.title;
+
+    btn.append(frame, title);
+    btn.addEventListener('click', () => select(video, true));
+    li.appendChild(btn);
+    list.appendChild(li);
+    return { entry: video, btn, badge };
+  };
+
+  fetch('data/videos.json')
+    .then((res) => res.json())
+    .then((data) => {
+      const videos = (Array.isArray(data) ? data : []).filter((v) => v && v.id && v.title);
+      if (!videos.length) throw new Error('data/videos.json vacío');
+      items = videos.map(buildItem);
+      countEl.textContent = `Más vídeos · ${videos.length}`;
+      select(videos[0], false);
+    })
+    .catch((err) => {
+      console.error('Error cargando vídeos:', err);
+      hub.hidden = true;
+    });
+})();
+
+/* ============================================================
    W de Sobre mí: gira sola (CSS) y, con ratón dentro de la
    sección, deja de girar y se inclina en 3D hacia el cursor.
    Al entrar arranca desde el ángulo en el que iba (leído del

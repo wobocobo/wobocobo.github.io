@@ -965,77 +965,24 @@
                     </div>
                 </div>
 
+                <!-- Reproductor + lista: main.js lo rellena con data/videos.json -->
                 <div class="boxed">
-                    <div class="row g-4" data-aos="fade-up">
-                        <div class="col-md-6">
-                            <div class="ratio ratio-16x9 video-shell">
-                                <iframe
-                                    src="https://www.youtube.com/embed/I4qaG9yU7j0"
-                                    allow="
-                                        accelerometer;
-                                        autoplay;
-                                        clipboard-write;
-                                        encrypted-media;
-                                        gyroscope;
-                                        picture-in-picture;
-                                    "
-                                    allowfullscreen
-                                    loading="lazy"
-                                ></iframe>
-                            </div>
+                    <div class="video-hub" id="videoHub" data-aos="fade-up">
+                        <div class="video-hub__stage">
+                            <div class="video-hub__player" data-video-player></div>
+                            <h3 class="video-hub__title" data-video-title></h3>
                         </div>
-                        <div class="col-md-6">
-                            <div class="ratio ratio-16x9 video-shell">
-                                <iframe
-                                    src="https://www.youtube.com/embed/wXzioxPtkW8"
-                                    allow="
-                                        accelerometer;
-                                        autoplay;
-                                        clipboard-write;
-                                        encrypted-media;
-                                        gyroscope;
-                                        picture-in-picture;
-                                    "
-                                    allowfullscreen
-                                    loading="lazy"
-                                ></iframe>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="ratio ratio-16x9 video-shell">
-                                <iframe
-                                    src="https://www.youtube.com/embed/-NEuWT3fPSs"
-                                    allow="
-                                        accelerometer;
-                                        autoplay;
-                                        clipboard-write;
-                                        encrypted-media;
-                                        gyroscope;
-                                        picture-in-picture;
-                                    "
-                                    allowfullscreen
-                                    loading="lazy"
-                                ></iframe>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="ratio ratio-16x9 video-shell">
-                                <iframe
-                                    src="https://www.youtube.com/embed/A-bc1A94dRA"
-                                    allow="
-                                        accelerometer;
-                                        autoplay;
-                                        clipboard-write;
-                                        encrypted-media;
-                                        gyroscope;
-                                        picture-in-picture;
-                                    "
-                                    allowfullscreen
-                                    loading="lazy"
-                                ></iframe>
-                            </div>
+                        <div class="video-hub__aside">
+                            <p class="video-hub__label" data-video-count>Más vídeos</p>
+                            <ol class="video-hub__list" data-video-list></ol>
                         </div>
                     </div>
+                    <noscript>
+                        <p class="section-subtitle">
+                            Los vídeos necesitan JavaScript.
+                            <a href="https://www.youtube.com/watch?v=I4qaG9yU7j0">Ver en YouTube</a>
+                        </p>
+                    </noscript>
                 </div>
             </section>
         </main>
