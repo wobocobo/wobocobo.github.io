@@ -473,62 +473,163 @@ img {
 }
 
 /* ===================== HERO ===================== */
+/* Pantalla completa a sangre: sube por detrás del navbar (transparente arriba)
+   con margin-top negativo. Capas: ::before = hero-bg.jpg con desenfoque y un
+   zoom muy lento; ::after = velo del color de fondo que se funde con la página
+   por abajo; encima, la W, el nombre y la frase. Entrada escalonada solo con
+   CSS: la W, cada letra (--i en el HTML) y al final la frase y la flecha. Las
+   animaciones usan solo opacity y transform: el filter queda libre para
+   invertir la W en el tema claro. */
 .hero {
   position: relative;
-  border-bottom: 1px solid var(--border);
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--header-h));
+  padding: calc(var(--header-h) + 3rem) 1.5rem 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    url('/assets/img/hero-bg.jpg') center / cover no-repeat;
-  filter: blur(6px) brightness(0.55);
-  transform: scale(1.04);
-  z-index: 0;
+  z-index: -2;
+  background: url('../assets/img/hero-bg.jpg') center / cover no-repeat;
+  filter: blur(3px);
+  transform: scale(1.06);
+  animation: hero-zoom 24s ease-in-out infinite alternate;
 }
 .hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background:
-    color-mix(in srgb, var(--bg) 60%, transparent),
-    radial-gradient(
-      600px 300px at 85% 20%,
-      color-mix(in srgb, var(--accent) 16%, transparent),
-      transparent 70%
-    );
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 58%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 64%, transparent) 65%,
+    var(--bg) 100%
+  );
+  transition: background 0.3s;
 }
-.hero-inner {
-  position: relative;
-  z-index: 2;
-  padding-block: clamp(5rem, 14vw, 10rem);
-  text-align: center;
+.hero__stage {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: clamp(1rem, 2.4vw, 1.6rem);
+  text-align: center;
 }
-
-.hero h1 {
-  font-size: clamp(3.2rem, 10vw, 6.5rem);
+.hero__logo {
+  width: clamp(88px, 12vw, 132px);
+  height: auto;
+  animation: hero-logo-in 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.light-theme .hero__logo {
+  filter: invert(1);
+}
+.hero__title {
+  font-size: clamp(2.2rem, 12vw, 9.25rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-bottom: 2.2rem;
-  background: linear-gradient(120deg, var(--grad-1) 20%, var(--grad-2) 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  color: var(--text);
+  white-space: nowrap;
+}
+.hero__title span {
+  display: inline-block;
+  animation: hero-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(0.35s + var(--i, 0) * 0.06s);
+}
+.hero__tagline {
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  color: var(--text-muted);
+  animation: hero-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 1.05s both;
+}
+.hero__scroll {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-mid);
+  border-radius: 50%;
+  color: var(--text-muted);
+  animation:
+    hero-fade 0.6s ease 1.5s both,
+    hero-bob 2.4s ease-in-out 2.1s infinite;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+.hero__scroll:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.hero__scroll svg {
+  width: 18px;
+  height: 18px;
 }
 
-.hero-ctas {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1.16);
+  }
+}
+@keyframes hero-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.82) rotate(-6deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hero-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before,
+  .hero__logo,
+  .hero__title span,
+  .hero__tagline,
+  .hero__scroll {
+    animation: none;
+  }
 }
 
 /* ===================== BOTONES ===================== */
@@ -2574,15 +2675,6 @@ img {
 }
 
 @media (max-width: 768px) {
-  .hero-ctas {
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 320px;
-  }
-  .hero-ctas .btn {
-    justify-content: center;
-  }
-
   .agency-logos {
     grid-template-columns: repeat(2, 1fr);
   }

@@ -162,12 +162,18 @@
 
         <!-- HERO -->
         <section class="hero" id="inicio">
-            <div class="boxed hero-inner">
-                <h1>Wobocobo</h1>
-                <div class="hero-ctas">
-                    <a href="#cases" class="btn btn--primary">Ver casos de trabajo</a>
-                    <a href="#about" class="btn btn--ghost">Sobre mí</a>
-                </div>
+            <div class="hero__stage">
+                <img class="hero__logo" src="assets/img/logo-w.png" alt="" width="132" height="132" />
+                <!-- Una letra por span para la entrada escalonada; el nombre accesible va en aria-label -->
+                <h1 class="hero__title" aria-label="Wobocobo">
+                    <span aria-hidden="true" style="--i: 0">W</span><span aria-hidden="true" style="--i: 1">O</span><span aria-hidden="true" style="--i: 2">B</span><span aria-hidden="true" style="--i: 3">O</span><span aria-hidden="true" style="--i: 4">C</span><span aria-hidden="true" style="--i: 5">O</span><span aria-hidden="true" style="--i: 6">B</span><span aria-hidden="true" style="--i: 7">O</span>
+                </h1>
+                <p class="hero__tagline">Mi espacio en internet</p>
+                <a class="hero__scroll" href="#about" aria-label="Bajar a Sobre mí">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 5v14M6 13l6 6 6-6"></path>
+                    </svg>
+                </a>
             </div>
         </section>
 
