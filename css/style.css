@@ -2159,7 +2159,6 @@ img {
   align-items: center;
   gap: 0.4rem;
   width: fit-content;
-  margin-top: 0.35rem;
   padding: 0.3rem 0.7rem;
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   border-radius: 999px;
@@ -2217,36 +2216,26 @@ img {
   }
 }
 
-.footer-container {
+/* Una sola fila de enlaces centrada bajo la marca (se parte sola en móvil) */
+.footer-nav {
   display: flex;
-  justify-content: space-between;
-  gap: 2.5rem;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 1.6rem;
 }
-.footer-column {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 170px;
-}
-.footer-column h5 {
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--text-faint);
-  margin-bottom: 0.45rem;
-}
-.footer-column a {
-  font-size: 0.9rem;
+.footer-nav a {
+  font-size: 0.92rem;
   color: var(--text-muted);
+  transition: color 0.2s;
 }
-.footer-column a:hover {
+.footer-nav a:hover,
+.footer-nav a[aria-current='page'] {
   color: var(--text);
 }
 .footer-copy {
   text-align: center;
-  margin-top: 2.4rem;
+  margin-top: 2rem;
   font-size: 0.82rem;
   color: var(--text-faint);
 }
@@ -3041,6 +3030,10 @@ img {
   .timeline-visit {
     position: static;
     width: auto;
+  }
+  /* Hueco para que el botón fijo de volver arriba no tape el copyright */
+  .footer {
+    padding-bottom: 5.5rem;
   }
 }
 
