@@ -178,8 +178,8 @@ if (dropdown && dropdownToggle) {
 }
 
 /* ============================================================
-   Timeline: línea de progreso y nodos activos al hacer scroll
-   La línea puede estar a la izquierda (móvil) o centrada (desktop).
+   Timeline: línea de progreso (a la izquierda) y nodos activos al
+   hacer scroll; «Ver más» despliega las viñetas de cada puesto.
    ============================================================ */
 const timeline = document.querySelector('.timeline');
 
@@ -203,6 +203,34 @@ if (timeline) {
   window.addEventListener('scroll', updateTimeline, { passive: true });
   window.addEventListener('resize', updateTimeline);
   updateTimeline();
+
+  /* «Ver más»: anima max-height desde el trozo que asoma hasta la altura real
+     y, al terminar, la deja en none para que aguante cambios de ancho. Al
+     plegar se parte de la altura en px (desde none no hay transición). Cambia
+     el alto de la timeline, así que se recalcula la línea al acabar. */
+  timeline.querySelectorAll('.timeline-toggle').forEach((btn) => {
+    const item = btn.closest('.timeline-item');
+    const more = item.querySelector('.timeline-more');
+    const label = btn.querySelector('span');
+
+    btn.addEventListener('click', () => {
+      const open = !item.classList.contains('is-open');
+      more.style.maxHeight = more.scrollHeight + 'px';
+      if (!open) {
+        void more.offsetHeight;
+        more.style.maxHeight = '';
+      }
+      item.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      label.textContent = open ? 'Ver menos' : 'Ver más';
+    });
+
+    more.addEventListener('transitionend', (e) => {
+      if (e.propertyName !== 'max-height') return;
+      if (item.classList.contains('is-open')) more.style.maxHeight = 'none';
+      updateTimeline();
+    });
+  });
 }
 
 /* ============================================================
