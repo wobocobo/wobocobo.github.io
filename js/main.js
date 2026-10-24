@@ -69,33 +69,80 @@ AOS.init({
 })();
 
 /* ============================================================
-   Menú hamburguesa + dropdown (móvil)
+   Header compacto: arriba del todo va limpio; en cuanto se baja
+   un poco gana fondo difuminado y menos altura (.is-scrolled).
+   ============================================================ */
+(function headerScroll() {
+  const header = document.querySelector('.main-header');
+  if (!header) return;
+
+  const update = () => {
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ============================================================
+   Scroll-spy: resalta en la píldora el enlace de la sección que
+   cruza la mitad de la pantalla. Solo actúa con enlaces #hash,
+   así que en cine/spoti no hace nada.
+   ============================================================ */
+(function navSpy() {
+  const links = [...document.querySelectorAll('.nav__link[href^="#"]')];
+  if (!links.length || !('IntersectionObserver' in window)) return;
+
+  const byId = new Map(links.map((link) => [link.getAttribute('href').slice(1), link]));
+  const sections = [...document.querySelectorAll('section[id]')];
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const current = byId.get(entry.target.id);
+        links.forEach((link) => link.classList.toggle('is-active', link === current));
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px' }
+  );
+
+  sections.forEach((section) => io.observe(section));
+})();
+
+/* ============================================================
+   Menú móvil a pantalla completa + dropdown Curiosidades
    ============================================================ */
 const toggleBtn = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav');
 const dropdown = document.querySelector('.dropdown');
 const dropdownToggle = document.querySelector('.dropdown-toggle');
 
-const isMobile = () => window.innerWidth <= 768;
+const isMobile = () => window.innerWidth <= 900;
+
+const closeDropdown = () => {
+  if (!dropdown) return;
+  dropdown.classList.remove('open');
+  if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+};
 
 const closeMenu = () => {
   if (!nav) return;
   nav.classList.remove('open');
-  if (dropdown) dropdown.classList.remove('open');
+  document.documentElement.classList.remove('menu-open');
+  closeDropdown();
   if (toggleBtn) {
     toggleBtn.setAttribute('aria-expanded', 'false');
     toggleBtn.setAttribute('aria-label', 'Abrir menú');
-    toggleBtn.textContent = '☰';
   }
 };
 
 if (toggleBtn && nav) {
   toggleBtn.addEventListener('click', () => {
     const open = nav.classList.toggle('open');
-    if (!open && dropdown) dropdown.classList.remove('open');
+    document.documentElement.classList.toggle('menu-open', open);
     toggleBtn.setAttribute('aria-expanded', String(open));
     toggleBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-    toggleBtn.textContent = open ? '✕' : '☰';
   });
 
   nav.addEventListener('click', (e) => {
@@ -115,9 +162,18 @@ if (toggleBtn && nav) {
   });
 }
 
+/* En escritorio se abre con hover/foco (CSS) y también con clic, para
+   táctiles grandes; en el menú móvil sus enlaces ya están a la vista. */
 if (dropdown && dropdownToggle) {
   dropdownToggle.addEventListener('click', () => {
-    if (isMobile()) dropdown.classList.toggle('open');
+    if (isMobile()) return;
+    const open = dropdown.classList.toggle('open');
+    dropdownToggle.setAttribute('aria-expanded', String(open));
+    if (!open) dropdownToggle.blur();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) closeDropdown();
   });
 }
 

@@ -59,24 +59,66 @@
         <header class="main-header">
             <div class="boxed header-container">
                 <div class="brand">
-                    <span class="brand-mark" aria-hidden="true"></span>
-                    <a href="index.html">Wobocobo</a>
+                    <a class="brand__link" href="index.html">
+                        <img class="brand__logo" src="assets/img/logo-w.png" alt="" width="28" height="28" />
+                        Wobocobo
+                    </a>
                 </div>
-                <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
-                    ☰
-                </button>
-                <nav class="nav">
-                    <a href="#about">Sobre mí</a>
-                    <a href="#experience">Experiencia</a>
-                    <a href="#cases">Trabajo</a>
+                <nav class="nav" id="mainNav" aria-label="Principal">
+                    <a class="nav__link" href="#inicio">
+                        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path>
+                        </svg>
+                        Inicio
+                    </a>
+                    <a class="nav__link" href="#about">
+                        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path>
+                        </svg>
+                        Sobre mí
+                    </a>
+                    <a class="nav__link" href="#cases">
+                        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M8 7l-5 5 5 5M16 7l5 5-5 5"></path>
+                        </svg>
+                        Trabajo
+                    </a>
                     <div class="dropdown">
-                        <span class="dropdown-toggle">Curiosidades</span>
+                        <button class="nav__link dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                            <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"></path>
+                            </svg>
+                            Curiosidades
+                            <svg class="nav__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
                         <div class="dropdown-menu">
-                            <a href="spoti.html">Música</a>
-                            <a href="cine.html">Cine</a>
+                            <a href="cine.html">
+                                <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                    <path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"></path>
+                                </svg>
+                                Cine
+                            </a>
+                            <a href="spoti.html">
+                                <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M9 18V5l12-2v13"></path>
+                                    <circle cx="6" cy="18" r="3"></circle>
+                                    <circle cx="18" cy="16" r="3"></circle>
+                                </svg>
+                                Música
+                            </a>
                         </div>
                     </div>
-                    <a href="#contact">Contacto</a>
+                    <a class="nav__link" href="#contact">
+                        <svg class="nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                            <path d="M3 7l9 6 9-6"></path>
+                        </svg>
+                        Contacto
+                    </a>
                 </nav>
                 <div class="header-end">
                     <time class="header-time" id="headerTime">--:--:--</time>
@@ -111,12 +153,15 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </button>
+                    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
+                        <span class="menu-toggle__bars" aria-hidden="true"></span>
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- HERO -->
-        <section class="hero">
+        <section class="hero" id="inicio">
             <div class="boxed hero-inner">
                 <h1>Wobocobo</h1>
                 <div class="hero-ctas">

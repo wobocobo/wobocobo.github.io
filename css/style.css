@@ -33,7 +33,8 @@
   --font-head: 'Space Grotesk', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
-  --header-h: 68px;
+  --header-h: 76px;
+  --header-h-compact: 60px;
 }
 
 .light-theme {
@@ -65,8 +66,13 @@
   padding: 0;
 }
 
+/* overflow-x: clip en html y body, no hidden: las animaciones laterales de AOS
+   y el carrusel a sangre se salen por los lados, y en móvil eso ensanchaba la
+   página (455px en una pantalla de 375). hidden en ambos convertiría a body en
+   contenedor de scroll y rompería el header sticky; clip recorta sin hacerlo. */
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -75,7 +81,7 @@ body {
   line-height: 1.7;
   background: var(--bg);
   color: var(--text-body);
-  overflow-x: hidden;
+  overflow-x: clip;
   transition:
     background 0.3s,
     color 0.3s;
@@ -164,14 +170,33 @@ img {
 }
 
 /* ===================== HEADER ===================== */
+/* Arriba del todo va limpio; al bajar, main.js pone .is-scrolled y la barra
+   se compacta con fondo difuminado. El blur va en ::before y no en el propio
+   header: backdrop-filter crea un bloque contenedor y el menú móvil, que es
+   position: fixed, quedaría encerrado dentro de la barra. */
 .main-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: color-mix(in srgb, var(--bg-deep) 86%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.main-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg-deep) 78%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.main-header.is-scrolled {
+  border-bottom-color: var(--border);
+}
+.main-header.is-scrolled::before {
+  opacity: 1;
 }
 .header-container {
   display: grid;
@@ -179,53 +204,99 @@ img {
   align-items: center;
   gap: 1rem;
   min-height: var(--header-h);
+  transition: min-height 0.3s ease;
+}
+.is-scrolled .header-container {
+  min-height: var(--header-h-compact);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   justify-self: start;
+  min-width: 0;
 }
-.brand a {
-  font-size: 1.25rem;
+.brand__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text);
+  white-space: nowrap;
 }
-.brand a:hover {
-  color: var(--accent);
-  text-decoration: none;
+.brand__link:hover {
+  color: var(--text);
 }
-.brand-mark {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 70%, transparent);
+.brand__logo {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+.brand__link:hover .brand__logo {
+  transform: rotate(-8deg) scale(1.06);
+}
+/* El PNG es blanco sobre transparente: en el tema claro se invierte a negro */
+.light-theme .brand__logo {
+  filter: invert(1);
 }
 
+/* Enlaces dentro de una píldora centrada */
 .nav {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 1.4rem;
+  gap: 0.15rem;
   justify-self: center;
-  justify-content: center;
+  padding: 0.3rem;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 }
-.nav > a,
-.dropdown-toggle {
-  font-size: 0.92rem;
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 36px;
+  padding: 0 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
   font-weight: 500;
+  line-height: 1;
   color: var(--text-muted);
+  white-space: nowrap;
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
-.nav > a:hover,
-.dropdown-toggle:hover {
+.nav__link:hover {
   color: var(--text);
-  text-decoration: none;
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+/* Sección visible (scroll-spy de main.js) o página actual dentro de Curiosidades */
+.nav__link.is-active,
+.dropdown:has([aria-current='page']) > .nav__link {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.nav__icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.nav__chevron {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  transition: transform 0.25s;
 }
 
 .header-end {
@@ -252,24 +323,20 @@ img {
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--border-mid);
-  background:
-    radial-gradient(70px 50px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    var(--surface);
+  background: var(--surface);
   color: var(--text-muted);
   cursor: pointer;
   line-height: 1;
-  font-size: 1.02rem;
   transition:
     border-color 0.2s,
     color 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+    background 0.3s,
+    transform 0.2s;
 }
 .theme-toggle:hover,
 .menu-toggle:hover {
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 .theme-toggle:hover {
   transform: rotate(15deg);
@@ -298,52 +365,111 @@ img {
   opacity: 1;
   transform: scale(1) rotate(0deg);
 }
+/* Hamburguesa: tres barras que se cruzan en una ✕ al abrir */
 .menu-toggle {
   display: none;
 }
-.menu-toggle:hover {
-  transform: rotate(90deg);
+.menu-toggle__bars,
+.menu-toggle__bars::before,
+.menu-toggle__bars::after {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition:
+    transform 0.3s ease,
+    background 0.2s;
+}
+.menu-toggle__bars {
+  position: relative;
+}
+.menu-toggle__bars::before,
+.menu-toggle__bars::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.menu-toggle__bars::before {
+  transform: translateY(-5px);
+}
+.menu-toggle__bars::after {
+  transform: translateY(5px);
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle__bars {
+  background: transparent;
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle__bars::before {
+  transform: rotate(45deg);
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle__bars::after {
+  transform: rotate(-45deg);
 }
 
 .dropdown {
   position: relative;
 }
+/* Puente invisible para que el hover no se corte entre la píldora y el menú */
 .dropdown::before {
   content: '';
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  height: 1rem;
-  z-index: 99;
+  height: 0.8rem;
+}
+/* Bootstrap trae su propio caret en .dropdown-toggle y oculta .dropdown-menu
+   con display: none; aquí manda la flecha SVG y la visibilidad por opacidad. */
+.dropdown-toggle::after {
+  display: none;
 }
 .dropdown-menu {
+  display: block;
   position: absolute;
   top: calc(100% + 0.6rem);
-  right: 0;
+  left: 50%;
+  z-index: 100;
+  min-width: 190px;
+  padding: 0.35rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.4rem;
-  display: none;
-  min-width: 170px;
-  z-index: 100;
-  box-shadow: 0 14px 40px color-mix(in srgb, var(--bg) 80%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--bg) 70%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -6px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    visibility 0.2s;
+}
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu,
+.dropdown.open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+.dropdown:hover .nav__chevron,
+.dropdown.open .nav__chevron {
+  transform: rotate(180deg);
 }
 .dropdown-menu a {
-  display: block;
-  padding: 0.55rem 0.9rem;
-  font-size: 0.88rem;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
   color: var(--text-muted);
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
-.dropdown-menu a:hover {
+.dropdown-menu a:hover,
+.dropdown-menu a[aria-current='page'] {
   background: var(--surface-2);
   color: var(--text);
-  text-decoration: none;
-}
-.dropdown:hover .dropdown-menu {
-  display: block;
 }
 
 /* ===================== HERO ===================== */
@@ -2301,6 +2427,17 @@ img {
 }
 
 /* ===================== RESPONSIVE ===================== */
+/* Entre tablet y portátil pequeño la píldora no cabe con iconos */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .nav > .nav__link .nav__icon,
+  .dropdown-toggle .nav__icon {
+    display: none;
+  }
+  .nav__link {
+    padding-inline: 0.75rem;
+  }
+}
+
 @media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr;
@@ -2310,125 +2447,133 @@ img {
     margin-inline: auto;
     width: 100%;
   }
-}
 
-@media (max-width: 768px) {
+  /* Menú a pantalla completa. El corte de 900px está repetido en main.js
+     (isMobile). Marca y botones quedan por encima de la capa. */
   .header-container {
-    grid-template-columns: 1fr auto auto;
-    gap: 0.6rem;
+    grid-template-columns: 1fr auto;
   }
-  .brand {
-    min-width: 0;
-  }
-  .brand a {
-    white-space: nowrap;
+  .brand,
+  .header-end {
+    position: relative;
+    z-index: 2;
   }
   .menu-toggle {
     display: grid;
   }
   .nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 1001;
-    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    justify-self: stretch;
+    align-self: stretch;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.35rem;
-    padding: 0.85rem 0.9rem 1rem;
-    border: 1px solid var(--border);
-    border-top: 1px solid var(--border-mid);
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    background: var(--surface);
-    box-shadow: 0 16px 34px color-mix(in srgb, var(--bg) 70%, transparent);
+    justify-content: center;
+    gap: 0.2rem;
+    padding: calc(var(--header-h) + 1rem) clamp(1.5rem, 8vw, 3rem) 2rem;
+    background: var(--bg-deep);
+    border: 0;
+    border-radius: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s;
   }
   .nav.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
   }
-
-  /* Items del menú: amplios, touch-friendly y con estado hover */
-  .nav > a,
-  .dropdown {
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    transition: background 0.2s, color 0.2s;
+  .nav__link,
+  .dropdown-menu a {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease,
+      background 0.2s,
+      color 0.2s;
+    transition-delay: calc(var(--i, 0) * 55ms);
   }
-  .nav > a:hover,
-  .dropdown.open > .dropdown-toggle {
-    background: var(--surface-2);
+  .nav.open .nav__link,
+  .nav.open .dropdown-menu a {
+    opacity: 1;
+    transform: none;
+  }
+  .nav > :nth-child(2) {
+    --i: 1;
+  }
+  .nav > :nth-child(3) {
+    --i: 2;
+  }
+  .nav > :nth-child(4) > .nav__link {
+    --i: 3;
+  }
+  .dropdown-menu a:nth-child(1) {
+    --i: 4;
+  }
+  .dropdown-menu a:nth-child(2) {
+    --i: 5;
+  }
+  .nav > :nth-child(5) {
+    --i: 6;
+  }
+  .nav__link {
+    justify-content: flex-start;
+    gap: 0.9rem;
+    min-height: 56px;
+    padding: 0 0.6rem;
+    border-radius: 14px;
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 600;
     color: var(--text);
   }
-  .nav > a,
-  .dropdown-toggle {
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  .dropdown {
-    width: 100%;
-    margin-top: 0.3rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid var(--border);
-    border-radius: 10px;
-  }
-  .dropdown-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.4rem;
-    width: 100%;
-  }
-  .dropdown-toggle::after {
-    content: '';
-    width: 7px;
-    height: 7px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
-    transition: transform 0.25s;
-    margin-top: -3px;
-    opacity: 0.6;
-    flex-shrink: 0;
-  }
-  .dropdown.open .dropdown-toggle::after {
-    transform: rotate(225deg);
-    margin-top: 2px;
-  }
-
-  /* Submenú Curiosidades: indentado con línea de acento */
-  .dropdown-menu {
-    display: none;
-    position: static;
-    margin-top: 0.4rem;
-    margin-left: 0.9rem;
-    padding: 0.2rem 0 0.2rem 0.9rem;
-    border-left: 2px solid color-mix(in srgb, var(--accent) 40%, var(--border));
-    background: transparent;
-    box-shadow: none;
-    min-width: 0;
-  }
-  .dropdown-menu a {
-    display: block;
-    padding: 0.6rem 0.8rem;
-    font-size: 0.92rem;
-    border-radius: 8px;
-    color: var(--text-muted);
-    transition: background 0.2s, color 0.2s;
-  }
-  .dropdown-menu a:hover {
-    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  .nav__link .nav__icon {
+    width: 22px;
+    height: 22px;
     color: var(--accent);
   }
-  .dropdown:hover .dropdown-menu {
+  /* Curiosidades: etiqueta fija con sus páginas siempre a la vista */
+  .dropdown-toggle {
+    width: 100%;
+    cursor: default;
+  }
+  .dropdown-toggle:hover {
+    background: transparent;
+  }
+  .nav__chevron,
+  .dropdown::before {
     display: none;
   }
+  .dropdown-menu,
+  .dropdown:hover .dropdown-menu,
+  .dropdown:focus-within .dropdown-menu,
   .dropdown.open .dropdown-menu {
-    display: block;
+    position: static;
+    min-width: 0;
+    margin: 0 0 0.3rem 2.3rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
   }
-  .header-time {
-    font-size: 0.8rem;
+  .dropdown-menu a {
+    min-height: 48px;
+    font-size: 1.15rem;
   }
+  /* El bloqueo de scroll va en html: en body lo convertiría en contenedor de
+     scroll y el header sticky (marca y ✕) se iría con la página. */
+  html.menu-open {
+    overflow: hidden;
+  }
+}
 
+@media (max-width: 768px) {
   .hero-ctas {
     flex-direction: column;
     align-items: stretch;
