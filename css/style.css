@@ -1223,6 +1223,10 @@ img {
     box-shadow 0.25s,
     transform 0.25s;
 }
+/* En banda, el hueco del punto toma el fondo de la banda */
+.section--alt .timeline-marker {
+  background: var(--bg-deep);
+}
 .timeline-marker.active {
   border-color: var(--accent);
   background: var(--accent);
