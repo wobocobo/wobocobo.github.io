@@ -629,6 +629,77 @@ document.querySelectorAll('[data-carousel]').forEach(initCarousel);
 })();
 
 /* ============================================================
+   W de Sobre mí: gira sola (CSS) y, con ratón dentro de la
+   sección, deja de girar y se inclina en 3D hacia el cursor.
+   Al entrar arranca desde el ángulo en el que iba (leído del
+   matrix3d) para no dar un salto; al salir vuelve de frente y
+   se devuelve el control a la animación CSS, que empieza en 0°.
+   Solo con ratón y sin "reducir movimiento".
+   ============================================================ */
+(function aboutTilt() {
+  const section = document.getElementById('about');
+  const logo = document.querySelector('.about-media__logo');
+  if (!section || !logo) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const MAX = 28; /* grados de inclinación máxima */
+  const anchor = logo.parentElement; /* el contenedor no rota: centro estable */
+  let active = false;
+  let followTimer;
+  let leaveTimer;
+
+  /* rotateY(θ) → matrix3d(cosθ, 0, -sinθ, 0, 0, 1, 0, 0, sinθ, 0, cosθ, 0, …) */
+  const currentAngle = () => {
+    const match = getComputedStyle(logo).transform.match(/matrix3d\((.+)\)/);
+    if (!match) return 0;
+    const v = match[1].split(',').map(Number);
+    return (Math.atan2(v[8], v[0]) * 180) / Math.PI;
+  };
+
+  const enter = () => {
+    clearTimeout(leaveTimer);
+    if (active) return;
+    active = true;
+    const angle = currentAngle();
+    logo.style.animation = 'none';
+    logo.style.transition = 'none';
+    logo.style.transform = `rotateX(0deg) rotateY(${angle.toFixed(1)}deg) scale(1)`;
+    void logo.offsetWidth; /* fija el punto de partida antes de animar */
+    logo.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    /* tras el giro inicial, seguimiento más ágil */
+    followTimer = setTimeout(() => {
+      logo.style.transition = 'transform 0.18s ease-out';
+    }, 600);
+  };
+
+  const clamp = (n) => Math.max(-1, Math.min(1, n));
+
+  section.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    enter();
+    const r = anchor.getBoundingClientRect();
+    const s = section.getBoundingClientRect();
+    const dx = clamp((e.clientX - (r.left + r.width / 2)) / (s.width / 2));
+    const dy = clamp((e.clientY - (r.top + r.height / 2)) / (s.height / 2));
+    logo.style.transform = `rotateX(${(-dy * MAX).toFixed(1)}deg) rotateY(${(dx * MAX).toFixed(1)}deg) scale(1.06)`;
+  });
+
+  section.addEventListener('pointerleave', () => {
+    if (!active) return;
+    clearTimeout(followTimer);
+    logo.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    logo.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+    leaveTimer = setTimeout(() => {
+      active = false;
+      logo.style.removeProperty('transform');
+      logo.style.removeProperty('transition');
+      logo.style.removeProperty('animation');
+    }, 600);
+  });
+})();
+
+/* ============================================================
    Aviso del CV: el mensaje bajo "¿Hablamos?" solo sale cuando se
    pulsa "Descargar CV" (enlazo del footer de las 3 páginas).
    Desde cine/spoti navega a index.html#contact-cv; allí se
