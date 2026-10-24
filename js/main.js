@@ -471,6 +471,164 @@ function initCarousel(root) {
 document.querySelectorAll('[data-carousel]').forEach(initCarousel);
 
 /* ============================================================
+   Al azar (portada): una película de data/ratings.json y una
+   playlist de data/spoti.json elegidas al azar en cada visita;
+   el botón «Otra» baraja sin recargar. El nombre y la carátula
+   reales de la playlist salen del oEmbed de Spotify, con la
+   misma caché que spoti.js (localStorage spoti:meta, 6 h).
+   ============================================================ */
+(function azar() {
+  const root = document.getElementById('azar');
+  if (!root) return;
+
+  const filmCard = root.querySelector('[data-azar="film"]');
+  const listCard = root.querySelector('[data-azar="playlist"]');
+  const shuffleBtn = root.querySelector('[data-azar-shuffle]');
+
+  const CACHE_KEY = 'spoti:meta';
+  const CACHE_TTL = 6 * 60 * 60 * 1000;
+  const OEMBED = 'https://open.spotify.com/oembed?url=';
+
+  let films = [];
+  let lists = [];
+  let film = null;
+  let list = null;
+
+  /* Mismo proxy que cine.js: el hotlink a pics.filmaffinity.com da 403 */
+  const posterUrl = (src) => {
+    const bare = (src || '').replace(/^https?:\/\//i, '');
+    if (!/^pics\.filmaffinity\.com\//i.test(bare)) return src || '';
+    return 'https://images.weserv.nl/?url=' + bare + '&w=160&q=80&output=jpg';
+  };
+
+  const readCache = () => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      if (!raw || !raw.meta || !raw.ts || Date.now() - raw.ts > CACHE_TTL) return {};
+      return raw.meta;
+    } catch {
+      return {};
+    }
+  };
+
+  const writeCache = (meta) => {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), meta }));
+    } catch {
+      /* modo privado o cuota llena: no es crítico */
+    }
+  };
+
+  const playlistMeta = async (entry) => {
+    const cache = readCache();
+    if (cache[entry.id]) return cache[entry.id];
+    try {
+      const target = encodeURIComponent('https://open.spotify.com/playlist/' + entry.id);
+      const res = await fetch(OEMBED + target);
+      if (!res.ok) throw new Error('oEmbed respondió ' + res.status);
+      const data = await res.json();
+      if (!data.thumbnail_url) throw new Error('oEmbed sin carátula');
+      const meta = { title: data.title || entry.name || '', cover: data.thumbnail_url };
+      cache[entry.id] = meta;
+      writeCache(cache);
+      return meta;
+    } catch {
+      /* sin metadatos: nombre de respaldo de data/spoti.json y sin carátula */
+      return { title: entry.name || 'Playlist', cover: '' };
+    }
+  };
+
+  /* Precarga la imagen antes de mostrar la tarjeta, con un tope de espera */
+  const preload = (src) =>
+    new Promise((resolve) => {
+      if (!src) return resolve();
+      const probe = new Image();
+      probe.onload = probe.onerror = resolve;
+      probe.src = src;
+      setTimeout(resolve, 1500);
+    });
+
+  const setImage = (card, src) => {
+    const img = card.querySelector('img');
+    if (src) img.src = src;
+    else img.removeAttribute('src');
+  };
+
+  const showFilm = async (entry) => {
+    const src = posterUrl(entry.poster);
+    await preload(src);
+    const title = entry.title + (entry.year ? ` (${entry.year})` : '');
+    setImage(filmCard, src);
+    filmCard.querySelector('.azar-card__title').textContent = title;
+    filmCard.querySelector('[data-azar-rating]').textContent = entry.rating ? `★ ${entry.rating}/10` : '';
+    filmCard.setAttribute('aria-label', `Película al azar: ${title}. Ver mi cine`);
+  };
+
+  const showList = async (entry) => {
+    const meta = await playlistMeta(entry);
+    await preload(meta.cover);
+    setImage(listCard, meta.cover);
+    listCard.querySelector('.azar-card__title').textContent = meta.title;
+    listCard.setAttribute('aria-label', `Playlist al azar: ${meta.title}. Ver mi música`);
+  };
+
+  /* Elige otro elemento distinto del actual (si hay más de uno) */
+  const pick = (items, current) => {
+    if (items.length < 2) return items[0];
+    let next;
+    do {
+      next = items[Math.floor(Math.random() * items.length)];
+    } while (next === current);
+    return next;
+  };
+
+  const swap = async (card, show) => {
+    card.classList.add('is-swapping');
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    await show();
+    card.classList.remove('is-swapping');
+  };
+
+  const shuffle = () => {
+    if (films.length) {
+      film = pick(films, film);
+      const entry = film;
+      swap(filmCard, () => showFilm(entry));
+    }
+    if (lists.length) {
+      list = pick(lists, list);
+      const entry = list;
+      swap(listCard, () => showList(entry));
+    }
+  };
+
+  shuffleBtn.addEventListener('click', () => {
+    shuffleBtn.classList.remove('is-spinning');
+    void shuffleBtn.offsetWidth; /* reinicia la animación del icono */
+    shuffleBtn.classList.add('is-spinning');
+    shuffle();
+  });
+
+  const getJson = (url) =>
+    fetch(url)
+      .then((res) => res.json())
+      .catch(() => []);
+
+  Promise.all([getJson('data/ratings.json'), getJson('data/spoti.json')]).then(([ratings, playlists]) => {
+    films = (Array.isArray(ratings) ? ratings : []).filter((entry) => entry && entry.title);
+    lists = (Array.isArray(playlists) ? playlists : []).filter((entry) => entry && entry.id);
+    filmCard.hidden = !films.length;
+    listCard.hidden = !lists.length;
+    shuffleBtn.hidden = films.length < 2 && lists.length < 2;
+    if (!films.length && !lists.length) {
+      root.hidden = true;
+      return;
+    }
+    shuffle();
+  });
+})();
+
+/* ============================================================
    Aviso del CV: el mensaje bajo "¿Hablamos?" solo sale cuando se
    pulsa "Descargar CV" (enlazo del footer de las 3 páginas).
    Desde cine/spoti navega a index.html#contact-cv; allí se

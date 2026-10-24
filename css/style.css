@@ -632,6 +632,186 @@ img {
   }
 }
 
+/* ===================== AL AZAR ===================== */
+/* Tras Sobre mí: una película y una playlist al azar (main.js). Al barajar,
+   cada tarjeta se desvanece (.is-swapping), cambia y vuelve. */
+.azar__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+.azar__head .section-head {
+  margin-bottom: 0;
+}
+.azar__shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.3s;
+}
+.azar__shuffle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.azar__shuffle svg {
+  width: 16px;
+  height: 16px;
+}
+.azar__shuffle.is-spinning svg {
+  animation: azar-spin 0.5s ease;
+}
+.azar__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 1rem;
+}
+.azar-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem 0.9rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: inherit;
+  transition:
+    border-color 0.2s,
+    background 0.3s,
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+.azar-card:hover {
+  border-color: var(--border-mid);
+  transform: translateY(-2px);
+  color: inherit;
+}
+.azar-card.is-swapping {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.azar-card__media {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.azar-card--playlist .azar-card__media {
+  width: 72px;
+  height: 72px;
+}
+.azar-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.azar-card__media img:not([src]) {
+  visibility: hidden;
+}
+.azar-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.azar-card__kicker {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.azar-card__title {
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.azar-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.azar-card__meta b {
+  color: var(--accent);
+  font-weight: 600;
+}
+.azar-card__eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.azar-card__eq span {
+  display: block;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform-origin: bottom;
+  animation: eq-bounce 1.05s ease-in-out infinite;
+}
+.azar-card__eq span:nth-child(1) {
+  animation-delay: -0.72s;
+}
+.azar-card__eq span:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.azar-card__eq span:nth-child(3) {
+  animation-delay: -0.52s;
+}
+.azar-card__eq span:nth-child(4) {
+  animation-delay: -0.12s;
+}
+.azar-card__arrow {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  color: var(--text-faint);
+  transition:
+    color 0.2s,
+    transform 0.2s;
+}
+.azar-card:hover .azar-card__arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+@keyframes azar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .azar-card__eq span,
+  .azar__shuffle.is-spinning svg {
+    animation: none;
+  }
+}
+
 /* ===================== BOTONES ===================== */
 .btn {
   display: inline-flex;

@@ -232,6 +232,54 @@
                 </div>
             </section>
 
+            <!-- AL AZAR: main.js elige una película y una playlist al azar -->
+            <section class="section azar" id="azar" aria-labelledby="azarTitle">
+                <div class="boxed">
+                    <div class="azar__head">
+                        <div class="section-head" data-aos="fade-up">
+                            <span class="section-label">Al azar</span>
+                            <h2 class="section-title" id="azarTitle">¿Qué ponemos hoy?</h2>
+                            <p class="section-subtitle">
+                                Una peli y una playlist mías al azar; si no te convencen, pide otra.
+                            </p>
+                        </div>
+                        <button class="azar__shuffle" type="button" data-azar-shuffle>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+                            </svg>
+                            Otra
+                        </button>
+                    </div>
+                    <div class="azar__grid">
+                        <a class="azar-card" href="cine.html" data-azar="film">
+                            <span class="azar-card__media"><img alt="" decoding="async" /></span>
+                            <span class="azar-card__body">
+                                <span class="azar-card__kicker">Película</span>
+                                <span class="azar-card__title">…</span>
+                                <span class="azar-card__meta"><b data-azar-rating></b> mi nota</span>
+                            </span>
+                            <svg class="azar-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14M13 6l6 6-6 6"></path>
+                            </svg>
+                        </a>
+                        <a class="azar-card azar-card--playlist" href="spoti.html" data-azar="playlist">
+                            <span class="azar-card__media"><img alt="" decoding="async" /></span>
+                            <span class="azar-card__body">
+                                <span class="azar-card__kicker">Playlist</span>
+                                <span class="azar-card__title">…</span>
+                                <span class="azar-card__meta">
+                                    <span class="azar-card__eq" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+                                    En Spotify
+                                </span>
+                            </span>
+                            <svg class="azar-card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14M13 6l6 6-6 6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
             <!-- EXPERIENCIA -->
             <section id="experience" class="section">
                 <div class="boxed">
