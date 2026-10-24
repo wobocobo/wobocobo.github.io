@@ -128,6 +128,11 @@ img {
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4.5vw, 4.5rem);
 }
+/* Más ancho para secciones protagonistas (Trabajo), con el mismo margen */
+.boxed--wide {
+  max-width: 1600px;
+  padding-inline: clamp(1.25rem, 3.5vw, 3.5rem);
+}
 
 .page {
   display: block;
@@ -1595,38 +1600,35 @@ img {
   scroll-snap-align: center;
   display: flex;
 }
-.carousel__controls {
+.carousel__nav {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  margin-top: 1.8rem;
+  gap: 0.6rem;
 }
 .carousel__arrow {
-  background:
-    radial-gradient(90px 60px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    var(--surface);
+  background: var(--surface);
   border: 1px solid var(--border-mid);
   color: var(--text-muted);
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  font-size: 1.1rem;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   display: grid;
   place-items: center;
   transition:
     border-color 0.2s,
     color 0.2s,
+    background 0.3s,
     opacity 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
+    transform 0.18s;
+}
+.carousel__arrow svg {
+  width: 18px;
+  height: 18px;
 }
 .carousel__arrow:hover:not(:disabled) {
   border-color: var(--accent);
   color: var(--accent);
-  transform: scale(1.08);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 20%, transparent);
+  transform: scale(1.06);
 }
 .carousel__arrow:disabled {
   opacity: 0.3;
@@ -1634,7 +1636,9 @@ img {
 }
 .carousel__dots {
   display: flex;
+  justify-content: center;
   gap: 0.55rem;
+  margin-top: 1.6rem;
 }
 .carousel__dot {
   width: 9px;
@@ -1653,54 +1657,140 @@ img {
   transform: scale(1.3);
 }
 
-/* Versión a sangre completa: el track ocupa los 100vw de la ventana y los
-   slides van pegados a los bordes (sin padding de centrado), de forma que
-   siempre hay cards rellenando el ancho y nunca queda un hueco vacío al
-   principio ni al final. `safe center` solo centra cuando todo el contenido
-   cabe entero (monitores muy anchos), sin volver inalcanzable el inicio. */
-.carousel--bleed {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-}
-.carousel--bleed .carousel__track {
-  padding-inline: calc(50vw - (var(--cw, min(880px, 92vw)) / 2));
-}
 
 /* ===================== CASOS — CARDS ===================== */
+/* Mismo padding compacto que #about (ritmo vertical del rediseño v2) */
+#cases {
+  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+/* Un caso a todo el ancho del contenedor: el slide mide el 100% del track y
+   las vecinas quedan ocultas por el overflow del viewport. Las flechas van en
+   la cabecera (.cases-head) y los puntos debajo. */
 .carousel--cases {
-  --cw: min(760px, 94vw);
+  --cw: 100%;
+}
+.cases-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.2rem);
+}
+.cases-head .section-head {
+  margin-bottom: 0;
 }
 
+/* Cada caso, sin tarjeta: marco de navegador grande a la izquierda (__frame)
+   con la captura de la web y su URL real enlazada, y el texto a la derecha.
+   En ≤900px se apilan (ver RESPONSIVE). */
 .case-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
   width: 100%;
-  height: 100%;
+}
+
+.case-frame {
+  border: 1px solid var(--border-mid);
+  border-radius: 16px;
+  background: var(--bg-deep);
+  overflow: hidden;
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--bg) 60%, transparent);
+}
+.case-frame__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.case-frame__dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.case-frame__dots i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-mid);
+}
+/* Margen derecho = ancho de los puntos, para que la URL quede centrada */
+.case-frame__url {
+  flex: 1;
+  min-width: 0;
+  margin-right: 42px;
+  padding: 0.22rem 0.7rem;
+  border-radius: 8px;
+  background: var(--bg-deep);
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.case-frame__url:hover {
+  color: var(--accent);
+}
+.case-frame__view {
+  background: var(--bg-deep);
+}
+.case-frame__shot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Pestañas del caso del ecosistema: main.js cambia la captura y la URL. Las
+   tres capturas comparten proporción (la de Tiendas) para que el marco no
+   salte al cambiar; object-fit las recorta por los lados, nunca por arriba. */
+.case-frame__tabs {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.45rem 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.case-frame__tab {
+  margin-bottom: -1px;
+  padding: 0.4rem 0.85rem 0.5rem;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
   transition:
-    border-color 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
+    color 0.2s,
+    background 0.2s;
 }
-.case-card:hover {
-  border-color: var(--border-mid);
-  transform: translateY(-4px);
-  box-shadow: 0 22px 48px color-mix(in srgb, var(--bg) 60%, transparent);
+.case-frame__tab:hover {
+  color: var(--text);
 }
-.case-card--featured {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-  border-width: 1.5px;
+.case-frame__tab[aria-selected='true'] {
+  color: var(--text);
+  background: var(--bg-deep);
+  border-color: var(--border);
+}
+[data-frame-tabs] .case-frame__shot {
+  aspect-ratio: 1200 / 518;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .case-body {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  padding: clamp(1.4rem, 3vw, 2rem);
-  flex: 1;
 }
 
 .case-header {
@@ -1724,16 +1814,21 @@ img {
   white-space: nowrap;
 }
 .case-title {
-  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  font-size: clamp(1.25rem, 2.2vw, 1.9rem);
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
 }
 .case-desc {
-  font-size: 0.98rem;
+  font-size: 1.02rem;
   line-height: 1.7;
   color: var(--text-body);
   max-width: 70ch;
+}
+/* El hueco entre párrafos lo da el gap de .case-body; Bootstrap añadiría
+   margin-bottom a cada p */
+.case-body p {
+  margin: 0;
 }
 
 .case-tech {
@@ -1745,232 +1840,27 @@ img {
   color: var(--text-muted);
   font-weight: 600;
 }
-
-.case-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-top: auto;
-  padding-top: 0.5rem;
-}
-.case-link {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-.case-link:hover {
-  color: var(--accent-soft);
-}
-.case-link--contact {
-  color: var(--text-muted);
-  border-bottom: 1px dashed var(--border-mid);
-}
-.case-link--contact:hover {
-  color: var(--text);
+.case-doc {
+  align-self: flex-start;
 }
 
-.case-pdf-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.6rem;
-  width: 100%;
-  min-height: 170px;
-  border: 1.5px solid var(--border-mid);
-  border-radius: 16px;
-  background:
-    radial-gradient(400px 160px at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
-    var(--surface-2);
-  padding: 1.6rem 1.4rem;
-  position: relative;
-  overflow: hidden;
-  transition:
-    border-color 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-.case-pdf-preview:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 30%, transparent);
-  text-decoration: none;
-}
-.case-pdf-preview__icon {
-  font-size: 2.4rem;
-  line-height: 1;
-  flex-shrink: 0;
-  filter: drop-shadow(0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent));
-}
-.case-pdf-preview__body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  font-size: 0.82rem;
-  color: var(--text-faint);
-  line-height: 1.5;
-  min-width: 0;
-  max-width: 30ch;
-}
-.case-pdf-preview__body b {
-  font-size: 1.02rem;
-  color: var(--text);
-  font-weight: 700;
-}
-.case-pdf-preview__open {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent);
-  white-space: nowrap;
-  padding: 0.5rem 1.4rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  margin-top: 0.3rem;
-  transition: color 0.2s, background 0.2s, transform 0.18s;
-}
-.case-pdf-preview__open:hover {
-  color: var(--on-accent);
-  background: linear-gradient(120deg, var(--grad-1), var(--grad-2));
-  border-color: transparent;
-  transform: translateY(-2px);
-}
-
-/* Logo del cliente en el caso de accesibilidad: banda centrada sobre la caja
-   del PDF. El logo es de tinta negra, así que va sobre fondo blanco (igual
-   que los marketplaces), no sobre el azul. */
-.case-links--split {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.7rem;
-}
-.case-client-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0.6rem;
-  align-self: stretch;
-  padding: 1.05rem 1.1rem;
-  border: 1.5px solid var(--border-mid);
-  border-radius: 16px;
-  background: #ffffff;
-  transition:
-    border-color 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-.case-client-logo:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 25%, transparent);
-  text-decoration: none;
-}
-.case-client-logo img {
-  max-width: 132px;
-  height: auto;
-  max-height: 46px;
-  object-fit: contain;
-  transition: transform 0.2s;
-}
-.case-client-logo:hover img {
-  transform: scale(1.05);
-}
-.case-client-logo__label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #0d1526;
-}
-
-/* Móvil: el chip se mantiene centrado y el PDF se queda con el alto sobrante */
-@media (max-width: 560px) {
-  .case-client-logo {
-    padding: 0.9rem 1rem;
-    gap: 0.5rem;
-  }
-  .case-client-logo img {
-    max-width: 116px;
-    max-height: 34px;
-  }
-  .case-pdf-preview {
-    min-height: 130px;
-  }
-}
-
-.subapp-logos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-.subapp-logo-btn {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.65rem;
-  border: 1.5px solid var(--border-mid);
-  border-radius: 16px;
-  padding: 1.4rem 2rem;
-  min-width: 150px;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(280px 120px at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
-    var(--surface-2);
-  transition:
-    border-color 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-.subapp-logo-btn:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 30%, transparent);
-  text-decoration: none;
-}
-.subapp-logo-btn img {
-  height: 52px;
-  width: auto;
-  max-width: 140px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--accent) 30%, transparent));
-}
-.subapp-logo-btn__label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-}
-.subapp-logo-btn:hover .subapp-logo-btn__label {
-  color: var(--accent);
-}
-
+/* Clientes de la agencia: chips pequeños dentro del texto. Fondo azul claro
+   para que se lean los logos oscuros; el único que venía blanco
+   (mielmoncabrer) se recoloreó a tinta oscura. */
 .agency-logos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.65rem;
-  margin-top: 0.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 0.45rem;
 }
-/* Agencias: azul claro para que se lean los logos oscuros; el único logo que
-   venía blanco (mielmoncabrer) se recoloreó a tinta oscura. */
 .agency-logo-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--border-mid);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  height: 76px;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(200px 90px at 50% 0%, color-mix(in srgb, #ffffff 55%, transparent), transparent 70%),
-    color-mix(in srgb, var(--accent) 22%, #ffffff);
+  height: 44px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 22%, #ffffff);
   transition:
     border-color 0.2s,
     transform 0.18s,
@@ -1978,105 +1868,27 @@ img {
 }
 .agency-logo-link:hover {
   border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 25%, transparent);
-  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .agency-logo-link img {
-  height: 32px;
+  height: 22px;
   width: auto;
-  max-width: 120px;
+  max-width: 78px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.35));
-  transition: transform 0.2s, filter 0.2s;
-}
-.agency-logo-link:hover img {
-  transform: scale(1.06);
-  filter: drop-shadow(0 3px 8px rgb(0 0 0 / 0.45));
 }
 .agency-logo-text {
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  font-size: 0.62rem;
+  color: #0d1526;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
-/* ===== Logos de transportistas y marketplaces ===== */
-.carrier-logos,
-.market-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.6rem;
-}
-
-/* Transportistas: 5 logos → 3 arriba + 2 abajo, centrados y uniformes */
-.carrier-logos {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: center;
-}
-
-.carrier-logo-btn,
-.market-logo-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  height: 76px;
-  min-width: 132px;
-  padding: 0.9rem 1.3rem;
-  position: relative;
-  overflow: hidden;
-  transition:
-    border-color 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-
-/* Transportistas: PNG transparentes, sin fondo, logos grandes */
-.carrier-logo-btn {
-  border: 1.5px solid var(--border-mid);
-  background:
-    radial-gradient(200px 80px at 50% 0%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
-    var(--surface-2);
-}
-.carrier-logo-btn:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 26%, transparent);
-}
-.carrier-logo-btn img {
-  max-height: 56px;
-  width: auto;
-  max-width: 116px;
-  object-fit: contain;
-}
-
-/* Marketplaces: algunos no son PNG, fondo blanco para que se vean bien */
-.market-logo-btn {
-  border: 1.5px solid var(--border-mid);
-  background: #ffffff;
-}
-.market-logo-btn:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 24%, transparent);
-}
-.market-logo-btn img {
-  max-height: 48px;
-  width: auto;
-  max-width: 104px;
-  object-fit: contain;
-}
-
-.logos-hint {
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text-faint);
-  font-style: italic;
+@media (max-width: 560px) {
+  .case-desc {
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
 }
 
 /* ===================== VÍDEOS ===================== */
@@ -2857,6 +2669,12 @@ img {
     width: 100%;
   }
 
+  /* Casos: marco arriba y texto debajo */
+  .case-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
   /* Menú a pantalla completa. El corte de 900px está repetido en main.js
      (isMobile). Marca y botones quedan por encima de la capa. */
   .header-container {
@@ -2982,22 +2800,6 @@ img {
   }
 }
 
-@media (max-width: 768px) {
-  .agency-logos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .subapp-logo-btn {
-    min-width: 130px;
-    padding: 1.1rem 1.5rem;
-  }
-  .subapp-logo-btn img {
-    height: 42px;
-  }
-  .carrier-logos {
-    grid-template-columns: repeat(2, auto);
-  }
-}
-
 @media (max-width: 480px) {
   .header-time {
     font-size: 0.75rem;
@@ -3073,21 +2875,6 @@ img {
   .timeline-visit {
     position: static;
     width: auto;
-  }
-  .agency-logos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  /* Casos: la caja del PDF absorbe el alto sobrante de la card en lugar de
-     dejar un hueco entre la descripción y el botón. */
-  .case-links:has(.case-pdf-preview) {
-    flex: 1;
-  }
-  .case-links--split .case-pdf-preview {
-    flex: 1 1 auto;
-    min-height: 130px;
-  }
-  .carousel__controls {
-    gap: 0.8rem;
   }
 }
 

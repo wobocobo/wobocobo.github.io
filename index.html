@@ -497,24 +497,33 @@
 
             <!-- CASOS DE TRABAJO -->
             <section id="cases" class="section">
-                <div class="boxed">
-                    <div class="section-head" data-aos="fade-up">
-                        <span class="section-label">Casos de trabajo</span>
-                        <h2 class="section-title">Proyectos en producción</h2>
-                        <p class="section-subtitle">
-                            Cada caso es un proyecto real, en uso y funcionando.
-                        </p>
-                    </div>
-                </div>
-
+                <!-- Un caso a todo el ancho; flechas en la cabecera y puntos debajo -->
                 <div
-                    class="carousel carousel--cases carousel--bleed"
+                    class="boxed boxed--wide carousel carousel--cases"
                     id="casesCarousel"
                     data-carousel
                     data-wrap
-                    data-aos="fade-up"
+                    data-autoplay="6000"
                 >
-                    <div class="carousel__viewport">
+                    <div class="cases-head">
+                        <div class="section-head" data-aos="fade-up">
+                            <span class="section-label">Casos</span>
+                            <h2 class="section-title">Trabajo</h2>
+                            <p class="section-subtitle">
+                                Cada caso es un proyecto real, en uso y funcionando.
+                            </p>
+                        </div>
+                        <div class="carousel__nav">
+                            <button class="carousel__arrow" type="button" data-prev aria-label="Caso anterior">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+                            </button>
+                            <button class="carousel__arrow" type="button" data-next aria-label="Caso siguiente">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="carousel__viewport" data-aos="fade-up">
                         <div
                             class="carousel__track"
                             data-track
@@ -524,17 +533,92 @@
                         >
                             <!-- CASO 1 -->
                             <div class="carousel__slide">
-                                <article class="case-card case-card--featured">
+                                <article class="case-card">
+                                    <!-- Pestañas: main.js cambia la captura y la URL de la barra -->
+                                    <div class="case-frame" data-frame-tabs>
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://shipping.z-bombilla.com" target="_blank" rel="noopener" data-frame-url>shipping.z-bombilla.com</a>
+                                        </div>
+                                        <div class="case-frame__tabs" role="tablist" aria-label="Aplicaciones del ecosistema">
+                                            <button
+                                                class="case-frame__tab"
+                                                type="button"
+                                                role="tab"
+                                                id="tabShipping"
+                                                aria-controls="panelShipping"
+                                                aria-selected="true"
+                                                data-url="https://shipping.z-bombilla.com"
+                                            >
+                                                Shipping
+                                            </button>
+                                            <button
+                                                class="case-frame__tab"
+                                                type="button"
+                                                role="tab"
+                                                id="tabFinanzas"
+                                                aria-controls="panelFinanzas"
+                                                aria-selected="false"
+                                                tabindex="-1"
+                                                data-url="https://finanzas.z-bombilla.com"
+                                            >
+                                                Finanzas
+                                            </button>
+                                            <button
+                                                class="case-frame__tab"
+                                                type="button"
+                                                role="tab"
+                                                id="tabTiendas"
+                                                aria-controls="panelTiendas"
+                                                aria-selected="false"
+                                                tabindex="-1"
+                                                data-url="https://tiendas.z-bombilla.com"
+                                            >
+                                                Tiendas
+                                            </button>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <div class="case-frame__panel" role="tabpanel" id="panelShipping" aria-labelledby="tabShipping">
+                                                <img
+                                                    class="case-frame__shot"
+                                                    src="assets/img/cases/shipping.jpg"
+                                                    alt="Web de Shipping Z-B: seguimiento de envíos en tiempo real"
+                                                    width="1200"
+                                                    height="432"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                />
+                                            </div>
+                                            <div class="case-frame__panel" role="tabpanel" id="panelFinanzas" aria-labelledby="tabFinanzas" hidden>
+                                                <img
+                                                    class="case-frame__shot"
+                                                    src="assets/img/cases/finanzas.jpg"
+                                                    alt="Web de Z-Bombilla Finanzas: facturación electrónica"
+                                                    width="1200"
+                                                    height="559"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                />
+                                            </div>
+                                            <div class="case-frame__panel" role="tabpanel" id="panelTiendas" aria-labelledby="tabTiendas" hidden>
+                                                <img
+                                                    class="case-frame__shot"
+                                                    src="assets/img/cases/tiendas.jpg"
+                                                    alt="Web de Tiendas Z-B: todos los marketplaces en un solo panel"
+                                                    width="1200"
+                                                    height="518"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="case-body">
                                         <div class="case-header">
-                                            <div class="case-tag">
-                                                Arquitectura · Sistemas internos
-                                            </div>
+                                            <div class="case-tag">Arquitectura · Sistemas internos</div>
                                             <div class="case-company">Z-Bombilla</div>
                                         </div>
-                                        <h3 class="case-title">
-                                            Ecosistema de aplicaciones internas
-                                        </h3>
+                                        <h3 class="case-title">Ecosistema de aplicaciones internas</h3>
                                         <p class="case-desc">
                                             Ecosistema de herramientas internas que conecta toda la
                                             operativa de la empresa en un solo entorno.
@@ -545,47 +629,6 @@
                                             cada área como una aplicación independiente dentro del
                                             mismo sistema.
                                         </p>
-                                        <div class="subapp-logos">
-                                            <a
-                                                href="https://shipping.z-bombilla.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="subapp-logo-btn"
-                                            >
-                                                <img
-                                                    src="assets/logos/shipping.png"
-                                                    alt="Shipping"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                                <span class="subapp-logo-btn__label">shipping</span>
-                                            </a>
-                                            <a
-                                                href="https://finanzas.z-bombilla.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="subapp-logo-btn"
-                                            >
-                                                <img
-                                                    src="assets/logos/finanzas.png"
-                                                    alt="Finanzas"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                                <span class="subapp-logo-btn__label">finanzas</span>
-                                            </a>
-                                            <a
-                                                href="https://amazon.z-bombilla.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="subapp-logo-btn"
-                                            >
-                                                <img
-                                                    src="assets/logos/amazon.png"
-                                                    alt="Amazon"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                                <span class="subapp-logo-btn__label">amazon</span>
-                                            </a>
-                                        </div>
                                     </div>
                                 </article>
                             </div>
@@ -593,6 +636,23 @@
                             <!-- CASO 2 -->
                             <div class="carousel__slide">
                                 <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://shipping.z-bombilla.com" target="_blank" rel="noopener">shipping.z-bombilla.com</a>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <img
+                                                class="case-frame__shot"
+                                                src="assets/img/cases/shipping.jpg"
+                                                alt="Web de Shipping Z-B: seguimiento de envíos en tiempo real"
+                                                width="1200"
+                                                height="432"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
                                     <div class="case-body">
                                         <div class="case-header">
                                             <div class="case-tag">Integración · APIs</div>
@@ -609,48 +669,9 @@
                                             sincronización entre plataformas.
                                         </p>
                                         <p class="case-tech">
-                                            <b>APIs integradas:</b>
-                                            <span class="logos-hint"
-                                                >algunas de las integraciones</span
-                                            >
+                                            <b>APIs integradas:</b> UPS, Correos, Correos Express,
+                                            Ontime y MRW, entre otras.
                                         </p>
-                                        <div class="carrier-logos">
-                                            <span class="carrier-logo-btn">
-                                                <img
-                                                    src="assets/logos/agencias/ups.png"
-                                                    alt="UPS"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="carrier-logo-btn">
-                                                <img
-                                                    src="assets/logos/agencias/correos.png"
-                                                    alt="Correos"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="carrier-logo-btn">
-                                                <img
-                                                    src="assets/logos/agencias/correosexpress.png"
-                                                    alt="Correos Express"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="carrier-logo-btn">
-                                                <img
-                                                    src="assets/logos/agencias/ontime.png"
-                                                    alt="Ontime"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="carrier-logo-btn">
-                                                <img
-                                                    src="assets/logos/agencias/mrw.png"
-                                                    alt="MRW"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                        </div>
                                     </div>
                                 </article>
                             </div>
@@ -658,14 +679,29 @@
                             <!-- CASO 3 -->
                             <div class="carousel__slide">
                                 <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://tiendas.z-bombilla.com" target="_blank" rel="noopener">tiendas.z-bombilla.com</a>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <img
+                                                class="case-frame__shot"
+                                                src="assets/img/cases/tiendas.jpg"
+                                                alt="Web de Tiendas Z-B: todos los marketplaces en un solo panel"
+                                                width="1200"
+                                                height="518"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
                                     <div class="case-body">
                                         <div class="case-header">
                                             <div class="case-tag">Seguridad · Cumplimiento</div>
                                             <div class="case-company">Z-Bombilla</div>
                                         </div>
-                                        <h3 class="case-title">
-                                            Auditoría de sistemas y marketplaces
-                                        </h3>
+                                        <h3 class="case-title">Auditoría de sistemas y marketplaces</h3>
                                         <p class="case-desc">
                                             Proceso completo de auditoría para validar el uso de
                                             APIs y plataformas de venta en marketplaces.
@@ -676,41 +712,9 @@
                                             Amazon SP-API, TikTok, Temu y Shopify.
                                         </p>
                                         <p class="case-tech">
-                                            <b>Marketplaces validados:</b>
-                                            <span class="logos-hint"
-                                                >algunos de los marketplaces</span
-                                            >
+                                            <b>Marketplaces validados:</b> Amazon, TikTok, Temu y
+                                            AliExpress, entre otros.
                                         </p>
-                                        <div class="market-logos">
-                                            <span class="market-logo-btn">
-                                                <img
-                                                    src="assets/logos/market/amazonLogo.png"
-                                                    alt="Amazon"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="market-logo-btn">
-                                                <img
-                                                    src="assets/logos/market/tiktok.png"
-                                                    alt="TikTok"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="market-logo-btn">
-                                                <img
-                                                    src="assets/logos/market/temu.png"
-                                                    alt="Temu"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                            <span class="market-logo-btn">
-                                                <img
-                                                    src="assets/logos/market/aliexpress.png"
-                                                    alt="AliExpress"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                            </span>
-                                        </div>
                                     </div>
                                 </article>
                             </div>
@@ -718,6 +722,23 @@
                             <!-- CASO 4 -->
                             <div class="carousel__slide">
                                 <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://www.estrenarte.es" target="_blank" rel="noopener">estrenarte.es</a>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <img
+                                                class="case-frame__shot"
+                                                src="assets/img/cases/estrenarte.jpg"
+                                                alt="Web de Estrenarte, festival de creación joven de la Región de Murcia"
+                                                width="790"
+                                                height="449"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
                                     <div class="case-body">
                                         <div class="case-header">
                                             <div class="case-tag">Accesibilidad · Normativa</div>
@@ -731,39 +752,13 @@
                                             cumplimiento, los issues detectados y recomendaciones de
                                             corrección.
                                         </p>
-                                        <div class="case-links case-links--split">
-                                            <a
-                                                href="https://www.estrenarte.es"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="case-client-logo"
-                                                title="Estrenarte"
-                                            >
-                                                <img
-                                                    src="assets/logos/estrenarte2.png"
-                                                    alt="Estrenarte"
-                                                    onerror="this.style.display = 'none'"
-                                                />
-                                                <span class="case-client-logo__label"
-                                                    >estrenarte.es</span
-                                                >
-                                            </a>
-                                            <a
-                                                href="assets/docs/informe-accesibilidad-estrenarte.pdf"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="case-pdf-preview"
-                                            >
-                                                <span class="case-pdf-preview__icon">📄</span>
-                                                <span class="case-pdf-preview__body">
-                                                    <b>Informe de accesibilidad</b>
-                                                    informe-accesibilidad-estrenarte.pdf
-                                                </span>
-                                                <span class="case-pdf-preview__open"
-                                                    >Ver informe ↗</span
-                                                >
-                                            </a>
-                                        </div>
+                                        <a
+                                            href="assets/docs/informe-accesibilidad-estrenarte.pdf"
+                                            target="_blank"
+                                            rel="noopener"
+                                            class="btn btn--subtle btn--sm case-doc"
+                                            >Ver el informe (PDF) ↗</a
+                                        >
                                     </div>
                                 </article>
                             </div>
@@ -771,11 +766,26 @@
                             <!-- CASO 5 -->
                             <div class="carousel__slide">
                                 <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://www.difusioncomunicacion.es" target="_blank" rel="noopener">difusioncomunicacion.es</a>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <img
+                                                class="case-frame__shot"
+                                                src="assets/img/cases/difusion.jpg"
+                                                alt="Web de Difusión Comunicación, agencia de comunicación en Alcoy"
+                                                width="790"
+                                                height="370"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
                                     <div class="case-body">
                                         <div class="case-header">
-                                            <div class="case-tag">
-                                                Desarrollo web · E-commerce · RGPD
-                                            </div>
+                                            <div class="case-tag">Desarrollo web · E-commerce · RGPD</div>
                                             <div class="case-company">Difusión Comunicación</div>
                                         </div>
                                         <h3 class="case-title">Proyectos en agencia digital</h3>
@@ -785,6 +795,7 @@
                                             PrestaShop a medida, cumplimiento de ley de cookies y
                                             RGPD, gestión de contenidos y pasarelas de pago.
                                         </p>
+                                        <p class="case-tech"><b>Algunos clientes:</b></p>
                                         <div class="agency-logos">
                                             <a
                                                 href="https://www.difusioncomunicacion.es"
@@ -937,17 +948,7 @@
                         </div>
                     </div>
 
-                    <div class="boxed">
-                        <div class="carousel__controls">
-                            <button class="carousel__arrow" data-prev aria-label="Caso anterior">
-                                ←
-                            </button>
-                            <div class="carousel__dots" data-dots></div>
-                            <button class="carousel__arrow" data-next aria-label="Caso siguiente">
-                                →
-                            </button>
-                        </div>
-                    </div>
+                    <div class="carousel__dots" data-dots></div>
                 </div>
             </section>
 

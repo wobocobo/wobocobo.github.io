@@ -234,12 +234,13 @@ if (timeline) {
 }
 
 /* ============================================================
-   Carrusel genérico (casos + vídeos)
+   Carrusel genérico (hoy, los casos de #cases)
    Uso: <div data-carousel> con track [data-track], flechas
    [data-prev]/[data-next] y puntos [data-dots].
    Con [data-wrap] es una RUEDA: no hay principio ni final y no
    se clona nada, solo se rota el orden de los mismos slides en
    el DOM (ver rotateForward/rotateBack).
+   Con [data-autoplay="ms"] avanza solo (ver al final).
    ============================================================ */
 function initCarousel(root) {
   const track = root.querySelector('[data-track]');
@@ -254,9 +255,9 @@ function initCarousel(root) {
   const total = slides.length;
   const wrap = root.hasAttribute('data-wrap') && total > 1;
 
-  /* Con el sangrado de `padding-inline`, el slide de la posición p queda
-     centrado justo con scrollLeft = p * step(), y el recorrido va de 0 a
-     (total - 1) * step(). */
+  /* Con slides que ocupan el ancho del track (o con un sangrado simétrico de
+     `padding-inline`), el slide de la posición p queda centrado justo con
+     scrollLeft = p * step(), y el recorrido va de 0 a (total - 1) * step(). */
   const step = () =>
     slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 0);
   const maxScroll = () => track.scrollWidth - track.clientWidth;
@@ -494,9 +495,89 @@ function initCarousel(root) {
   if (wrap) rotateBack();
 
   sync();
+
+  /* Paso automático: cada `ms` avanza un slide, salvo con el ratón encima, foco
+     de teclado dentro, un toque reciente, arrastrando, fuera de pantalla o con
+     la pestaña oculta. Tras cualquier interacción espera un ciclo completo. Con
+     "reducir movimiento" no arranca. */
+  const autoplayMs = parseInt(root.dataset.autoplay, 10);
+  if (autoplayMs > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let hovered = false;
+    let keyboardFocus = false;
+    let visible = false;
+    let last = Date.now();
+    const touched = () => {
+      last = Date.now();
+    };
+
+    root.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') hovered = true;
+    });
+    root.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      hovered = false;
+      touched(); /* al salir, un ciclo entero antes de avanzar */
+    });
+    root.addEventListener('focusin', (e) => {
+      keyboardFocus = e.target.matches(':focus-visible');
+    });
+    root.addEventListener('focusout', () => {
+      keyboardFocus = false;
+    });
+    root.addEventListener('pointerdown', touched);
+    root.addEventListener('click', touched);
+    track.addEventListener('touchstart', touched, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+      }, { threshold: 0.4 }).observe(root);
+    } else {
+      visible = true;
+    }
+
+    setInterval(() => {
+      if (hovered || keyboardFocus || !visible || isDown || document.hidden) return;
+      if (Date.now() - last < autoplayMs) return;
+      last = Date.now();
+      goTo(currentIndex() + 1);
+    }, 500);
+  }
 }
 
 document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+
+/* ============================================================
+   Marcos de navegador con pestañas (caso del ecosistema en
+   #cases): cada pestaña muestra su captura y cambia la URL de la
+   barra. Flechas izquierda/derecha para moverse entre pestañas.
+   ============================================================ */
+document.querySelectorAll('[data-frame-tabs]').forEach((frame) => {
+  const tabs = [...frame.querySelectorAll('[role="tab"]')];
+  const url = frame.querySelector('[data-frame-url]');
+
+  const select = (tab, focus) => {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    url.href = tab.dataset.url;
+    url.textContent = tab.dataset.url.replace(/^https?:\/\//, '');
+    if (focus) tab.focus();
+  };
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const step = e.key === 'ArrowRight' ? 1 : tabs.length - 1;
+      select(tabs[(i + step) % tabs.length], true);
+    });
+  });
+});
 
 /* ============================================================
    Al azar (portada): una película de data/ratings.json y una
