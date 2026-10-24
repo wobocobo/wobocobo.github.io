@@ -3056,11 +3056,70 @@ img {
 }
 
 /* ===================== CONTACTO ===================== */
+/* Dos columnas: a la izquierda título, frase y enlaces directos (el email se
+   copia, main.js → copyEmail); a la derecha el formulario en tarjeta. En
+   ≤900px se apilan. Mismo padding compacto que el resto del rediseño v2. */
+#contact {
+  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+.contact__intro .section-head {
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.contact-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 0.2rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    padding 0.2s;
+}
+.contact-link:hover {
+  color: var(--accent);
+  padding-left: 0.5rem;
+}
+.contact-link__meta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  transition: color 0.2s;
+}
+.contact-link:hover .contact-link__meta,
+.contact-link.is-copied .contact-link__meta {
+  color: var(--accent);
+}
+
 /* Aviso que sustituye al CV: aparece bajo "¿Hablamos?" solo al pulsar
    "Descargar CV" del footer (js/main.js → cvNotice). */
 .contact-note {
   max-width: 720px;
-  margin: 0 auto 1.6rem;
+  margin: 0 0 1.6rem;
   padding: 0.9rem 1.15rem;
   border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-left: 3px solid var(--accent);
@@ -3078,10 +3137,15 @@ img {
   transform: none;
 }
 .contact-form {
-  max-width: 720px;
-  margin-inline: auto;
   display: grid;
   gap: 1.15rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 }
 
 .contact-form__row {
@@ -3110,7 +3174,7 @@ img {
   font: inherit;
   font-size: 1rem;
   color: var(--text-body);
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border-mid);
   border-radius: 12px;
   transition:
@@ -3170,5 +3234,11 @@ img {
 @media (min-width: 768px) {
   .contact-form__row {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .contact {
+    grid-template-columns: 1fr;
   }
 }

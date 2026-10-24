@@ -989,16 +989,43 @@
 
         <!-- CONTACTO -->
         <section id="contact" class="section">
-            <div class="boxed">
-                <div class="section-head" data-aos="fade-up">
-                    <span class="section-label">Contacto</span>
-                    <h2 class="section-title">¿Hablamos?</h2>
-                </div>
+            <div class="boxed contact">
+                <div class="contact__intro" data-aos="fade-up">
+                    <div class="section-head">
+                        <span class="section-label">Contacto</span>
+                        <h2 class="section-title">¿Hablamos?</h2>
+                        <p class="section-subtitle">
+                            Para trabajo, un proyecto o recomendarme una película.
+                        </p>
+                    </div>
 
-                <p class="contact-note" id="contactNote" hidden>
-                    Si quieres saber más de mí, mejor hablemos: cuéntame qué buscas y te enseño
-                    directamente lo que te interese.
-                </p>
+                    <p class="contact-note" id="contactNote" hidden>
+                        Si quieres saber más de mí, mejor hablemos: cuéntame qué buscas y te enseño
+                        directamente lo que te interese.
+                    </p>
+
+                    <!-- El email se copia al pulsarlo (main.js → copyEmail) -->
+                    <ul class="contact-links">
+                        <li>
+                            <button class="contact-link" type="button" data-copy="hola@wobocobo.com">
+                                <span class="contact-link__main">hola@wobocobo.com</span>
+                                <span class="contact-link__meta" data-copy-label aria-live="polite">Copiar</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a class="contact-link" href="https://linkedin.com/in/alejandro-ortega-hernández" target="_blank" rel="noopener">
+                                <span class="contact-link__main">LinkedIn</span>
+                                <span class="contact-link__meta" aria-hidden="true">↗</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="contact-link" href="https://github.com/wobocobo" target="_blank" rel="noopener">
+                                <span class="contact-link__main">GitHub</span>
+                                <span class="contact-link__meta" aria-hidden="true">↗</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <form
                     id="contactForm"

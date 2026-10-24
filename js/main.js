@@ -961,6 +961,60 @@ document.querySelectorAll('[data-frame-tabs]').forEach((frame) => {
 })();
 
 /* ============================================================
+   Copiar email ([data-copy] en #contact): copia al portapapeles y
+   cambia la etiqueta a «Copiado» un momento. Si la Clipboard API no
+   está o la deniega el navegador, prueba con execCommand('copy') y,
+   como último recurso, abre el correo con mailto.
+   ============================================================ */
+(function copyEmail() {
+  const legacyCopy = (value) => {
+    const area = document.createElement('textarea');
+    area.value = value;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch {
+      ok = false;
+    }
+    area.remove();
+    return ok;
+  };
+
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    const label = btn.querySelector('[data-copy-label]');
+    const original = label ? label.textContent : '';
+    let timer;
+
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copy;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(value);
+        ok = true;
+      } catch {
+        ok = legacyCopy(value);
+      }
+      if (!ok) {
+        window.location.href = 'mailto:' + value;
+        return;
+      }
+      btn.classList.add('is-copied');
+      if (label) label.textContent = 'Copiado ✓';
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (label) label.textContent = original;
+      }, 2000);
+    });
+  });
+})();
+
+/* ============================================================
    Formulario de contacto (#contact) → FormSubmit
    Envío AJAX a formsubmit.co/ajax (reenvío a hola@wobocobo.com).
    Saneo en cliente + honeypot _honey; antispam de FormSubmit.
