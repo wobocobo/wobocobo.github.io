@@ -1683,11 +1683,13 @@ img {
 
 /* Cada caso, sin tarjeta: marco de navegador grande a la izquierda (__frame)
    con la captura de la web y su URL real enlazada, y el texto a la derecha.
-   En ≤900px se apilan (ver RESPONSIVE). */
+   Arriba del todo, no centrado: todos los slides miden lo que el más alto y,
+   centrado, el marco bajaba más o menos según el caso. En ≤900px se apilan
+   (ver RESPONSIVE). */
 .case-card {
   display: grid;
   grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(1.5rem, 4vw, 4rem);
   width: 100%;
 }
@@ -1735,21 +1737,28 @@ img {
   text-overflow: ellipsis;
   transition: color 0.2s;
 }
-.case-frame__url:hover {
+a.case-frame__url:hover {
   color: var(--accent);
 }
+/* Todas las capturas comparten proporción (2:1, una pantalla Full HD sin las
+   barras del navegador) para que el marco no salte de un caso a otro;
+   object-fit las recorta por los lados o por abajo, nunca por arriba. */
 .case-frame__view {
+  aspect-ratio: 2 / 1;
   background: var(--bg-deep);
+}
+.case-frame__panel {
+  height: 100%;
 }
 .case-frame__shot {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
 }
 
-/* Pestañas del caso del ecosistema: main.js cambia la captura y la URL. Las
-   tres capturas comparten proporción (la de Tiendas) para que el marco no
-   salte al cambiar; object-fit las recorta por los lados, nunca por arriba. */
+/* Pestañas del caso del ecosistema: main.js cambia la captura y la URL. */
 .case-frame__tabs {
   display: flex;
   gap: 0.3rem;
@@ -1781,10 +1790,344 @@ img {
   background: var(--bg-deep);
   border-color: var(--border);
 }
-[data-frame-tabs] .case-frame__shot {
-  aspect-ratio: 1200 / 518;
-  object-fit: cover;
-  object-position: center top;
+
+/* Caso de validación: no hay captura que enseñar, así que el marco lleva un
+   panel hecho en HTML/CSS. Las medidas van en cqw (ancho del marco) para que
+   escale entero, como una captura más. */
+.case-frame__view--panel {
+  container-type: inline-size;
+}
+.app-review {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 2.2cqw;
+  padding: 3.4cqw 4cqw;
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    var(--bg-deep);
+  color: var(--text);
+  font-size: 2.05cqw;
+  line-height: 1.3;
+}
+.app-review ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.app-review__lead,
+.app-review__checks,
+.app-review__more li {
+  border: 1px solid var(--border-mid);
+  border-radius: 1.6cqw;
+  background: var(--surface);
+}
+.app-review__lead {
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  padding: 2.4cqw;
+}
+/* Los logos vienen sobre blanco: siempre en ficha blanca, en los dos temas */
+.app-review__logo {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 1.2cqw;
+  background: #fff;
+}
+.app-review__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.app-review__logo--lead {
+  width: 16cqw;
+  height: 16cqw;
+  padding: 2.2cqw;
+}
+.app-review__id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5cqw;
+}
+.app-review__name {
+  font-family: var(--font-head);
+  font-size: 3.4cqw;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.app-review__api {
+  font-size: 1.7cqw;
+  color: var(--text-muted);
+}
+.app-review__badge,
+.app-review__checks li::before,
+.app-review__more li::after {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.app-review__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6cqw;
+  margin-top: 0.8cqw;
+  padding: 0.5cqw 1.3cqw;
+  border-radius: 99px;
+  font-size: 1.5cqw;
+  font-weight: 600;
+}
+.app-review__badge::before {
+  content: '✓';
+}
+.app-review__checks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.6cqw;
+  padding: 2.4cqw 2.8cqw;
+}
+.app-review__label {
+  font-size: 1.4cqw;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.app-review__checks ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5cqw;
+}
+.app-review__checks li {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+}
+.app-review__checks li::before,
+.app-review__more li::after {
+  content: '✓';
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.8cqw;
+  height: 2.8cqw;
+  border-radius: 50%;
+  font-size: 1.5cqw;
+  font-weight: 700;
+}
+.app-review__more {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.2cqw;
+}
+.app-review__more li {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 1.1cqw 1.4cqw;
+  font-size: 1.9cqw;
+  font-weight: 600;
+}
+.app-review__more li::after {
+  margin-left: auto;
+}
+.app-review__more .app-review__logo {
+  width: 8.5cqw;
+  height: 4.8cqw;
+  padding: 0.7cqw 0.9cqw;
+}
+
+/* Caso de integración: Shipping a la izquierda y los transportistas a la
+   derecha, unidos por cables (SVG con viewBox 200×100, el mismo 2:1 del
+   marco: 1 unidad = 0,5cqw). Los paquetes van por animateMotion y cada fila
+   se ilumina cuando le llega el suyo: mismo periodo (2,6 s) y el retardo de
+   la fila (--i × 0,52 s) es el begin de su paquete. */
+.ship-hub {
+  position: relative;
+  height: 100%;
+  background:
+    radial-gradient(circle at 22% 50%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+    var(--bg-deep);
+  color: var(--text);
+}
+.ship-hub__wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.ship-hub__wires path {
+  fill: none;
+  stroke: var(--border-mid);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+.ship-hub__packet {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 2px var(--accent));
+}
+.ship-hub__packet--back {
+  fill: var(--accent-soft);
+  opacity: 0.75;
+}
+/* Borde derecho en 37cqw = x 74 del SVG, donde nacen los cables */
+.ship-hub__core {
+  position: absolute;
+  top: 50%;
+  left: 7cqw;
+  width: 30cqw;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 2.2cqw 2cqw;
+  border: 1px solid var(--border-mid);
+  border-radius: 1.6cqw;
+  background: var(--surface);
+  box-shadow: 0 0 6cqw color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.ship-hub__core img {
+  display: block;
+  width: 22cqw;
+  height: auto;
+}
+.ship-hub__chip {
+  padding: 0.5cqw 1.3cqw;
+  border-radius: 99px;
+  font-size: 1.45cqw;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+/* Borde izquierdo en 64cqw = x 128 del SVG; centros de fila en y 14,8 ·
+   32,4 · 50 · 67,6 · 85,2 */
+.ship-hub__carriers {
+  position: absolute;
+  top: 3.8cqw;
+  right: 5cqw;
+  bottom: 3.8cqw;
+  width: 31cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ship-hub__carriers li {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  height: 7.2cqw;
+  padding: 0 1.6cqw 0 1.1cqw;
+  border: 1px solid var(--border-mid);
+  border-radius: 1.4cqw;
+  background: var(--surface);
+  font-size: 1.9cqw;
+  font-weight: 600;
+  animation: ship-ping 2.6s calc(var(--i) * 0.52s) infinite;
+}
+.ship-hub__carriers img {
+  display: block;
+  flex-shrink: 0;
+  width: 5cqw;
+  height: 5cqw;
+  border-radius: 1.1cqw;
+}
+.ship-hub__carriers li::after {
+  content: '';
+  margin-left: auto;
+  width: 1.1cqw;
+  height: 1.1cqw;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0.5cqw color-mix(in srgb, var(--accent) 20%, transparent);
+}
+@keyframes ship-ping {
+  0% {
+    border-color: var(--accent);
+    box-shadow: 0 0 2.5cqw color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  35%,
+  100% {
+    border-color: var(--border-mid);
+    box-shadow: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ship-hub__packet {
+    display: none;
+  }
+  .ship-hub__carriers li {
+    animation: none;
+  }
+}
+
+/* Caso del informe: tres páginas del PDF en imagen (portada delante, dos
+   interiores detrás) que se abren en abanico al pasar por el marco. */
+.doc-preview {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+    var(--bg-deep);
+}
+.doc-preview__page {
+  position: absolute;
+  top: 4cqw;
+  left: 50%;
+  width: 30cqw;
+  height: auto;
+  border-radius: 0.5cqw;
+  box-shadow: 0 1.5cqw 4cqw rgb(0 0 0 / 0.45);
+  transform: translateX(-50%);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.doc-preview__page--left {
+  transform: translateX(-50%) translateX(-17cqw) translateY(3cqw) rotate(-7deg) scale(0.9);
+}
+.doc-preview__page--right {
+  transform: translateX(-50%) translateX(17cqw) translateY(3cqw) rotate(7deg) scale(0.9);
+}
+.case-frame:hover .doc-preview__page {
+  transform: translateX(-50%) translateY(-1.2cqw);
+}
+.case-frame:hover .doc-preview__page--left {
+  transform: translateX(-50%) translateX(-25cqw) translateY(2cqw) rotate(-10deg) scale(0.9);
+}
+.case-frame:hover .doc-preview__page--right {
+  transform: translateX(-50%) translateX(25cqw) translateY(2cqw) rotate(10deg) scale(0.9);
+}
+.doc-preview__brand {
+  position: absolute;
+  left: 3cqw;
+  bottom: 3cqw;
+  width: 9cqw;
+  height: 9cqw;
+  border-radius: 1.2cqw;
+  box-shadow: 0 1cqw 3cqw rgb(0 0 0 / 0.35);
+}
+.doc-preview__meta {
+  position: absolute;
+  right: 3cqw;
+  bottom: 3cqw;
+  padding: 0.6cqw 1.4cqw;
+  border-radius: 99px;
+  font-size: 1.5cqw;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .doc-preview__page {
+    transition: none;
+  }
 }
 
 .case-body {
@@ -1793,11 +2136,14 @@ img {
   gap: 0.9rem;
 }
 
+/* Si etiqueta y empresa no caben en una línea, la empresa baja debajo en vez
+   de estrujar la etiqueta en varias líneas */
 .case-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 1rem;
+  gap: 0.3rem 1rem;
 }
 .case-tag {
   font-size: 0.74rem;
@@ -1844,44 +2190,73 @@ img {
   align-self: flex-start;
 }
 
-/* Clientes de la agencia: chips pequeños dentro del texto. Fondo azul claro
-   para que se lean los logos oscuros; el único que venía blanco
-   (mielmoncabrer) se recoloreó a tinta oscura. */
-.agency-logos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
-  gap: 0.45rem;
+/* Caso de la agencia: el marco y, debajo, la tira de clientes. Cada logo con
+   captura es un botón que la enseña en el marco (main.js); el que no tiene es
+   un enlace a su web en pestaña nueva, marcado con ↗. Fondo azul claro para
+   que se lean los logos oscuros (mielmoncabrer se recoloreó a tinta oscura). */
+.case-media {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
 }
-.agency-logo-link {
+.case-frame__shot {
+  transition: opacity 0.25s;
+}
+.case-frame__shot.is-loading {
+  opacity: 0.35;
+}
+.client-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.5rem;
+}
+.client-strip__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 44px;
-  padding: 0.35rem 0.5rem;
+  height: 52px;
+  padding: 0.45rem 0.6rem;
   border: 1px solid var(--border-mid);
-  border-radius: 10px;
+  border-radius: 12px;
   background: color-mix(in srgb, var(--accent) 22%, #ffffff);
   transition:
     border-color 0.2s,
     transform 0.18s,
     box-shadow 0.18s;
 }
-.agency-logo-link:hover {
+button.client-strip__item {
+  cursor: pointer;
+}
+a.client-strip__item {
+  position: relative;
+}
+a.client-strip__item::after {
+  content: '↗';
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #0d1526;
+  opacity: 0.55;
+}
+button.client-strip__item:hover,
+a.client-strip__item:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 22%, transparent);
 }
-.agency-logo-link img {
-  height: 22px;
-  width: auto;
-  max-width: 78px;
-  object-fit: contain;
+.client-strip__item[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
 }
-.agency-logo-text {
-  font-size: 0.62rem;
-  color: #0d1526;
-  text-align: center;
-  line-height: 1.2;
+.client-strip__item img {
+  width: auto;
+  max-width: 100%;
+  max-height: 28px;
+  object-fit: contain;
 }
 
 @media (max-width: 560px) {

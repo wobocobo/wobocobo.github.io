@@ -580,6 +580,31 @@ document.querySelectorAll('[data-frame-tabs]').forEach((frame) => {
 });
 
 /* ============================================================
+   Marco con tira de clientes (caso de la agencia en #cases):
+   cada logo con captura (data-shot) la enseña en el marco y
+   cambia la URL de la barra, como los vídeos de la lista.
+   ============================================================ */
+document.querySelectorAll('[data-frame-clients]').forEach((root) => {
+  const shot = root.querySelector('[data-frame-shot]');
+  const url = root.querySelector('[data-frame-url]');
+  const items = [...root.querySelectorAll('[data-shot]')];
+
+  shot.addEventListener('load', () => shot.classList.remove('is-loading'));
+
+  items.forEach((item) => {
+    item.addEventListener('click', () => {
+      if (item.getAttribute('aria-pressed') === 'true') return;
+      items.forEach((i) => i.setAttribute('aria-pressed', String(i === item)));
+      shot.classList.add('is-loading');
+      shot.src = item.dataset.shot;
+      shot.alt = item.dataset.alt;
+      url.href = item.dataset.url;
+      url.textContent = item.dataset.url.replace(/^https?:\/\/(www\.)?/, '');
+    });
+  });
+});
+
+/* ============================================================
    Al azar (portada): una película de data/ratings.json y una
    playlist de data/spoti.json elegidas al azar en cada visita;
    el botón «Otra» baraja sin recargar. El nombre y la carátula

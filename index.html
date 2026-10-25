@@ -583,8 +583,8 @@
                                                     class="case-frame__shot"
                                                     src="assets/img/cases/shipping.jpg"
                                                     alt="Web de Shipping Z-B: seguimiento de envíos en tiempo real"
-                                                    width="1200"
-                                                    height="432"
+                                                    width="1366"
+                                                    height="683"
                                                     loading="lazy"
                                                     decoding="async"
                                                 />
@@ -633,7 +633,8 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 2 -->
+                            <!-- CASO 2: Shipping en el centro y los paquetes viajando
+                                 por la API hasta cada transportista (y vuelta) -->
                             <div class="carousel__slide">
                                 <article class="case-card">
                                     <div class="case-frame">
@@ -641,16 +642,41 @@
                                             <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
                                             <a class="case-frame__url" href="https://shipping.z-bombilla.com" target="_blank" rel="noopener">shipping.z-bombilla.com</a>
                                         </div>
-                                        <div class="case-frame__view">
-                                            <img
-                                                class="case-frame__shot"
-                                                src="assets/img/cases/shipping.jpg"
-                                                alt="Web de Shipping Z-B: seguimiento de envíos en tiempo real"
-                                                width="1200"
-                                                height="432"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
+                                        <div class="case-frame__view case-frame__view--panel">
+                                            <div
+                                                class="ship-hub"
+                                                role="img"
+                                                aria-label="Shipping Z-B conectado por API con UPS, Correos, Correos Express, MRW y Ontime"
+                                            >
+                                                <svg class="ship-hub__wires" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
+                                                    <path id="shipWire1" d="M74 50 C101 50 101 14.8 128 14.8" />
+                                                    <path id="shipWire2" d="M74 50 C101 50 101 32.4 128 32.4" />
+                                                    <path id="shipWire3" d="M74 50 L128 50" />
+                                                    <path id="shipWire4" d="M74 50 C101 50 101 67.6 128 67.6" />
+                                                    <path id="shipWire5" d="M74 50 C101 50 101 85.2 128 85.2" />
+                                                    <circle class="ship-hub__packet" r="1.2"><animateMotion dur="2.6s" begin="0s" repeatCount="indefinite"><mpath href="#shipWire1" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet" r="1.2"><animateMotion dur="2.6s" begin="0.52s" repeatCount="indefinite"><mpath href="#shipWire2" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet" r="1.2"><animateMotion dur="2.6s" begin="1.04s" repeatCount="indefinite"><mpath href="#shipWire3" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet" r="1.2"><animateMotion dur="2.6s" begin="1.56s" repeatCount="indefinite"><mpath href="#shipWire4" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet" r="1.2"><animateMotion dur="2.6s" begin="2.08s" repeatCount="indefinite"><mpath href="#shipWire5" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet ship-hub__packet--back" r="0.9"><animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#shipWire1" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet ship-hub__packet--back" r="0.9"><animateMotion dur="2.6s" begin="1.82s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#shipWire2" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet ship-hub__packet--back" r="0.9"><animateMotion dur="2.6s" begin="2.34s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#shipWire3" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet ship-hub__packet--back" r="0.9"><animateMotion dur="2.6s" begin="0.26s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#shipWire4" /></animateMotion></circle>
+                                                    <circle class="ship-hub__packet ship-hub__packet--back" r="0.9"><animateMotion dur="2.6s" begin="0.78s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#shipWire5" /></animateMotion></circle>
+                                                </svg>
+                                                <div class="ship-hub__core">
+                                                    <img src="assets/logos/shipping.png" alt="" width="480" height="320" loading="lazy" decoding="async" />
+                                                    <span class="ship-hub__chip">API unificada</span>
+                                                </div>
+                                                <ul class="ship-hub__carriers">
+                                                    <li style="--i: 0"><img src="assets/logos/agencias/ups.png" alt="" width="160" height="160" loading="lazy" decoding="async" />UPS</li>
+                                                    <li style="--i: 1"><img src="assets/logos/agencias/correos.png" alt="" width="160" height="160" loading="lazy" decoding="async" />Correos</li>
+                                                    <li style="--i: 2"><img src="assets/logos/agencias/correosexpress.png" alt="" width="160" height="160" loading="lazy" decoding="async" />Correos Express</li>
+                                                    <li style="--i: 3"><img src="assets/logos/agencias/mrw.png" alt="" width="160" height="160" loading="lazy" decoding="async" />MRW</li>
+                                                    <li style="--i: 4"><img src="assets/logos/agencias/ontime.png" alt="" width="160" height="160" loading="lazy" decoding="async" />Ontime</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="case-body">
@@ -676,24 +702,54 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 3 -->
+                            <!-- CASO 3: sin captura; panel de validación en HTML/CSS -->
                             <div class="carousel__slide">
                                 <article class="case-card">
                                     <div class="case-frame">
                                         <div class="case-frame__bar">
                                             <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                                            <a class="case-frame__url" href="https://tiendas.z-bombilla.com" target="_blank" rel="noopener">tiendas.z-bombilla.com</a>
+                                            <span class="case-frame__url">Validación de apps públicas</span>
                                         </div>
-                                        <div class="case-frame__view">
-                                            <img
-                                                class="case-frame__shot"
-                                                src="assets/img/cases/tiendas.jpg"
-                                                alt="Web de Tiendas Z-B: todos los marketplaces en un solo panel"
-                                                width="1200"
-                                                height="518"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
+                                        <div class="case-frame__view case-frame__view--panel">
+                                            <div
+                                                class="app-review"
+                                                role="img"
+                                                aria-label="Apps validadas: Amazon Selling Partner API, TikTok, Temu y AliExpress"
+                                            >
+                                                <div class="app-review__lead">
+                                                    <span class="app-review__logo app-review__logo--lead">
+                                                        <img src="assets/logos/market/amazonLogo.png" alt="" width="244" height="200" loading="lazy" decoding="async" />
+                                                    </span>
+                                                    <span class="app-review__id">
+                                                        <span class="app-review__name">Amazon</span>
+                                                        <span class="app-review__api">Selling Partner API</span>
+                                                        <span class="app-review__badge">Validada</span>
+                                                    </span>
+                                                </div>
+                                                <div class="app-review__checks">
+                                                    <span class="app-review__label">Revisión de seguridad</span>
+                                                    <ul>
+                                                        <li>Pentesting y vulnerabilidades</li>
+                                                        <li>Documentación técnica</li>
+                                                        <li>Controles de acceso</li>
+                                                        <li>Gestión de permisos</li>
+                                                    </ul>
+                                                </div>
+                                                <ul class="app-review__more">
+                                                    <li>
+                                                        <span class="app-review__logo"><img src="assets/logos/market/tiktok.png" alt="" width="206" height="200" loading="lazy" decoding="async" /></span>
+                                                        TikTok
+                                                    </li>
+                                                    <li>
+                                                        <span class="app-review__logo"><img src="assets/logos/market/temu.png" alt="" width="200" height="200" loading="lazy" decoding="async" /></span>
+                                                        Temu
+                                                    </li>
+                                                    <li>
+                                                        <span class="app-review__logo"><img src="assets/logos/market/aliexpress.png" alt="" width="360" height="85" loading="lazy" decoding="async" /></span>
+                                                        AliExpress
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="case-body">
@@ -701,42 +757,45 @@
                                             <div class="case-tag">Seguridad · Cumplimiento</div>
                                             <div class="case-company">Z-Bombilla</div>
                                         </div>
-                                        <h3 class="case-title">Auditoría de sistemas y marketplaces</h3>
+                                        <h3 class="case-title">Validación de apps públicas en marketplaces</h3>
                                         <p class="case-desc">
-                                            Proceso completo de auditoría para validar el uso de
-                                            APIs y plataformas de venta en marketplaces.
+                                            Proceso completo de validación de aplicaciones públicas
+                                            en marketplaces, con Amazon y su Selling Partner API
+                                            (SP-API) como el más exigente.
                                         </p>
                                         <p class="case-desc">
                                             Pentesting, análisis de vulnerabilidades, documentación
-                                            técnica, controles de acceso y gestión de permisos para
-                                            Amazon SP-API, TikTok, Temu y Shopify.
+                                            técnica, controles de acceso y gestión de permisos.
                                         </p>
                                         <p class="case-tech">
-                                            <b>Marketplaces validados:</b> Amazon, TikTok, Temu y
-                                            AliExpress, entre otros.
+                                            <b>También validadas en:</b> TikTok, Temu y AliExpress,
+                                            entre otros.
                                         </p>
                                     </div>
                                 </article>
                             </div>
 
-                            <!-- CASO 4 -->
+                            <!-- CASO 4: vista previa del informe (páginas sueltas en
+                                 imagen, no el PDF); al pasar por encima se abren -->
                             <div class="carousel__slide">
                                 <article class="case-card">
                                     <div class="case-frame">
                                         <div class="case-frame__bar">
                                             <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                                            <a class="case-frame__url" href="https://www.estrenarte.es" target="_blank" rel="noopener">estrenarte.es</a>
+                                            <a class="case-frame__url" href="assets/docs/informe-accesibilidad-estrenarte.pdf" target="_blank" rel="noopener">informe-accesibilidad-web.pdf</a>
                                         </div>
-                                        <div class="case-frame__view">
-                                            <img
-                                                class="case-frame__shot"
-                                                src="assets/img/cases/estrenarte.jpg"
-                                                alt="Web de Estrenarte, festival de creación joven de la Región de Murcia"
-                                                width="790"
-                                                height="449"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
+                                        <div class="case-frame__view case-frame__view--panel">
+                                            <div
+                                                class="doc-preview"
+                                                role="img"
+                                                aria-label="Vista previa del informe de accesibilidad de estrenarte.es: portada, gráfico de puntuaciones y tabla de resultados"
+                                            >
+                                                <img class="doc-preview__page doc-preview__page--left" src="assets/img/cases/informe/grafico.jpg" alt="" width="640" height="906" loading="lazy" decoding="async" />
+                                                <img class="doc-preview__page doc-preview__page--right" src="assets/img/cases/informe/tabla.jpg" alt="" width="640" height="906" loading="lazy" decoding="async" />
+                                                <img class="doc-preview__page" src="assets/img/cases/informe/portada.jpg" alt="" width="640" height="906" loading="lazy" decoding="async" />
+                                                <img class="doc-preview__brand" src="assets/logos/estrenarte.png" alt="" width="400" height="400" loading="lazy" decoding="async" />
+                                                <span class="doc-preview__meta">PDF · 343 páginas</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="case-body">
@@ -763,24 +822,126 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 5 -->
+                            <!-- CASO 5: la tira de clientes de debajo cambia la captura
+                                 y la URL del marco (main.js, [data-frame-clients]). Los
+                                 clientes sin captura son enlaces a su web (pestaña nueva). -->
                             <div class="carousel__slide">
                                 <article class="case-card">
-                                    <div class="case-frame">
-                                        <div class="case-frame__bar">
-                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                                            <a class="case-frame__url" href="https://www.difusioncomunicacion.es" target="_blank" rel="noopener">difusioncomunicacion.es</a>
+                                    <div class="case-media" data-frame-clients>
+                                        <div class="case-frame">
+                                            <div class="case-frame__bar">
+                                                <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                                <a class="case-frame__url" href="https://www.difusioncomunicacion.es" target="_blank" rel="noopener" data-frame-url>difusioncomunicacion.es</a>
+                                            </div>
+                                            <div class="case-frame__view">
+                                                <img
+                                                    class="case-frame__shot"
+                                                    src="assets/img/cases/clientes/difusion.jpg"
+                                                    alt="Web de Difusión Comunicación, agencia de comunicación en Alcoy"
+                                                    width="1536"
+                                                    height="768"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    data-frame-shot
+                                                />
+                                            </div>
                                         </div>
-                                        <div class="case-frame__view">
-                                            <img
-                                                class="case-frame__shot"
-                                                src="assets/img/cases/difusion.jpg"
-                                                alt="Web de Difusión Comunicación, agencia de comunicación en Alcoy"
-                                                width="790"
-                                                height="370"
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
+                                        <div class="client-strip" role="group" aria-label="Clientes: pulsa uno para ver su web">
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="true"
+                                                title="Difusión Comunicación"
+                                                data-shot="assets/img/cases/clientes/difusion.jpg"
+                                                data-url="https://www.difusioncomunicacion.es"
+                                                data-alt="Web de Difusión Comunicación, agencia de comunicación en Alcoy"
+                                            >
+                                                <img src="assets/logos/difusion.png" alt="Difusión Comunicación" />
+                                            </button>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="Difusión Labs"
+                                                data-shot="assets/img/cases/clientes/difusionlabs.jpg"
+                                                data-url="https://www.difusionlabs.com"
+                                                data-alt="Web de Difusión Labs: inteligencia del lenguaje natural"
+                                            >
+                                                <img src="assets/logos/difusionlabs.png" alt="Difusión Labs" />
+                                            </button>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="Up2Access"
+                                                data-shot="assets/img/cases/clientes/up2access.jpg"
+                                                data-url="https://www.up2access.com"
+                                                data-alt="Web de Up2Access: parking inteligente"
+                                            >
+                                                <img src="assets/logos/up2access.png" alt="Up2Access" />
+                                            </button>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="Old Farm Houses"
+                                                data-shot="assets/img/cases/clientes/oldfarmhouses.jpg"
+                                                data-url="https://oldfarmhouses.es"
+                                                data-alt="Web de Old Farm Houses, agencia inmobiliaria"
+                                            >
+                                                <img src="assets/logos/oldfarmhouses.png" alt="Old Farm Houses" />
+                                            </button>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="Un Juguete Una Ilusión"
+                                                data-shot="assets/img/cases/clientes/unjugueteunailusion.jpg"
+                                                data-url="https://www.unjugueteunailusion.com"
+                                                data-alt="Web de Un Juguete Una Ilusión"
+                                            >
+                                                <img src="assets/logos/unjugueteunailusion.png" alt="Un Juguete Una Ilusión" />
+                                            </button>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="La Oficina Moderna"
+                                                data-shot="assets/img/cases/clientes/laoficinamoderna.jpg"
+                                                data-url="https://www.laoficinamoderna.com"
+                                                data-alt="Web de La Oficina Moderna, equipamientos de oficina"
+                                            >
+                                                <img src="assets/logos/laoficinamoderna.png" alt="La Oficina Moderna" />
+                                            </button>
+                                            <a
+                                                class="client-strip__item"
+                                                href="https://www.xarxaalcover.cat"
+                                                target="_blank"
+                                                rel="noopener"
+                                                title="Xarxa Alcover (abre su web)"
+                                            >
+                                                <img src="assets/logos/xarxaalcover.png" alt="Xarxa Alcover" />
+                                            </a>
+                                            <a
+                                                class="client-strip__item"
+                                                href="https://www.mielmoncabrer.com"
+                                                target="_blank"
+                                                rel="noopener"
+                                                title="Miel Moncabrer (abre su web)"
+                                            >
+                                                <img src="assets/logos/mielmoncabrer.png" alt="Miel Moncabrer" />
+                                            </a>
+                                            <button
+                                                class="client-strip__item"
+                                                type="button"
+                                                aria-pressed="false"
+                                                title="Estrenarte"
+                                                data-shot="assets/img/cases/clientes/estrenarte.jpg"
+                                                data-url="https://www.estrenarte.es"
+                                                data-alt="Web de Estrenarte, festival de creación joven de la Región de Murcia"
+                                            >
+                                                <img src="assets/logos/estrenarte.png" alt="Estrenarte" />
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="case-body">
@@ -795,153 +956,10 @@
                                             PrestaShop a medida, cumplimiento de ley de cookies y
                                             RGPD, gestión de contenidos y pasarelas de pago.
                                         </p>
-                                        <p class="case-tech"><b>Algunos clientes:</b></p>
-                                        <div class="agency-logos">
-                                            <a
-                                                href="https://www.difusioncomunicacion.es"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Difusión Comunicación"
-                                            >
-                                                <img
-                                                    src="assets/logos/difusion.png"
-                                                    alt="Difusión Comunicación"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>difusioncomunicacion.es</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.difusionlabs.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Difusión Labs"
-                                            >
-                                                <img
-                                                    src="assets/logos/difusionlabs.png"
-                                                    alt="Difusión Labs"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>difusionlabs.com</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.up2access.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Up2Access"
-                                            >
-                                                <img
-                                                    src="assets/logos/up2access.png"
-                                                    alt="Up2Access"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>up2access.com</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://oldfarmhouses.es"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Old Farm Houses"
-                                            >
-                                                <img
-                                                    src="assets/logos/oldfarmhouses.png"
-                                                    alt="Old Farm Houses"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>oldfarmhouses.es</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.unjugueteunailusion.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Un Juguete Una Ilusión"
-                                            >
-                                                <img
-                                                    src="assets/logos/unjugueteunailusion.png"
-                                                    alt="Un Juguete Una Ilusión"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>unjugueteunailusion.com</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.laoficinamoderna.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="La Oficina Moderna"
-                                            >
-                                                <img
-                                                    src="assets/logos/laoficinamoderna.png"
-                                                    alt="La Oficina Moderna"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>laoficinamoderna.com</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.xarxaalcover.cat"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Xarxa Alcover"
-                                            >
-                                                <img
-                                                    src="assets/logos/xarxaalcover.png"
-                                                    alt="Xarxa Alcover"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>xarxaalcover.cat</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.mielmoncabrer.com"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Miel Moncabrer"
-                                            >
-                                                <img
-                                                    src="assets/logos/mielmoncabrer.png"
-                                                    alt="Miel Moncabrer"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>mielmoncabrer.com</span>'
-                                                    "
-                                                />
-                                            </a>
-                                            <a
-                                                href="https://www.estrenarte.es"
-                                                target="_blank"
-                                                rel="noopener"
-                                                class="agency-logo-link"
-                                                title="Estrenarte"
-                                            >
-                                                <img
-                                                    src="assets/logos/estrenarte.png"
-                                                    alt="Estrenarte"
-                                                    onerror="
-                                                        this.outerHTML =
-                                                            '<span class=\'agency-logo-text\'>estrenarte.es</span>'
-                                                    "
-                                                />
-                                            </a>
-                                        </div>
+                                        <p class="case-tech">
+                                            <b>Algunos clientes</b>, debajo de la captura: pulsa su
+                                            logo para ver su web.
+                                        </p>
                                     </div>
                                 </article>
                             </div>
