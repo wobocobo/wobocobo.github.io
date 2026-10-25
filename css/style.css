@@ -2742,12 +2742,16 @@ a.client-strip__item:hover {
   transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
+/* Gira con el ratón encima, al tocarla (.is-flipped, desde cine.js) y con el
+   foco de teclado. Foco solo de teclado (:focus-visible), no :focus-within:
+   en móvil el botón del póster se quedaba con el foco al tocarlo y la entrada
+   no volvía a girar al tocar el reverso. */
 @media (hover: hover) {
   .ticket:hover .ticket__inner {
     transform: rotateY(180deg);
   }
 }
-.ticket:focus-within .ticket__inner,
+.ticket:has(:focus-visible) .ticket__inner,
 .ticket.is-flipped .ticket__inner {
   transform: rotateY(180deg);
 }
@@ -2814,6 +2818,22 @@ a.client-strip__item:hover {
   outline: 3px solid var(--accent);
   outline-offset: -3px;
   border-radius: 10px;
+}
+
+/* La cara de espaldas no recibe toques. Safari (iPhone) no respeta
+   backface-visibility al decidir qué se pulsa: el reverso, que va encima en
+   el DOM, se llevaba el toque del póster y su enlace abría FilmAffinity. */
+.ticket__back {
+  pointer-events: none;
+}
+.ticket.is-flipped .ticket__back,
+.ticket:has(:focus-visible) .ticket__back {
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .ticket:hover .ticket__back {
+    pointer-events: auto;
+  }
 }
 
 .ticket__back {
