@@ -1,32 +1,41 @@
 /* ============================================================
    Playlists de Spotify (spoti.html)
-   Cards con carátula que montan el embed bajo demanda: la página
-   no descarga N iframes de Spotify y solo hay un reproductor
-   activo a la vez.
+   Cards con carátula y vinilo que montan el embed bajo demanda:
+   la página no descarga N iframes de Spotify y solo hay un
+   reproductor activo a la vez.
 
-   El reproductor vive en un hueco fijo (#player) encima del grid,
-   no dentro de la card: así el grid nunca salta y siempre se abre
-   en el mismo sitio. Al cerrar se elimina el iframe, que es lo que
-   corta el audio.
+   El reproductor es un tocadiscos fijo abajo (#player): plato con
+   el vinilo de la playlist y el embed de Spotify al lado; se puede
+   seguir mirando la página mientras suena. Al cerrar se elimina el
+   iframe, que es lo que corta el audio.
 
    El nombre y la carátula NO están en el repo: se piden al oEmbed
    de Spotify (`access-control-allow-origin: *`, sin API key ni
    token) y se cachean unas horas en localStorage. Si mañana
-   cambias una carátula en Spotify, la web la enseña sola.
+   cambias una carátula en Spotify, la web la enseña sola. Con esas
+   carátulas se rellena también el mosaico de la cabecera.
    ============================================================ */
 (function spoti() {
   const grid = document.getElementById('playlists');
   const player = document.getElementById('player');
   if (!grid || !player) return;
 
+  const mosaic = document.querySelector('[data-mosaic]');
+  const shuffleBtn = document.querySelector('[data-shuffle]');
+  const countEl = document.querySelector('[data-count]');
+
   const OEMBED = 'https://open.spotify.com/oembed?url=';
   const CACHE_KEY = 'spoti:meta';
   const CACHE_TTL = 6 * 60 * 60 * 1000;
   const IFRAME_ALLOW = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+  const MOSAIC_TILES = 28;
+  const CONCURRENCY = 3;
 
   const NS = 'http://www.w3.org/2000/svg';
 
-  const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.14-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>';
+  const PLAY_SVG =
+    '<svg class="pl-card__icon pl-card__icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.14-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>' +
+    '<svg class="pl-card__icon pl-card__icon--stop" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>';
 
   const closeSvg = document.createElementNS(NS, 'svg');
   closeSvg.setAttribute('viewBox', '0 0 24 24');
@@ -41,6 +50,8 @@
 
   let cache = readCache();
   let active = null;
+  let cards = [];
+  let tiles = [];
 
   /* ---------- caché de metadatos ---------- */
 
@@ -72,12 +83,12 @@
     return { title: data.title || '', cover: data.thumbnail_url };
   }
 
-  /* ---------- reproductor fijo ---------- */
+  /* ---------- reproductor (barra fija abajo) ---------- */
 
-  const playerTitle = document.createElement('h3');
+  const playerTitle = document.createElement('p');
   playerTitle.className = 'pl-player__title';
 
-  const playerLabel = document.createElement('p');
+  const playerLabel = document.createElement('span');
   playerLabel.className = 'pl-player__label';
   playerLabel.textContent = 'Reproduciendo';
 
@@ -90,27 +101,90 @@
   playerClose.type = 'button';
   playerClose.className = 'pl-player__close';
   playerClose.appendChild(closeSvg);
-  playerClose.appendChild(document.createTextNode('Cerrar'));
+  const closeText = document.createElement('span');
+  closeText.textContent = 'Cerrar';
+  playerClose.appendChild(closeText);
   playerClose.addEventListener('click', () => close());
 
   const playerEmbed = document.createElement('div');
   playerEmbed.className = 'pl-player__embed';
 
+  const playerText = document.createElement('div');
+  playerText.className = 'pl-player__text';
+  playerText.append(playerLabel, playerTitle);
+
   const playerHead = document.createElement('div');
   playerHead.className = 'pl-player__head';
-  playerHead.append(playerEq, playerLabel, playerTitle, playerClose);
+  playerHead.append(playerEq, playerText, playerClose);
 
-  player.append(playerHead, playerEmbed);
+  /* Tocadiscos: plato con el vinilo (la etiqueta es la carátula), brazo,
+     piloto y selector de velocidad. Solo decorativo. */
+  const deck = document.createElement('div');
+  deck.className = 'pl-deck';
+  deck.setAttribute('aria-hidden', 'true');
+  deck.innerHTML =
+    '<span class="pl-deck__platter"><span class="pl-deck__record"><span class="pl-deck__label"><img alt=""></span></span></span>' +
+    '<span class="pl-deck__arm"></span>' +
+    '<span class="pl-deck__led"></span>' +
+    '<span class="pl-deck__speed">33</span>';
+  const deckLabel = deck.querySelector('.pl-deck__label img');
+
+  player.append(deck, playerHead, playerEmbed);
+
+  /* La barra tapa el final de la página: el body reserva su alto (--player-h)
+     y la flecha de volver arriba se sube por encima */
+  const syncPlayerSpace = () => {
+    document.body.style.setProperty('--player-h', player.offsetHeight + 'px');
+  };
+  if ('ResizeObserver' in window) new ResizeObserver(syncPlayerSpace).observe(player);
+
+  /* ---------- mosaico de la cabecera ---------- */
+
+  function buildMosaic(total) {
+    if (!mosaic || !total) return;
+    tiles = Array.from({ length: MOSAIC_TILES }, () => {
+      const img = document.createElement('img');
+      img.alt = '';
+      img.decoding = 'async';
+      img.addEventListener('load', () => img.classList.add('is-loaded'));
+      mosaic.appendChild(img);
+      return img;
+    });
+  }
+
+  /* Cada carátula ocupa las casillas i, i + total, i + 2·total… */
+  function paintMosaic(index, total, cover) {
+    for (let i = index; i < tiles.length; i += total) {
+      if (tiles[i].getAttribute('src') !== cover) tiles[i].setAttribute('src', cover);
+    }
+  }
 
   /* ---------- card ---------- */
 
-  function buildCard(entry) {
+  function buildCard(entry, index) {
     const title = entry.name || 'Playlist';
 
     const card = document.createElement('article');
     card.className = 'pl-card';
     card.dataset.id = entry.id;
     card.dataset.title = title;
+    card.dataset.index = index;
+
+    const media = document.createElement('div');
+    media.className = 'pl-card__media';
+
+    /* El vinilo va detrás de la funda; la etiqueta del centro es la carátula */
+    const vinyl = document.createElement('span');
+    vinyl.className = 'pl-card__vinyl';
+    vinyl.setAttribute('aria-hidden', 'true');
+    const label = document.createElement('span');
+    label.className = 'pl-card__label';
+    const labelImg = document.createElement('img');
+    labelImg.alt = '';
+    labelImg.loading = 'lazy';
+    labelImg.decoding = 'async';
+    label.appendChild(labelImg);
+    vinyl.appendChild(label);
 
     const cover = document.createElement('div');
     cover.className = 'pl-card__cover';
@@ -131,13 +205,20 @@
     playBtn.addEventListener('click', () => (active === card ? close() : open(card)));
     cover.appendChild(playBtn);
 
+    media.append(vinyl, cover);
+
     const info = document.createElement('div');
     info.className = 'pl-card__info';
 
-    const h4 = document.createElement('h4');
-    h4.className = 'pl-card__title';
-    h4.textContent = title;
-    info.appendChild(h4);
+    const eq = document.createElement('span');
+    eq.className = 'pl-card__eq';
+    eq.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 3; i++) eq.appendChild(document.createElement('span'));
+
+    const h3 = document.createElement('h3');
+    h3.className = 'pl-card__title';
+    h3.textContent = title;
+    info.append(eq, h3);
 
     if (entry.note) {
       const note = document.createElement('p');
@@ -146,7 +227,7 @@
       info.appendChild(note);
     }
 
-    card.append(cover, info);
+    card.append(media, info);
     return card;
   }
 
@@ -155,10 +236,12 @@
 
     card.dataset.title = title;
     card.querySelector('.pl-card__title').textContent = title;
-    card.querySelector('.pl-card__play').setAttribute('aria-label', 'Reproducir ' + title);
+    if (active !== card) card.querySelector('.pl-card__play').setAttribute('aria-label', 'Reproducir ' + title);
 
-    const img = card.querySelector('.pl-card__cover img');
-    if (img.getAttribute('src') !== meta.cover) img.setAttribute('src', meta.cover);
+    for (const img of card.querySelectorAll('.pl-card__cover img, .pl-card__label img')) {
+      if (img.getAttribute('src') !== meta.cover) img.setAttribute('src', meta.cover);
+    }
+    paintMosaic(Number(card.dataset.index), cards.length, meta.cover);
   }
 
   async function hydrate(card) {
@@ -180,7 +263,20 @@
     }
   }
 
+  /* Todas a la vez no: de pocas en pocas, para no disparar el límite de
+     peticiones del oEmbed (el mosaico las necesita todas pronto) */
+  async function hydrateAll(list) {
+    const queue = [...list];
+    const worker = async () => {
+      while (queue.length) await hydrate(queue.shift());
+    };
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+  }
+
   /* ---------- abrir / cerrar ---------- */
+
+  let hideTimer = null;
+  let cueTimer = null;
 
   function open(card) {
     if (active === card) {
@@ -191,7 +287,18 @@
     playerTitle.textContent = card.dataset.title;
     playerClose.setAttribute('aria-label', 'Cerrar el reproductor de ' + card.dataset.title);
 
-    if (active) deactivate(active);
+    const cover = card.querySelector('.pl-card__cover img').getAttribute('src');
+    if (cover) deckLabel.setAttribute('src', cover);
+    else deckLabel.removeAttribute('src');
+
+    /* Cambio de disco con el tocadiscos ya abierto: el brazo se levanta y
+       vuelve a bajar (.is-cueing) */
+    if (active) {
+      deactivate(active);
+      player.classList.add('is-cueing');
+      clearTimeout(cueTimer);
+      cueTimer = setTimeout(() => player.classList.remove('is-cueing'), 650);
+    }
 
     /* quitar el iframe anterior es lo que corta el audio */
     playerEmbed.replaceChildren();
@@ -200,38 +307,57 @@
     iframe.src = 'https://open.spotify.com/embed/playlist/' + card.dataset.id;
     iframe.width = '100%';
     iframe.height = '352';
-    iframe.loading = 'lazy';
     iframe.allow = IFRAME_ALLOW;
     iframe.setAttribute('allowfullscreen', '');
     iframe.title = 'Reproductor de Spotify: ' + card.dataset.title;
-    iframe.style.borderRadius = '12px';
     playerEmbed.appendChild(iframe);
 
+    clearTimeout(hideTimer);
     player.hidden = false;
-    card.classList.add('pl-card--active');
-    card.querySelector('.pl-card__play').setAttribute('aria-expanded', 'true');
-    active = card;
+    void player.offsetWidth; /* sin este reflow no hay transición de entrada */
+    player.classList.add('is-open');
+    document.body.classList.add('player-open');
+    syncPlayerSpace();
 
-    player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    card.classList.add('pl-card--active');
+    const playBtn = card.querySelector('.pl-card__play');
+    playBtn.setAttribute('aria-expanded', 'true');
+    playBtn.setAttribute('aria-label', 'Cerrar el reproductor de ' + card.dataset.title);
+    active = card;
   }
 
   function deactivate(card) {
     card.classList.remove('pl-card--active');
-    card.querySelector('.pl-card__play').setAttribute('aria-expanded', 'false');
+    const playBtn = card.querySelector('.pl-card__play');
+    playBtn.setAttribute('aria-expanded', 'false');
+    playBtn.setAttribute('aria-label', 'Reproducir ' + card.dataset.title);
   }
 
   function close() {
     /* quitar el iframe destruye el player y corta el audio */
     playerEmbed.replaceChildren();
-    player.hidden = true;
+    player.classList.remove('is-open', 'is-cueing');
+    document.body.classList.remove('player-open');
+    hideTimer = setTimeout(() => (player.hidden = true), 400);
 
     if (active) deactivate(active);
     active = null;
   }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && !player.hidden) close();
+    if (e.key === 'Escape' && active) close();
   });
+
+  /* «Una al azar»: abre otra playlist cualquiera y la trae a la vista */
+  if (shuffleBtn) {
+    shuffleBtn.addEventListener('click', () => {
+      const pool = cards.filter(card => card !== active);
+      if (!pool.length) return;
+      const card = pool[Math.floor(Math.random() * pool.length)];
+      open(card);
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
 
   /* ---------- carga ---------- */
 
@@ -243,26 +369,17 @@
         return;
       }
 
-      const cards = data.filter(entry => entry && entry.id).map(entry => {
-        const card = buildCard(entry);
+      cards = data.filter(entry => entry && entry.id).map((entry, i) => {
+        const card = buildCard(entry, i);
         grid.appendChild(card);
         return card;
       });
 
-      if (!('IntersectionObserver' in window)) {
-        cards.forEach(hydrate);
-        return;
-      }
+      if (countEl) countEl.textContent = `${cards.length} playlists · pulsa una portada para escucharla.`;
+      if (shuffleBtn) shuffleBtn.hidden = cards.length < 2;
 
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          io.unobserve(e.target);
-          hydrate(e.target);
-        });
-      }, { rootMargin: '300px 0px' });
-
-      cards.forEach(card => io.observe(card));
+      buildMosaic(cards.length);
+      hydrateAll(cards);
     })
     .catch(err => {
       console.error('Error cargando playlists:', err);

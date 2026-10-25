@@ -97,64 +97,71 @@
     </div>
   </header>
 
-  <main class="container main-container">
+  <main>
 
-    <section id="profile" class="page-intro page-intro--sp" data-aos="fade-up">
+    <!-- Cabecera: detrás, un mosaico con las carátulas de las playlists que
+         rellena spoti.js -->
+    <section id="profile" class="music-hero">
+      <div class="music-hero__mosaic" data-mosaic aria-hidden="true"></div>
+      <div class="boxed music-hero__inner">
+        <div class="section-head music-hero__head" data-aos="fade-up">
+          <span class="section-label">Curiosidades · Música</span>
+          <h1 class="section-title">Soy melómano</h1>
+          <p class="section-subtitle">
+            La música me acompaña cada día, para concentrarme, trabajar o simplemente desconectar.
+            Estas son algunas de mis playlists públicas de Spotify, con lo que más escucho de cada momento.
+          </p>
+        </div>
 
-      <div class="page-intro__brand">
-        <span class="page-intro__logo">
-          <img src="assets/logos/spotify.svg" alt="Spotify" width="40" height="40">
-        </span>
-
-        <span class="page-intro__avatar">
-          <img src="https://i.scdn.co/image/ab6775700000ee85ab7ccac11c25a082e6023ed4" alt=""
-            width="66" height="66" loading="lazy" decoding="async" referrerpolicy="no-referrer">
-        </span>
-
-        <span class="page-intro__eq" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </div>
-
-      <h2>Soy melómano</h2>
-      <p class="page-intro__lead">
-        La música me acompaña cada día, para concentrarme, trabajar o simplemente desconectar.<br>
-        Estas son algunas de mis playlists públicas de Spotify, con lo que más escucho de cada momento.
-      </p>
-
-      <div class="page-intro__actions">
-        <a
-          href="https://open.spotify.com/user/11171869957?si=73d11cd48af341d0"
-          target="_blank" rel="noopener noreferrer" class="btn btn-spotify btn--shine">
-          Ver todas mis playlists en Spotify
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </a>
+        <div class="music-hero__profile" data-aos="fade-up" data-aos-delay="100">
+          <span class="music-hero__avatar">
+            <img src="https://i.scdn.co/image/ab6775700000ee85ab7ccac11c25a082e6023ed4" alt=""
+              width="72" height="72" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            <span class="music-hero__badge"><img src="assets/logos/spotify.svg" alt="" width="14" height="14"></span>
+          </span>
+          <div class="music-hero__actions">
+            <button class="btn btn--subtle music-hero__shuffle" type="button" data-shuffle hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+              </svg>
+              Una al azar
+            </button>
+            <a href="https://open.spotify.com/user/11171869957?si=73d11cd48af341d0"
+              target="_blank" rel="noopener noreferrer" class="btn-spotify">
+              Ver todas en Spotify
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="mt-4">
-      <h3 data-aos="fade-up">Playlists</h3>
-      <p>Pulsa una portada para abrir el reproductor.</p>
+    <section class="section music-list" aria-labelledby="playlistsTitle">
+      <div class="boxed">
+        <div class="music-list__head">
+          <h2 class="music-list__title" id="playlistsTitle">Playlists</h2>
+          <p class="music-list__hint" data-count>Pulsa una portada para escucharla.</p>
+        </div>
 
-      <div id="player" class="pl-player" hidden aria-label="Reproductor de Spotify"></div>
+        <div id="playlists" class="pl-grid"></div>
 
-      <div id="playlists" class="pl-grid" data-aos="fade-up"></div>
-
-      <noscript>
-        <p class="pl-empty">Activa JavaScript para ver las playlists, o
-          <a href="https://open.spotify.com/user/11171869957" target="_blank"
-            rel="noopener noreferrer">ábrelas en Spotify</a>.
-        </p>
-      </noscript>
+        <noscript>
+          <p class="pl-empty">Activa JavaScript para ver las playlists, o
+            <a href="https://open.spotify.com/user/11171869957" target="_blank"
+              rel="noopener noreferrer">ábrelas en Spotify</a>.
+          </p>
+        </noscript>
+      </div>
     </section>
 
   </main>
+
+  <!-- Reproductor: barra fija abajo que spoti.js monta al darle a play; se
+       puede seguir mirando la página mientras suena -->
+  <div id="player" class="pl-player" hidden aria-label="Reproductor de Spotify"></div>
 
   <footer class="footer">
     <div class="boxed">
