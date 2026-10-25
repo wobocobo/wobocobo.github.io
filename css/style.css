@@ -3090,10 +3090,126 @@ a.client-strip__item:hover {
     flex: 1 1 calc(50% - 0.75rem);
   }
 }
-.cine-more {
+/* Paginado del catálogo: abajo el completo (anterior, números con «…» y
+   siguiente) y arriba, junto al contador, «Página 2 de 14» con flechas */
+.cine-pager {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  gap: 0.4rem;
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+.cine-pager__page,
+.cine-pager__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s,
+    transform 0.18s;
+}
+.cine-pager__page:hover:not([aria-current]),
+.cine-pager__step:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.cine-pager__page[aria-current='page'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: default;
+}
+.cine-pager__step:disabled,
+.cine-pager-mini__step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.cine-pager__step svg {
+  width: 16px;
+  height: 16px;
+}
+.cine-pager__gap {
+  min-width: 22px;
+  color: var(--text-faint);
+  text-align: center;
+}
+.page-list__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+}
+.cine-pager-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-faint);
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+.cine-pager-mini b {
+  color: var(--text);
+}
+.cine-pager-mini__step {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border-mid);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+.cine-pager-mini__step:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cine-pager-mini__step svg {
+  width: 15px;
+  height: 15px;
+}
+#allTitle:focus {
+  outline: none;
+}
+/* En móvil, solo flechas y botones más prietos: «‹ 1 … 6 7 8 … 14 ›» cabe
+   en una línea de 343px */
+@media (max-width: 560px) {
+  .cine-pager {
+    gap: 0.3rem;
+  }
+  .cine-pager__step span {
+    display: none;
+  }
+  .cine-pager__page,
+  .cine-pager__step {
+    min-width: 36px;
+    height: 38px;
+    padding: 0 0.4rem;
+  }
+  .cine-pager__gap {
+    min-width: 14px;
+  }
 }
 
 /* Listas de FilmAffinity */

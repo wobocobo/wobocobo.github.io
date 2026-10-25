@@ -137,8 +137,11 @@
     <section class="section section--alt" id="todas" aria-labelledby="allTitle">
       <div class="boxed boxed--full">
         <div class="page-list__head">
-          <h2 class="page-list__title" id="allTitle">Todas mis películas</h2>
-          <p class="page-list__hint" data-result-count aria-live="polite"></p>
+          <h2 class="page-list__title" id="allTitle" tabindex="-1">Todas mis películas</h2>
+          <div class="page-list__meta">
+            <p class="page-list__hint" data-result-count aria-live="polite"></p>
+            <div class="cine-pager-mini" data-pager-mini hidden></div>
+          </div>
         </div>
 
         <form class="cine-filters" role="search" data-filters hidden>
@@ -172,13 +175,19 @@
               <option value="title">Título (A-Z)</option>
             </select>
           </label>
+          <label class="cine-filters__field">
+            <span>Por página</span>
+            <select name="per">
+              <option value="24">24</option>
+              <option value="48" selected>48</option>
+              <option value="96">96</option>
+            </select>
+          </label>
         </form>
 
         <div id="catalog" class="ticket-grid ticket-grid--dense"></div>
         <p class="pl-empty" data-empty hidden>Ninguna película coincide con esos filtros.</p>
-        <div class="cine-more">
-          <button class="btn btn--subtle" type="button" data-more hidden>Ver más</button>
-        </div>
+        <nav class="cine-pager" data-pager aria-label="Páginas del catálogo" hidden></nav>
       </div>
     </section>
 
