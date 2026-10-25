@@ -240,7 +240,6 @@ if (timeline) {
    Con [data-wrap] es una RUEDA: no hay principio ni final y no
    se clona nada, solo se rota el orden de los mismos slides en
    el DOM (ver rotateForward/rotateBack).
-   Con [data-autoplay="ms"] avanza solo (ver al final).
    ============================================================ */
 function initCarousel(root) {
   const track = root.querySelector('[data-track]');
@@ -496,52 +495,17 @@ function initCarousel(root) {
 
   sync();
 
-  /* Paso automático: cada `ms` avanza un slide, salvo con el ratón encima, foco
-     de teclado dentro, un toque reciente, arrastrando, fuera de pantalla o con
-     la pestaña oculta. Tras cualquier interacción espera un ciclo completo. Con
-     "reducir movimiento" no arranca. */
-  const autoplayMs = parseInt(root.dataset.autoplay, 10);
-  if (autoplayMs > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let hovered = false;
-    let keyboardFocus = false;
-    let visible = false;
-    let last = Date.now();
-    const touched = () => {
-      last = Date.now();
-    };
-
-    root.addEventListener('pointerenter', (e) => {
-      if (e.pointerType === 'mouse') hovered = true;
-    });
-    root.addEventListener('pointerleave', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      hovered = false;
-      touched(); /* al salir, un ciclo entero antes de avanzar */
-    });
-    root.addEventListener('focusin', (e) => {
-      keyboardFocus = e.target.matches(':focus-visible');
-    });
-    root.addEventListener('focusout', () => {
-      keyboardFocus = false;
-    });
-    root.addEventListener('pointerdown', touched);
-    root.addEventListener('click', touched);
-    track.addEventListener('touchstart', touched, { passive: true });
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([entry]) => {
-        visible = entry.isIntersecting;
-      }, { threshold: 0.4 }).observe(root);
-    } else {
-      visible = true;
-    }
-
-    setInterval(() => {
-      if (hovered || keyboardFocus || !visible || isDown || document.hidden) return;
-      if (Date.now() - last < autoplayMs) return;
-      last = Date.now();
-      goTo(currentIndex() + 1);
-    }, 500);
+  /* No avanza solo: la primera vez que el carrusel entra en pantalla, la
+     flecha de «siguiente» da un pequeño empujón para avisar de que hay más
+     (la animación está en el CSS, .is-hinting). */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      nextBtn.classList.add('is-hinting');
+      nextBtn.addEventListener('animationend', () => nextBtn.classList.remove('is-hinting'), { once: true });
+    }, { threshold: 0.5 });
+    io.observe(root);
   }
 }
 

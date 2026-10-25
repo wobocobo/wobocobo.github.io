@@ -1534,17 +1534,59 @@ img {
     border-color 0.2s,
     color 0.2s,
     background 0.3s,
+    box-shadow 0.25s,
     opacity 0.2s,
     transform 0.18s;
 }
+/* La flecha se asoma hacia su lado al pasar (con un leve rebote), el botón
+   se hunde al pulsar y, al entrar en pantalla, la de «siguiente» da dos
+   empujoncitos (.is-hinting, lo pone main.js) para avisar de que hay más. */
 .carousel__arrow svg {
   width: 18px;
   height: 18px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .carousel__arrow:hover:not(:disabled) {
   border-color: var(--accent);
   color: var(--accent);
-  transform: scale(1.06);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.carousel__arrow[data-prev]:hover:not(:disabled) svg {
+  transform: translateX(-3px);
+}
+.carousel__arrow[data-next]:hover:not(:disabled) svg {
+  transform: translateX(3px);
+}
+.carousel__arrow:active:not(:disabled) {
+  transform: scale(0.92);
+}
+.carousel__arrow.is-hinting svg {
+  animation: arrow-hint 1.2s ease-in-out 0.4s 2;
+}
+@keyframes arrow-hint {
+  0%,
+  45%,
+  100% {
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(5px);
+  }
+  30% {
+    transform: translateX(1px);
+  }
+  38% {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel__arrow svg {
+    transition: none;
+  }
+  .carousel__arrow.is-hinting svg {
+    animation: none;
+  }
 }
 .carousel__arrow:disabled {
   opacity: 0.3;
@@ -1580,6 +1622,13 @@ img {
    la cabecera (.cases-head) y los puntos debajo. */
 .carousel--cases {
   --cw: 100%;
+}
+/* 3px de aire a los lados: el slide mide decimales (842,47px…) y scrollLeft
+   se redondea a enteros, así que el marco podía quedar hasta medio píxel por
+   fuera y el overflow del viewport le comía el borde izquierdo. El centrado
+   sigue cuadrando: el sangrado es simétrico (ver step() en main.js). */
+.carousel--cases .carousel__track {
+  padding-inline: 3px;
 }
 .cases-head {
   display: flex;
