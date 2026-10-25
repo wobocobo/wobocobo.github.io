@@ -37,22 +37,24 @@
   --header-h-compact: 60px;
 }
 
+/* Tema claro «papel»: fondo crema y tarjetas casi blancas encima. El blanco
+   puro en fondo y tarjetas deslumbraba y lo dejaba todo plano. */
 .light-theme {
-  --bg: #ffffff;
-  --bg-deep: #f3f6fb;
-  --surface: #ffffff;
-  --surface-2: #f6f9fd;
-  --border: #e0e7f1;
-  --border-mid: #aebcd4;
+  --bg: #f5f3ee;
+  --bg-deep: #ebe7df;
+  --surface: #fcfbf8;
+  --surface-2: #f4f1eb;
+  --border: #e0dbd0;
+  --border-mid: #b5ab99;
 
   --text: #0d1526;
-  --text-muted: #34425e;
-  --text-faint: #5a6a86;
+  --text-muted: #36404f;
+  --text-faint: #545d6c;
   --text-body: #1c2638;
 
-  --accent: #0870b0;
-  --accent-strong: #026aa8;
-  --accent-soft: #0b8fd8;
+  --accent: #0868a6;
+  --accent-strong: #02619c;
+  --accent-soft: #0b84c9;
   --on-accent: #ffffff;
 
   --grad-1: #0ea5e9;
