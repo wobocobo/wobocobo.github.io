@@ -138,8 +138,9 @@ img {
   display: block;
 }
 
+/* Padding compacto del rediseño v2 (#azar lo afina en .azar) */
 .section {
-  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
   scroll-margin-top: calc(var(--header-h) + 8px);
 }
 
@@ -723,10 +724,25 @@ img {
   background: var(--surface-2);
 }
 .azar-card--playlist .azar-card__media {
+  position: relative;
   width: 72px;
   height: 72px;
 }
+/* Sin carátula (si falla el oEmbed): el logo de Spotify apagado, como en
+   spoti.html. La carátula, posicionada y después en el DOM, lo tapa. */
+.azar-card--playlist .azar-card__media::before {
+  content: '';
+  position: absolute;
+  inset: 28%;
+  background: url('../assets/logos/spotify.svg') center / contain no-repeat;
+  filter: brightness(0) invert(1);
+  opacity: 0.45;
+}
+.light-theme .azar-card--playlist .azar-card__media::before {
+  filter: brightness(0);
+}
 .azar-card__media img {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -908,19 +924,6 @@ img {
   transform: translateX(5px);
 }
 
-.btn--ghost {
-  background:
-    radial-gradient(220px 90px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
-    var(--surface);
-  border-color: var(--border-mid);
-  color: var(--text);
-}
-.btn--ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 20%, transparent);
-}
 .btn--sm {
   padding: 0.5rem 1.05rem;
   font-size: 0.84rem;
@@ -960,10 +963,6 @@ img {
   font-weight: 600;
 }
 
-/* Variante compacta: sección junta, sin scroll */
-#about {
-  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
-}
 #about .section-head {
   margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
 }
@@ -1090,92 +1089,7 @@ img {
   }
 }
 
-/* ===================== STACK ===================== */
-.stack-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-.stack-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  transition:
-    border-color 0.2s,
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-.stack-chip:hover {
-  border-color: var(--border-mid);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--bg) 60%, transparent);
-}
-.stack-chip img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.stack-chip__text-icon {
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
-  font-size: 1.05rem;
-  flex-shrink: 0;
-}
-.stack-chip__name {
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-.stack-chip:hover .stack-chip__name {
-  color: var(--text);
-}
-.stack-chip__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-left: 0.15rem;
-}
-.dot-backend { background: #818cf8; }
-.dot-frontend { background: #34d399; }
-.dot-cms { background: #fb923c; }
-.dot-db { background: #f472b6; }
-.dot-server { background: #a3e635; }
-.dot-tools { background: #94a3b8; }
-
-.stack-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  margin-top: 1.6rem;
-  padding-top: 1.4rem;
-  border-top: 1px solid var(--border);
-}
-.stack-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-.stack-legend-item .stack-chip__dot {
-  margin-left: 0;
-}
-
 /* ===================== EXPERIENCIA — TIMELINE ===================== */
-/* Mismo padding compacto que #about (ritmo vertical del rediseño v2) */
-#experience {
-  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
-}
 /* El subtítulo va en una línea en escritorio (el 60ch general lo partía) */
 #experience .section-subtitle {
   max-width: none;
@@ -1659,10 +1573,6 @@ img {
 
 
 /* ===================== CASOS — CARDS ===================== */
-/* Mismo padding compacto que #about (ritmo vertical del rediseño v2) */
-#cases {
-  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
-}
 /* Un caso a todo el ancho del contenedor: el slide mide el 100% del track y
    las vecinas quedan ocultas por el overflow del viewport. Las flechas van en
    la cabecera (.cases-head) y los puntos debajo. */
@@ -2206,9 +2116,11 @@ a.case-frame__url:hover {
 .case-frame__shot.is-loading {
   opacity: 0.35;
 }
+/* 78px de mínimo: los nueve caben en una fila desde ~1300px de pantalla y el
+   caso no hace más alto que el resto todo el carrusel */
 .client-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
   gap: 0.5rem;
 }
 .client-strip__item {
@@ -2271,9 +2183,6 @@ a.client-strip__item:hover {
    en dos columnas). main.js (videoHub) monta todo desde data/videos.json: el
    principal empieza como portada (miniatura de YouTube + botón) y el iframe de
    youtube-nocookie solo se crea al reproducir. */
-#videos {
-  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
-}
 .video-hub {
   display: grid;
   grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
@@ -3426,10 +3335,7 @@ a.client-strip__item:hover {
 /* ===================== CONTACTO ===================== */
 /* Dos columnas: a la izquierda título, frase y enlaces directos (el email se
    copia, main.js → copyEmail); a la derecha el formulario en tarjeta. En
-   ≤900px se apilan. Mismo padding compacto que el resto del rediseño v2. */
-#contact {
-  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
-}
+   ≤900px se apilan. */
 .contact {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
