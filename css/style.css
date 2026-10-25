@@ -4104,7 +4104,11 @@ body.player-open #backToTop {
     border: 0;
     box-shadow: none;
     opacity: 1;
-    visibility: visible;
+    /* inherit y no visible: un hijo con visibility: visible se ve y se puede
+       pulsar aunque el menú esté cerrado (oculto). Cine y Música quedaban
+       como una franja invisible encima de la página que se llevaba los
+       toques. */
+    visibility: inherit;
     transform: none;
   }
   .dropdown-menu a {
