@@ -4,10 +4,13 @@
    la página no descarga N iframes de Spotify y solo hay un
    reproductor activo a la vez.
 
-   El reproductor es un tocadiscos fijo abajo (#player): plato con
-   el vinilo de la playlist y el embed de Spotify al lado; se puede
-   seguir mirando la página mientras suena. Al cerrar se elimina el
-   iframe, que es lo que corta el audio.
+   El reproductor es un tocadiscos (#player): plato con el vinilo de
+   la playlist y el embed de Spotify al lado. En escritorio flota en
+   una esquina, se arrastra por su barra y se minimiza a un vinilo;
+   en móvil es una hoja abajo que se cierra deslizándola. El embed se
+   monta con la API oficial de Spotify (iFrame API), que permite darle
+   al play desde «Una al azar»; si no carga, un iframe normal. Al
+   cerrar se destruye el embed, que es lo que corta el audio.
 
    El nombre y la carátula NO están en el repo: se piden al oEmbed
    de Spotify (`access-control-allow-origin: *`, sin API key ni
@@ -28,6 +31,8 @@
   const CACHE_KEY = 'spoti:meta';
   const CACHE_TTL = 6 * 60 * 60 * 1000;
   const IFRAME_ALLOW = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+  const IFRAME_API = 'https://open.spotify.com/embed/iframe-api/v1';
+  const EMBED_HEIGHT = 352;
   const MOSAIC_TILES = 28;
   const CONCURRENCY = 3;
 
@@ -83,7 +88,7 @@
     return { title: data.title || '', cover: data.thumbnail_url };
   }
 
-  /* ---------- reproductor (barra fija abajo) ---------- */
+  /* ---------- reproductor (tocadiscos) ---------- */
 
   const playerTitle = document.createElement('p');
   playerTitle.className = 'pl-player__title';
@@ -113,9 +118,24 @@
   playerText.className = 'pl-player__text';
   playerText.append(playerLabel, playerTitle);
 
+  const playerMin = document.createElement('button');
+  playerMin.type = 'button';
+  playerMin.className = 'pl-player__min';
+  playerMin.setAttribute('aria-label', 'Minimizar el reproductor');
+  playerMin.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg>';
+  playerMin.addEventListener('click', () => setMinimized(true));
+
+  /* Minimizado, todo el vinilo es el botón para volver a abrirlo */
+  const playerRestore = document.createElement('button');
+  playerRestore.type = 'button';
+  playerRestore.className = 'pl-player__restore';
+  playerRestore.hidden = true;
+  playerRestore.addEventListener('click', () => setMinimized(false));
+
   const playerHead = document.createElement('div');
   playerHead.className = 'pl-player__head';
-  playerHead.append(playerEq, playerText, playerClose);
+  playerHead.append(playerEq, playerText, playerMin, playerClose);
 
   /* Tocadiscos: plato con el vinilo (la etiqueta es la carátula), brazo,
      piloto y selector de velocidad. Solo decorativo. */
@@ -129,14 +149,143 @@
     '<span class="pl-deck__speed">33</span>';
   const deckLabel = deck.querySelector('.pl-deck__label img');
 
-  player.append(deck, playerHead, playerEmbed);
+  player.append(deck, playerHead, playerEmbed, playerRestore);
 
-  /* La barra tapa el final de la página: el body reserva su alto (--player-h)
-     y la flecha de volver arriba se sube por encima */
+  /* En móvil la hoja tapa el final de la página: el body reserva su alto
+     (--player-h, lo usa el CSS de ≤760px) y la flecha de volver arriba se sube */
   const syncPlayerSpace = () => {
     document.body.style.setProperty('--player-h', player.offsetHeight + 'px');
   };
   if ('ResizeObserver' in window) new ResizeObserver(syncPlayerSpace).observe(player);
+
+  const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+
+  function setMinimized(on) {
+    player.classList.toggle('is-minimized', on);
+    playerRestore.hidden = !on;
+    (on ? playerRestore : playerMin).focus({ preventScroll: true });
+    if (!on) keepInView();
+  }
+
+  /* Escritorio: se arrastra por la barra de arriba (left/top en línea, sin
+     salirse de la ventana). Móvil: la barra se desliza hacia abajo y, pasado
+     un tramo, cierra. */
+  function placeAt(left, top) {
+    const margin = 8;
+    const maxLeft = window.innerWidth - player.offsetWidth - margin;
+    const maxTop = window.innerHeight - player.offsetHeight - margin;
+    player.style.left = Math.min(Math.max(margin, left), maxLeft) + 'px';
+    player.style.top = Math.min(Math.max(margin, top), maxTop) + 'px';
+    player.style.right = 'auto';
+    player.style.bottom = 'auto';
+  }
+
+  function resetPlacement() {
+    ['left', 'top', 'right', 'bottom', 'transform'].forEach(prop => (player.style[prop] = ''));
+  }
+
+  function keepInView() {
+    if (isMobile()) resetPlacement();
+    else if (player.style.left) {
+      const rect = player.getBoundingClientRect();
+      placeAt(rect.left, rect.top);
+    }
+  }
+  window.addEventListener('resize', keepInView);
+
+  let drag = null;
+  playerHead.addEventListener('pointerdown', e => {
+    if (e.button !== 0 || e.target.closest('button')) return;
+    const rect = player.getBoundingClientRect();
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, left: rect.left, top: rect.top, mobile: isMobile() };
+    playerHead.setPointerCapture(e.pointerId);
+    player.classList.add('is-dragging');
+  });
+  playerHead.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    const dy = e.clientY - drag.y;
+    if (drag.mobile) player.style.transform = `translateY(${Math.max(0, dy)}px)`;
+    else placeAt(drag.left + dx, drag.top + dy);
+  });
+  const endDrag = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const { mobile, y } = drag;
+    drag = null;
+    player.classList.remove('is-dragging');
+    if (!mobile) return;
+    player.style.transform = '';
+    if (e.clientY - y > 90) close();
+  };
+  playerHead.addEventListener('pointerup', endDrag);
+  playerHead.addEventListener('pointercancel', endDrag);
+
+  /* ---------- embed de Spotify ---------- */
+
+  /* La API oficial se carga solo la primera vez que se abre el reproductor */
+  let iframeApi = null;
+  function loadIframeApi() {
+    if (!iframeApi) {
+      iframeApi = new Promise((resolve, reject) => {
+        window.onSpotifyIframeApiReady = resolve;
+        const script = document.createElement('script');
+        script.src = IFRAME_API;
+        script.async = true;
+        script.onerror = reject;
+        document.body.appendChild(script);
+        setTimeout(() => reject(new Error('La API de Spotify no responde')), 8000);
+      });
+    }
+    return iframeApi;
+  }
+
+  let controller = null;
+  let embedToken = 0;
+
+  function destroyEmbed() {
+    embedToken++;
+    if (controller) controller.destroy();
+    controller = null;
+    playerEmbed.replaceChildren();
+  }
+
+  /* Cada apertura monta un embed nuevo (quitar el anterior corta su audio).
+     Con autoplay, la API le da al play en cuanto está listo; el navegador
+     puede bloquearlo (Safari lo hace) y entonces queda listo para pulsar. */
+  function mountEmbed(card, autoplay) {
+    destroyEmbed();
+    const token = embedToken;
+    const title = 'Reproductor de Spotify: ' + card.dataset.title;
+    const slot = document.createElement('div');
+    playerEmbed.appendChild(slot);
+
+    loadIframeApi()
+      .then(IFrameAPI => {
+        if (token !== embedToken) return;
+        const options = { uri: 'spotify:playlist:' + card.dataset.id, width: '100%', height: EMBED_HEIGHT };
+        IFrameAPI.createController(slot, options, ctrl => {
+          if (token !== embedToken) {
+            ctrl.destroy();
+            return;
+          }
+          controller = ctrl;
+          const iframe = playerEmbed.querySelector('iframe');
+          if (iframe) iframe.title = title;
+          if (autoplay) ctrl.addListener('ready', () => controller === ctrl && ctrl.play());
+        });
+      })
+      .catch(() => {
+        if (token !== embedToken) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://open.spotify.com/embed/playlist/' + card.dataset.id;
+        iframe.width = '100%';
+        iframe.height = String(EMBED_HEIGHT);
+        iframe.allow = IFRAME_ALLOW;
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.title = title;
+        playerEmbed.replaceChildren(iframe);
+      });
+  }
 
   /* ---------- mosaico de la cabecera ---------- */
 
@@ -278,7 +427,7 @@
   let hideTimer = null;
   let cueTimer = null;
 
-  function open(card) {
+  function open(card, { autoplay = false } = {}) {
     if (active === card) {
       close();
       return;
@@ -286,6 +435,7 @@
 
     playerTitle.textContent = card.dataset.title;
     playerClose.setAttribute('aria-label', 'Cerrar el reproductor de ' + card.dataset.title);
+    playerRestore.setAttribute('aria-label', 'Abrir el reproductor de ' + card.dataset.title);
 
     const cover = card.querySelector('.pl-card__cover img').getAttribute('src');
     if (cover) deckLabel.setAttribute('src', cover);
@@ -300,19 +450,10 @@
       cueTimer = setTimeout(() => player.classList.remove('is-cueing'), 650);
     }
 
-    /* quitar el iframe anterior es lo que corta el audio */
-    playerEmbed.replaceChildren();
-
-    const iframe = document.createElement('iframe');
-    iframe.src = 'https://open.spotify.com/embed/playlist/' + card.dataset.id;
-    iframe.width = '100%';
-    iframe.height = '352';
-    iframe.allow = IFRAME_ALLOW;
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.title = 'Reproductor de Spotify: ' + card.dataset.title;
-    playerEmbed.appendChild(iframe);
+    mountEmbed(card, autoplay);
 
     clearTimeout(hideTimer);
+    if (player.classList.contains('is-minimized')) setMinimized(false);
     player.hidden = false;
     void player.offsetWidth; /* sin este reflow no hay transición de entrada */
     player.classList.add('is-open');
@@ -334,11 +475,15 @@
   }
 
   function close() {
-    /* quitar el iframe destruye el player y corta el audio */
-    playerEmbed.replaceChildren();
-    player.classList.remove('is-open', 'is-cueing');
+    /* destruir el embed corta el audio */
+    destroyEmbed();
+    player.classList.remove('is-open', 'is-cueing', 'is-minimized');
+    playerRestore.hidden = true;
     document.body.classList.remove('player-open');
-    hideTimer = setTimeout(() => (player.hidden = true), 400);
+    hideTimer = setTimeout(() => {
+      player.hidden = true;
+      player.style.transform = '';
+    }, 400);
 
     if (active) deactivate(active);
     active = null;
@@ -348,13 +493,13 @@
     if (e.key === 'Escape' && active) close();
   });
 
-  /* «Una al azar»: abre otra playlist cualquiera y la trae a la vista */
+  /* «Una al azar»: abre otra playlist cualquiera, le da al play y la trae a la vista */
   if (shuffleBtn) {
     shuffleBtn.addEventListener('click', () => {
       const pool = cards.filter(card => card !== active);
       if (!pool.length) return;
       const card = pool[Math.floor(Math.random() * pool.length)];
-      open(card);
+      open(card, { autoplay: true });
       card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
