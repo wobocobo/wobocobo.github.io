@@ -135,6 +135,12 @@ img {
   max-width: 1600px;
   padding-inline: clamp(1.25rem, 3.5vw, 3.5rem);
 }
+/* A todo el ancho de la pantalla (catálogo de Cine: cuantas más por fila,
+   más se ve el abanico) */
+.boxed--full {
+  max-width: none;
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
+}
 
 .page {
   display: block;
@@ -2663,53 +2669,414 @@ a.client-strip__item:hover {
   transform: translateY(-3px);
 }
 
-/* ===================== PÁGINAS SECUNDARIAS ===================== */
-.main-container {
-  padding-block: clamp(2.5rem, 6vw, 4rem);
+/* ===================== CINE (cine.html) ===================== */
+/* Mosaico de pósters (verticales) en vez de carátulas */
+.page-hero__mosaic--posters img {
+  aspect-ratio: 2 / 3;
 }
-
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+/* En Cine, casi sin desenfoque: los pósters se reconocen */
+.page-hero__mosaic--posters {
+  filter: blur(0.4px) saturate(1.1);
+  opacity: 0.7;
 }
-.movie-card {
-  display: block;
-  text-decoration: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+.cine-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
 }
-.movie-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-mid);
-  box-shadow: 0 12px 30px color-mix(in srgb, var(--bg) 55%, transparent);
+.cine-stats li {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 75%, transparent);
+  font-size: 0.86rem;
+  color: var(--text-muted);
 }
-.movie-card img {
-  width: 100%;
-  display: block;
-}
-.movie-info {
-  padding: 0.85rem;
-}
-.movie-info h4 {
-  font-size: 0.92rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
+.cine-stats b {
+  font-family: var(--font-head);
   color: var(--text);
 }
-.movie-info span {
-  font-size: 0.84rem;
-  color: var(--accent);
-  font-weight: 600;
+/* El logo de FilmAffinity es blanco: siempre sobre su chip azul */
+.cine-fa-logo {
+  display: inline-flex;
+  padding: 0.6rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #0e2a55, #17457f);
+  box-shadow: 0 8px 22px color-mix(in srgb, #0a1c3a 45%, transparent);
+}
+.cine-fa-logo img {
+  display: block;
+  width: 104px;
+  height: 26px;
+  object-fit: contain;
 }
 
+/* Rejilla de entradas: unas 6 por fila en escritorio, 2 en móvil */
+.ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(175px, 42%), 1fr));
+  gap: clamp(1.25rem, 2.6vw, 2rem) clamp(0.9rem, 2vw, 1.5rem);
+}
+
+/* Entrada de cine que se gira: delante el póster con mi nota y detrás la
+   entrada en papel con los datos. Las muescas de los lados son una máscara
+   (dos mitades con un círculo transparente en el borde). Papel y tinta son
+   un objeto: iguales en los dos temas. */
+.ticket {
+  --paper: #f3e6cf;
+  --ink: #2a1d12;
+  --ticket-red: #a8302c;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+  perspective: 1200px;
+}
+.ticket__inner {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+@media (hover: hover) {
+  .ticket:hover .ticket__inner {
+    transform: rotateY(180deg);
+  }
+}
+.ticket:focus-within .ticket__inner,
+.ticket.is-flipped .ticket__inner {
+  transform: rotateY(180deg);
+}
+.ticket__face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-mask:
+    radial-gradient(circle 9px at 0 60%, #0000 96%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% 60%, #0000 96%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 9px at 0 60%, #0000 96%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% 60%, #0000 96%, #000) right / 51% 100% no-repeat;
+}
+.ticket__front {
+  background: var(--surface-2);
+}
+.ticket__front img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ticket__rating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 2px solid rgb(255 255 255 / 0.85);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.45);
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.ticket__rating--top {
+  background: #b8891f;
+}
+.ticket__rating--good {
+  background: #2c8148;
+}
+.ticket__rating--mid {
+  background: #bd6b25;
+}
+.ticket__rating--low {
+  background: #a8302c;
+}
+.ticket__flip {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.ticket__flip:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+  border-radius: 10px;
+}
+
+.ticket__back {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  padding: 0.75rem 0.75rem 0.6rem;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.025) 0 1px, transparent 1px 4px),
+    var(--paper);
+  color: var(--ink);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  cursor: pointer;
+  transform: rotateY(180deg);
+}
+.ticket__kicker {
+  padding-bottom: 0.35rem;
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  color: var(--ticket-red);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.ticket__title {
+  display: -webkit-box;
+  margin: 0.15rem 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.ticket__meta {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 75%, transparent);
+  font-weight: 600;
+}
+.ticket__line {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.ticket__line b {
+  margin-right: 0.2rem;
+  color: var(--ticket-red);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ticket__scores {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: auto;
+}
+.ticket__score {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.25rem 0.2rem;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 6px;
+}
+.ticket__score small {
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ticket__score strong {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  line-height: 1.1;
+}
+.ticket__score--top {
+  color: #8a6512;
+}
+.ticket__score--good {
+  color: #1f6a39;
+}
+.ticket__score--mid {
+  color: #96501a;
+}
+.ticket__score--low {
+  color: #9a2824;
+}
+.ticket__stub {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1.5px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+.ticket__serial {
+  margin-right: auto;
+}
+.ticket__link {
+  color: var(--ticket-red);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ticket__link:hover {
+  color: var(--ticket-red);
+  text-decoration: underline;
+}
+.ticket__caption {
+  min-width: 0;
+}
+.ticket__name {
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ticket__year {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: 0.78rem;
+}
+/* Entradas estrechas (móvil, ~160px): todo más prieto para que quepa */
+.ticket {
+  container-type: inline-size;
+}
+@container (max-width: 200px) {
+  .ticket__back {
+    gap: 0.2rem;
+    padding: 0.6rem 0.6rem 0.5rem;
+    font-size: 0.68rem;
+  }
+  .ticket__kicker {
+    padding-bottom: 0.25rem;
+    font-size: 0.55rem;
+  }
+  .ticket__title {
+    font-size: 0.85rem;
+    -webkit-line-clamp: 2;
+  }
+  .ticket__line {
+    -webkit-line-clamp: 1;
+  }
+  .ticket__score {
+    padding: 0.15rem;
+  }
+  .ticket__score strong {
+    font-size: 1rem;
+  }
+  .ticket__serial {
+    display: none;
+  }
+  .ticket__stub span:first-child {
+    margin-right: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticket__inner {
+    transition: none;
+  }
+}
+
+/* Filtros del catálogo */
+.cine-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+.cine-filters__search {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  background: var(--surface);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.cine-filters__search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.cine-filters__search svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--text-faint);
+}
+.cine-filters__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
+}
+.cine-filters__search input::placeholder {
+  color: var(--text-faint);
+}
+.cine-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cine-filters__field select {
+  height: 44px;
+  padding: 0 2.1rem 0 0.85rem;
+  border: 1px solid var(--border-mid);
+  border-radius: 12px;
+  background: var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2393a3c4' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 0.75rem center / 14px;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.cine-filters__field select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+@media (max-width: 560px) {
+  .cine-filters__field {
+    flex: 1 1 calc(50% - 0.75rem);
+  }
+}
+.cine-more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Listas de FilmAffinity */
 .lists-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2761,7 +3128,7 @@ a.client-strip__item:hover {
 .list-card__info {
   padding: 0.85rem;
 }
-.list-card__info h4 {
+.list-card__info h3 {
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 0.15rem;
@@ -2778,18 +3145,18 @@ a.client-strip__item:hover {
   margin-top: 0.3rem;
 }
 
-/* ===================== MÚSICA (spoti.html) ===================== */
-/* Cabecera v2 con un mosaico de carátulas detrás (lo rellena spoti.js). El
-   velo va de opaco a la izquierda, donde está el texto, a transparente a la
-   derecha, y se funde con la página por abajo. */
-.music-hero {
+/* ===================== CABECERA CON MOSAICO (Música y Cine) ===================== */
+/* Cabecera v2 con un mosaico de carátulas o pósters detrás (lo rellenan
+   spoti.js y cine.js). El velo va de opaco a la izquierda, donde está el
+   texto, a transparente a la derecha, y se funde con la página por abajo. */
+.page-hero {
   position: relative;
   overflow: hidden;
   isolation: isolate;
   padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2.5rem, 5vw, 4rem);
   border-bottom: 1px solid var(--border);
 }
-.music-hero__mosaic {
+.page-hero__mosaic {
   position: absolute;
   inset: -30% -15%;
   z-index: -2;
@@ -2801,7 +3168,7 @@ a.client-strip__item:hover {
   transform: rotate(-8deg);
   animation: mosaic-drift 70s linear infinite alternate;
 }
-.music-hero__mosaic img {
+.page-hero__mosaic img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
@@ -2809,10 +3176,10 @@ a.client-strip__item:hover {
   opacity: 0;
   transition: opacity 0.8s ease;
 }
-.music-hero__mosaic img.is-loaded {
+.page-hero__mosaic img.is-loaded {
   opacity: 1;
 }
-.music-hero::after {
+.page-hero::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -2834,25 +3201,25 @@ a.client-strip__item:hover {
     transform: rotate(-8deg) translateX(-10%);
   }
 }
-.music-hero__inner {
+.page-hero__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.75rem 3rem;
 }
-.music-hero__head {
+.page-hero__head {
   margin-bottom: 0;
 }
-.music-hero__head .section-subtitle {
+.page-hero__head .section-subtitle {
   color: var(--text-body);
 }
-.music-hero__profile {
+.page-hero__profile {
   display: flex;
   align-items: center;
   gap: 1.1rem;
 }
-.music-hero__avatar {
+.page-hero__avatar {
   position: relative;
   flex: 0 0 auto;
   width: 72px;
@@ -2862,14 +3229,14 @@ a.client-strip__item:hover {
     0 0 0 3px var(--bg),
     0 0 0 5px color-mix(in srgb, #1db954 70%, transparent);
 }
-.music-hero__avatar > img {
+.page-hero__avatar > img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
   display: block;
 }
-.music-hero__badge {
+.page-hero__badge {
   position: absolute;
   right: -4px;
   bottom: -4px;
@@ -2881,29 +3248,29 @@ a.client-strip__item:hover {
   background: #1db954;
   box-shadow: 0 0 0 3px var(--bg);
 }
-.music-hero__badge img {
+.page-hero__badge img {
   width: 14px;
   height: 14px;
   filter: brightness(0);
 }
-.music-hero__actions {
+.page-hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
 }
-.music-hero__shuffle {
+.page-hero__shuffle {
   background: color-mix(in srgb, var(--surface) 80%, transparent);
 }
-.music-hero__shuffle svg {
+.page-hero__shuffle svg {
   width: 16px;
   height: 16px;
   transition: transform 0.4s ease;
 }
-.music-hero__shuffle:hover svg {
+.page-hero__shuffle:hover svg {
   transform: rotate(180deg);
 }
 
-.music-list__head {
+.page-list__head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -2911,18 +3278,19 @@ a.client-strip__item:hover {
   gap: 0.4rem 1.5rem;
   margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
-.music-list__title {
+.page-list__title {
   font-size: clamp(1.4rem, 2.6vw, 1.85rem);
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
 }
-.music-list__hint {
+.page-list__hint {
   font-size: 0.9rem;
   color: var(--text-faint);
   margin: 0;
 }
 
+/* ===================== MÚSICA (spoti.html) ===================== */
 /* Rejilla: unas 5 por fila en escritorio, 2 en móvil */
 .pl-grid {
   display: grid;
@@ -3525,7 +3893,7 @@ body.player-open #backToTop {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .music-hero__mosaic,
+  .page-hero__mosaic,
   .pl-card--active .pl-card__vinyl,
   .pl-card__eq span,
   .pl-player__eq span {
@@ -3548,48 +3916,6 @@ body.player-open #backToTop {
   border-radius: var(--radius-md);
 }
 
-.page-intro {
-  text-align: center;
-  padding: clamp(1.6rem, 4vw, 2.6rem) clamp(1.1rem, 4vw, 2.4rem);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(640px 240px at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 72%),
-    var(--surface);
-}
-.page-intro__brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.1rem;
-  margin-bottom: 1.35rem;
-}
-.page-intro__logo {
-  display: inline-flex;
-  align-items: center;
-  border-radius: var(--radius-sm);
-}
-.page-intro__logo img {
-  display: block;
-  object-fit: contain;
-}
-.page-intro--fa .page-intro__logo {
-  padding: 0.6rem 0.95rem;
-  background: linear-gradient(135deg, #0e2a55, #17457f);
-  box-shadow: 0 8px 22px color-mix(in srgb, #0a1c3a 45%, transparent);
-}
-.page-intro--fa .page-intro__logo img {
-  width: 104px;
-  height: 26px;
-}
-.page-intro__ring {
-  position: relative;
-  flex: 0 0 auto;
-  width: 66px;
-  height: 66px;
-  display: grid;
-  place-items: center;
-}
 @keyframes eq-bounce {
   0%,
   100% {
@@ -3598,56 +3924,6 @@ body.player-open #backToTop {
   50% {
     transform: scaleY(1);
   }
-}
-.circular-chart {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-.circular-chart .circle-bg {
-  fill: none;
-  stroke: var(--border-mid);
-  stroke-width: 3.4;
-}
-.circular-chart .circle-fill {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 3.4;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  transition: stroke-dashoffset 1.2s cubic-bezier(0.65, 0, 0.35, 1);
-}
-.page-intro__ring-value {
-  position: absolute;
-  font-family: var(--font-head);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.page-intro h2 {
-  font-size: clamp(1.35rem, 3.2vw, 1.75rem);
-  margin-bottom: 0.6rem;
-}
-.page-intro__lead {
-  color: var(--text-body);
-  font-size: 0.98rem;
-  max-width: 104ch;
-  margin-inline: auto;
-}
-@media (max-width: 900px) {
-  .page-intro__lead br {
-    display: none;
-  }
-}
-.page-intro__actions {
-  margin-top: 1.4rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  justify-content: center;
 }
 
 .btn-spotify {

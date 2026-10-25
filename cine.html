@@ -97,65 +97,102 @@
     </div>
   </header>
 
-  <main class="container main-container">
+  <main>
 
-    <section id="profile" class="page-intro page-intro--fa" data-aos="fade-up">
+    <!-- Cabecera: detrás, un mosaico con los pósters de lo último que he
+         visto, que rellena cine.js -->
+    <section id="profile" class="page-hero">
+      <div class="page-hero__mosaic page-hero__mosaic--posters" data-mosaic aria-hidden="true"></div>
+      <div class="boxed page-hero__inner">
+        <div class="section-head page-hero__head" data-aos="fade-up">
+          <span class="section-label">Curiosidades · Cine</span>
+          <h1 class="section-title">Soy cinéfilo</h1>
+          <p class="section-subtitle">
+            Este es mi cuaderno de cine: apunto cada película que veo con la nota que le doy, una a una.
+            Además monto mis propias listas de recomendaciones con lo mejor que he visto de cada género.
+          </p>
+          <ul class="cine-stats" data-cine-stats aria-label="Mis números en FilmAffinity" hidden>
+            <li><b data-stat="total">—</b> películas</li>
+            <li>media <b data-stat="avg">—</b></li>
+            <li>desde <b data-stat="since">—</b></li>
+          </ul>
+        </div>
 
-      <div class="page-intro__brand">
-        <span class="page-intro__logo">
-          <img src="assets/logos/filmmaffinity.png" alt="FilmAffinity" width="104" height="26">
-        </span>
-
-        <span class="page-intro__ring" data-cine-ring role="img" aria-label="Nota media de mis valoraciones">
-          <svg viewBox="0 0 36 36" class="circular-chart" aria-hidden="true">
-            <path
-              class="circle-bg"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-            <path
-              class="circle-fill"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
-          </svg>
-          <span class="page-intro__ring-value" data-cine-stat="avg">—</span>
-        </span>
-      </div>
-
-      <h2>Soy cinefilo</h2>
-      <p class="page-intro__lead">
-        Este es mi cuaderno de cine, apunto aquí cada película que veo con la nota que le doy, una a una.<br>
-        Además monto mis propias listas de recomendaciones con lo mejor que he visto de cada género.
-      </p>
-
-      <div class="page-intro__actions">
-        <a
-          href="https://www.filmaffinity.com/es/userratings.php?user_id=9048877&p=1&orderby=rating-date&chv=grid"
-          target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--shine">
-          Ver todas mis valoraciones
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </a>
+        <div class="page-hero__profile" data-aos="fade-up" data-aos-delay="100">
+          <span class="cine-fa-logo">
+            <img src="assets/logos/filmmaffinity.png" alt="FilmAffinity" width="104" height="26">
+          </span>
+          <a href="https://www.filmaffinity.com/es/userratings.php?user_id=9048877&p=1&orderby=rating-date&chv=grid"
+            target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--shine">
+            Ver todas mis valoraciones
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="mt-5">
-      <h3>Actividad reciente</h3>
-      <p>
-        Estas son las últimas películas que he valorado en FilmAffinity.
-      </p>
+    <section class="section section--alt" id="todas" aria-labelledby="allTitle">
+      <div class="boxed boxed--full">
+        <div class="page-list__head">
+          <h2 class="page-list__title" id="allTitle">Todas mis películas</h2>
+          <p class="page-list__hint" data-result-count aria-live="polite"></p>
+        </div>
+
+        <form class="cine-filters" role="search" data-filters hidden>
+          <label class="cine-filters__search">
+            <span class="visually-hidden">Buscar</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+            <input type="search" name="q" placeholder="Título, dirección o reparto" autocomplete="off">
+          </label>
+          <label class="cine-filters__field">
+            <span>Nota</span>
+            <select name="rating">
+              <option value="">Todas</option>
+              <option value="9-10">9 y 10</option>
+              <option value="7-8">7 y 8</option>
+              <option value="5-6">5 y 6</option>
+              <option value="1-4">De 1 a 4</option>
+            </select>
+          </label>
+          <label class="cine-filters__field" data-genre-field hidden>
+            <span>Género</span>
+            <select name="genre"><option value="">Todos</option></select>
+          </label>
+          <label class="cine-filters__field">
+            <span>Orden</span>
+            <select name="sort">
+              <option value="recent">Más recientes</option>
+              <option value="best">Mi mejor nota</option>
+              <option value="worst">Mi peor nota</option>
+              <option value="year">Más nuevas</option>
+              <option value="old">Más antiguas</option>
+              <option value="title">Título (A-Z)</option>
+            </select>
+          </label>
+        </form>
+
+        <div id="catalog" class="ticket-grid ticket-grid--dense"></div>
+        <p class="pl-empty" data-empty hidden>Ninguna película coincide con esos filtros.</p>
+        <div class="cine-more">
+          <button class="btn btn--subtle" type="button" data-more hidden>Ver más</button>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <div id="movies" class="movies-grid"></div>
+    <section class="section" aria-labelledby="listsTitle">
+      <div class="boxed">
+        <div class="page-list__head">
+          <h2 class="page-list__title" id="listsTitle">Listas</h2>
+          <p class="page-list__hint">Mis listas públicas en FilmAffinity.</p>
+        </div>
+        <div id="lists" class="lists-grid"></div>
+      </div>
     </section>
 
-    <section class="mt-5">
-      <h3>Listas</h3>
-      <p>Mis listas públicas en FilmAffinity.</p>
-      <div id="lists" class="lists-grid"></div>
-    </section>
-
-    </main>
+  </main>
 
   <footer class="footer">
     <div class="boxed">

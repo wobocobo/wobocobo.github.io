@@ -727,7 +727,10 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
       .catch(() => []);
 
   Promise.all([getJson('data/ratings.json'), getJson('data/spoti.json')]).then(([ratings, playlists]) => {
-    films = (Array.isArray(ratings) ? ratings : []).filter((entry) => entry && entry.title);
+    /* Solo recomienda lo que me gustó (7 o más); si no hubiera ninguna, cualquiera */
+    const rated = (Array.isArray(ratings) ? ratings : []).filter((entry) => entry && entry.title);
+    const liked = rated.filter((entry) => Number(entry.rating) >= 7);
+    films = liked.length ? liked : rated;
     lists = (Array.isArray(playlists) ? playlists : []).filter((entry) => entry && entry.id);
     filmCard.hidden = !films.length;
     listCard.hidden = !lists.length;
