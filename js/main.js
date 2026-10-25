@@ -541,6 +541,20 @@ document.querySelectorAll('[data-frame-tabs]').forEach((frame) => {
       select(tabs[(i + step) % tabs.length], true);
     });
   });
+
+  /* La primera vez que el marco se ve, las pestañas inactivas se iluminan una
+     tras otra (.is-hinting, animación en el CSS) para que se note que se
+     pueden pulsar. Se quita por tiempo y no en animationend: si se quedara
+     puesta, se animaría cualquier pestaña que dejara de estar activa. */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      frame.classList.add('is-hinting');
+      setTimeout(() => frame.classList.remove('is-hinting'), 2000);
+    }, { threshold: 0.6 });
+    io.observe(frame);
+  }
 });
 
 /* ============================================================
