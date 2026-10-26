@@ -202,12 +202,14 @@ if (timeline) {
 
   window.addEventListener('scroll', updateTimeline, { passive: true });
   window.addEventListener('resize', updateTimeline);
+  /* Al plegar o desplegar un puesto, el alto de la timeline cambia en cada
+     fotograma de la transición: la línea lo sigue en vez de esperar al final */
+  if ('ResizeObserver' in window) new ResizeObserver(updateTimeline).observe(timeline);
   updateTimeline();
 
   /* «Ver más»: anima max-height desde el trozo que asoma hasta la altura real
      y, al terminar, la deja en none para que aguante cambios de ancho. Al
-     plegar se parte de la altura en px (desde none no hay transición). Cambia
-     el alto de la timeline, así que se recalcula la línea al acabar. */
+     plegar se parte de la altura en px (desde none no hay transición). */
   timeline.querySelectorAll('.timeline-toggle').forEach((btn) => {
     const item = btn.closest('.timeline-item');
     const more = item.querySelector('.timeline-more');
