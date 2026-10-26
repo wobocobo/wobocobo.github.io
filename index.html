@@ -63,6 +63,26 @@
                         <img class="brand__logo" src="assets/img/logo-w.png" alt="" width="28" height="28" />
                         Wobocobo
                     </a>
+                    <!-- Guiño: su cabeza lanza el Spider-Man que cruza la pantalla (main.js) -->
+                    <button class="brand__spidey" type="button" data-spidey hidden
+                            aria-label="Que pase Spider-Man" title="Que pase Spider-Man">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <defs>
+                                <clipPath id="spideyIconClip">
+                                    <path d="M12 2.2c4.6 0 8 3.6 8 8.6 0 5.6-3.9 11-8 11s-8-5.4-8-11c0-5 3.4-8.6 8-8.6z" />
+                                </clipPath>
+                            </defs>
+                            <path d="M12 2.2c4.6 0 8 3.6 8 8.6 0 5.6-3.9 11-8 11s-8-5.4-8-11c0-5 3.4-8.6 8-8.6z" fill="#d0202c" />
+                            <g clip-path="url(#spideyIconClip)" fill="none" stroke="#4a070e" stroke-width=".55" stroke-opacity=".8">
+                                <path d="M12 13V1M12 13v11M12 13L2 5M12 13L22 5M12 13H1M12 13h11M12 13L3 23M12 13l9 10" />
+                                <circle cx="12" cy="13" r="3.6" />
+                                <circle cx="12" cy="13" r="7" />
+                            </g>
+                            <path d="M12 2.2c4.6 0 8 3.6 8 8.6 0 5.6-3.9 11-8 11s-8-5.4-8-11c0-5 3.4-8.6 8-8.6z" fill="none" stroke="#4a070e" stroke-width=".8" />
+                            <path d="M10.7 13.4C10 10.4 8.2 8.6 5.3 8.4c-.2 3.2 2 5.3 5.4 5z" fill="#fff" stroke="#111" stroke-width="1.1" stroke-linejoin="round" />
+                            <path d="M13.3 13.4c.7-3 2.5-4.8 5.4-5 .2 3.2-2 5.3-5.4 5z" fill="#fff" stroke="#111" stroke-width="1.1" stroke-linejoin="round" />
+                        </svg>
+                    </button>
                 </div>
                 <nav class="nav" id="mainNav" aria-label="Principal">
                     <a class="nav__link" href="#inicio">

@@ -4186,7 +4186,7 @@ a.client-strip__item:hover {
   }
 }
 
-/* Guiño: Spider-Man que cruza balanceándose al entrar (spoti.js).
+/* Guiño: Spider-Man que cruza balanceándose (main.js).
    Capa fija a toda la ventana que no se lleva ningún toque. */
 .spidey {
   position: fixed;
@@ -4207,40 +4207,36 @@ a.client-strip__item:hover {
   stroke-linecap: round;
 }
 
-/* Botón para repetirlo: su cabeza, en el hueco sobre la etiqueta */
-.page-hero__head {
-  position: relative;
-}
-.page-hero__spidey {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 0.6rem);
+/* El botón que lo lanza: su cabeza, junto a la marca del header (en las
+   tres páginas). Al pasar el ratón se balancea colgada del hilo. */
+.brand__spidey {
   display: grid;
+  flex: none;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
+  margin-left: 0.4rem;
   padding: 0;
-  border: 1px solid var(--border-mid);
+  border: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  background: none;
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
 }
-.page-hero__spidey svg {
-  width: 26px;
-  height: 26px;
+.brand__spidey svg {
+  width: 24px;
+  height: 24px;
   transform-origin: 50% 0;
+  transition: transform 0.2s ease;
 }
-.page-hero__spidey:hover {
-  border-color: #d0202c;
-  transform: translateY(-2px);
-}
-.page-hero__spidey:hover svg {
+.brand__spidey:hover svg {
   animation: spidey-dangle 1s ease-in-out infinite;
 }
-.page-hero__spidey:focus-visible {
+.brand__spidey:active svg {
+  transform: scale(0.9);
+}
+.brand__spidey:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 @keyframes spidey-dangle {
   0%,
@@ -4249,17 +4245,6 @@ a.client-strip__item:hover {
   }
   50% {
     transform: rotate(10deg);
-  }
-}
-@media (max-width: 560px) {
-  .page-hero__spidey {
-    width: 34px;
-    height: 34px;
-    bottom: calc(100% + 0.4rem);
-  }
-  .page-hero__spidey svg {
-    width: 23px;
-    height: 23px;
   }
 }
 
