@@ -491,6 +491,37 @@ function initCarousel(root) {
     true
   );
 
+  /* Con el dedo (y con el trackpad) el arrastre es el scroll nativo, que no
+     rota la rueda: al llegar al último slide del DOM se topaba con el final y
+     ya no avanzaba. Cuando el scroll se para en un extremo, se rota (invisible,
+     como siempre) para que quede card a ambos lados. No se toca mientras hay
+     un dedo encima ni durante un movimiento propio (no-snap). */
+  if (wrap) {
+    let touching = false;
+    let settleTimer = null;
+    const keepInterior = () => {
+      if (touching || isDown || track.classList.contains('no-snap')) return;
+      const pos = Math.round(track.scrollLeft / step());
+      if (pos <= 0) rotateBack();
+      else if (pos >= total - 1) rotateForward();
+    };
+    const settleSoon = () => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(keepInterior, 140);
+    };
+    const release = () => {
+      touching = false;
+      settleSoon();
+    };
+    track.addEventListener('scroll', settleSoon, { passive: true });
+    track.addEventListener('touchstart', () => {
+      touching = true;
+      clearTimeout(settleTimer);
+    }, { passive: true });
+    track.addEventListener('touchend', release, { passive: true });
+    track.addEventListener('touchcancel', release, { passive: true });
+  }
+
   /* Arranque de la rueda: se adelanta una posición para que, con el primer caso
      ya centrado, la última card asome por la izquierda (y no un hueco). */
   if (wrap) rotateBack();
