@@ -352,36 +352,67 @@ img {
   border-color: var(--accent);
   color: var(--accent);
 }
-/* Icono del tema: un interruptor de luz. En claro la tecla sube y se
-   enciende el piloto; en oscuro baja. Al pasar el ratón la tecla amaga
-   hacia la otra posición. */
-.theme-switch {
-  width: 20px;
-  height: 20px;
+/* Botón de tema: toggle tipo iPhone. La bolita se desliza y lleva la luna
+   (tema oscuro) o el sol (tema claro), que se cruzan girando. Al pasar el
+   ratón la bolita amaga hacia el otro lado. */
+.theme-toggle {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 30px;
+  padding: 0;
+  border-radius: 99px;
+  background: var(--bg-deep);
 }
-.theme-switch__lever {
-  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+.theme-toggle__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--border-mid) 75%, var(--surface));
+  color: var(--text);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+  transition:
+    transform 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
+    background 0.3s,
+    color 0.3s;
 }
-.theme-toggle:hover .theme-switch__lever {
-  transform: translateY(-1px);
+.light-theme .theme-toggle__knob {
+  background: #fff;
+  color: #c27a0a;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  transform: translateX(26px);
 }
-.light-theme .theme-switch__lever {
-  transform: translateY(-6.2px);
+.theme-toggle:hover .theme-toggle__knob {
+  transform: translateX(2px);
 }
-.light-theme .theme-toggle:hover .theme-switch__lever {
-  transform: translateY(-5.2px);
+.light-theme .theme-toggle:hover .theme-toggle__knob {
+  transform: translateX(24px);
 }
-.theme-switch__led {
-  fill: #e0a030;
+.theme-toggle__icon {
+  grid-area: 1 / 1;
+  width: 14px;
+  height: 14px;
+  transition:
+    opacity 0.3s,
+    transform 0.4s ease;
+}
+.theme-toggle__icon--sun,
+.light-theme .theme-toggle__icon--moon {
   opacity: 0;
-  transition: opacity 0.3s;
+  transform: rotate(-90deg) scale(0.5);
 }
-.light-theme .theme-switch__led {
+.light-theme .theme-toggle__icon--sun {
   opacity: 1;
+  transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .theme-switch__lever,
-  .theme-switch__led {
+  .theme-toggle__knob,
+  .theme-toggle__icon {
     transition: none;
   }
 }
@@ -4451,6 +4482,15 @@ a.client-strip__item:hover {
   .header-time {
     font-size: 0.75rem;
   }
+}
+/* En pantallas muy estrechas no caben la marca con Spider-Man, la hora, el
+   toggle de tema y el menú: la hora se queda fuera */
+@media (max-width: 359px) {
+  .header-time {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
   /* Trayectoria en móvil: el logo deja de flotar en la esquina y pasa a ser
      un chip inline a la izquierda del texto, para que el h4 y el rol dispongan
      de todo el ancho. */

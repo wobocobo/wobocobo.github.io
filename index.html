@@ -143,13 +143,16 @@
                 <div class="header-end">
                     <time class="header-time" id="headerTime">--:--:--</time>
                     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a tema claro">
-                        <!-- Interruptor de luz: la tecla sube en claro y baja en oscuro -->
-                        <svg class="theme-switch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="4.5" y="1.5" width="15" height="21" rx="3"></rect>
-                            <rect x="8.5" y="5" width="7" height="14" rx="1.6"></rect>
-                            <rect class="theme-switch__lever" x="9.9" y="12.6" width="4.2" height="5" rx="1" fill="currentColor" stroke="none"></rect>
-                            <circle class="theme-switch__led" cx="12" cy="3.3" r=".85" stroke="none"></circle>
-                        </svg>
+                        <!-- Toggle tipo iPhone: la bolita lleva la luna (oscuro) o el sol (claro) -->
+                        <span class="theme-toggle__knob" aria-hidden="true">
+                            <svg class="theme-toggle__icon theme-toggle__icon--moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"></path>
+                            </svg>
+                            <svg class="theme-toggle__icon theme-toggle__icon--sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="4"></circle>
+                                <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"></path>
+                            </svg>
+                        </span>
                     </button>
                     <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
                         <span class="menu-toggle__bars" aria-hidden="true"></span>
