@@ -3992,13 +3992,41 @@ a.client-strip__item:hover {
 }
 
 /* Minimizado: solo el vinilo girando. La cabecera y el embed siguen ahí
-   (recortados y transparentes) para que la música no se corte. */
+   (recortados y transparentes) para que la música no se corte. Se arrastra
+   (spoti.js) y lleva un brillo ámbar con un halo que late mientras suena. */
 .pl-player.is-minimized {
-  grid-template-columns: 76px;
+  grid-template-columns: 88px;
   grid-template-areas: 'deck';
   gap: 0;
   padding: 6px;
   border-radius: 50%;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 14px 32px rgb(0 0 0 / 0.6),
+    0 0 22px color-mix(in srgb, var(--amber) 40%, transparent);
+}
+.pl-player.is-minimized::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--amber);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pl-halo 1.9s ease-out infinite;
+}
+.pl-player.is-minimized.is-paused::after {
+  animation: none;
+  opacity: 0.45;
+}
+@keyframes pl-halo {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
 }
 .pl-player.is-minimized .pl-player__head,
 .pl-player.is-minimized .pl-player__embed {
@@ -4011,8 +4039,8 @@ a.client-strip__item:hover {
   clip-path: inset(50%);
 }
 .pl-player.is-minimized .pl-deck {
-  width: 76px;
-  height: 76px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   background: none;
   box-shadow: none;
@@ -4037,6 +4065,10 @@ a.client-strip__item:hover {
   border-radius: 50%;
   background: none;
   cursor: pointer;
+  touch-action: none; /* con el dedo arrastra el vinilo, no la página */
+}
+.pl-player.is-dragging .pl-player__restore {
+  cursor: grabbing;
 }
 .pl-player__restore:focus-visible {
   outline: 3px solid var(--amber);
@@ -4140,7 +4172,8 @@ a.client-strip__item:hover {
   .page-hero__mosaic,
   .pl-card--active .pl-card__vinyl,
   .pl-card__eq span,
-  .pl-player__eq span {
+  .pl-player__eq span,
+  .pl-player.is-minimized::after {
     animation: none;
   }
   .pl-card__vinyl,

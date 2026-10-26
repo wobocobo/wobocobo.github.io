@@ -126,12 +126,13 @@
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg>';
   playerMin.addEventListener('click', () => setMinimized(true));
 
-  /* Minimizado, todo el vinilo es el botón para volver a abrirlo */
+  /* Minimizado, todo el vinilo es el botón para volver a abrirlo (y se
+     arrastra: ver más abajo) */
   const playerRestore = document.createElement('button');
   playerRestore.type = 'button';
   playerRestore.className = 'pl-player__restore';
+  playerRestore.setAttribute('aria-label', 'Abrir el reproductor');
   playerRestore.hidden = true;
-  playerRestore.addEventListener('click', () => setMinimized(false));
 
   const playerHead = document.createElement('div');
   playerHead.className = 'pl-player__head';
@@ -156,14 +157,26 @@
   const syncPlayerSpace = () => {
     document.body.style.setProperty('--player-h', player.offsetHeight + 'px');
   };
-  if ('ResizeObserver' in window) new ResizeObserver(syncPlayerSpace).observe(player);
+  /* Al cambiar de tamaño (minimizar, restaurar o cuando llega el embed, que
+     carga después) se recoloca para no salirse de la ventana */
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(() => {
+      syncPlayerSpace();
+      keepInView();
+    }).observe(player);
+  }
 
   const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+
+  /* En móvil el vinilo recuerda dónde se dejó la última vez (abierto, el
+     reproductor es la hoja de abajo y no tiene posición propia) */
+  let miniPos = null;
 
   function setMinimized(on) {
     player.classList.toggle('is-minimized', on);
     playerRestore.hidden = !on;
     (on ? playerRestore : playerMin).focus({ preventScroll: true });
+    if (on && isMobile() && miniPos) placeAt(miniPos.left, miniPos.top);
     if (!on) keepInView();
   }
 
@@ -185,11 +198,8 @@
   }
 
   function keepInView() {
-    if (isMobile()) resetPlacement();
-    else if (player.style.left) {
-      const rect = player.getBoundingClientRect();
-      placeAt(rect.left, rect.top);
-    }
+    if (isMobile() && !player.classList.contains('is-minimized')) resetPlacement();
+    else if (player.style.left) placeAt(parseFloat(player.style.left), parseFloat(player.style.top));
   }
   window.addEventListener('resize', keepInView);
 
@@ -220,6 +230,49 @@
   playerHead.addEventListener('pointerup', endDrag);
   playerHead.addEventListener('pointercancel', endDrag);
 
+  /* El vinilo minimizado se arrastra con ratón o dedo. Hasta que no se mueve
+     unos píxeles es un toque normal; si se ha arrastrado, soltar no lo abre. */
+  let miniDrag = null;
+  let miniMoved = false;
+  playerRestore.addEventListener('pointerdown', e => {
+    if (e.button !== 0) return;
+    const rect = player.getBoundingClientRect();
+    miniDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, left: rect.left, top: rect.top };
+    miniMoved = false;
+    playerRestore.setPointerCapture(e.pointerId);
+  });
+  playerRestore.addEventListener('pointermove', e => {
+    if (!miniDrag || e.pointerId !== miniDrag.id) return;
+    const dx = e.clientX - miniDrag.x;
+    const dy = e.clientY - miniDrag.y;
+    if (!miniMoved) {
+      if (Math.hypot(dx, dy) < 6) return;
+      miniMoved = true;
+      player.classList.add('is-dragging');
+    }
+    placeAt(miniDrag.left + dx, miniDrag.top + dy);
+  });
+  const endMiniDrag = e => {
+    if (!miniDrag || e.pointerId !== miniDrag.id) return;
+    miniDrag = null;
+    player.classList.remove('is-dragging');
+    if (miniMoved && isMobile()) {
+      const rect = player.getBoundingClientRect();
+      miniPos = { left: rect.left, top: rect.top };
+    }
+    /* tras un pointercancel no llega clic que lo consuma */
+    if (e.type === 'pointercancel') miniMoved = false;
+  };
+  playerRestore.addEventListener('pointerup', endMiniDrag);
+  playerRestore.addEventListener('pointercancel', endMiniDrag);
+  playerRestore.addEventListener('click', () => {
+    if (miniMoved) {
+      miniMoved = false;
+      return;
+    }
+    setMinimized(false);
+  });
+
   /* ---------- embed de Spotify ---------- */
 
   /* La API oficial se carga solo la primera vez que se abre el reproductor */
@@ -246,6 +299,7 @@
     embedToken++;
     if (controller) controller.destroy();
     controller = null;
+    player.classList.remove('is-paused');
     playerEmbed.replaceChildren();
   }
 
@@ -272,6 +326,10 @@
           const iframe = playerEmbed.querySelector('iframe');
           if (iframe) iframe.title = title;
           if (autoplay) ctrl.addListener('ready', () => controller === ctrl && ctrl.play());
+          /* en pausa, el vinilo minimizado deja de latir (sin la API late siempre) */
+          ctrl.addListener('playback_update', e => {
+            if (controller === ctrl) player.classList.toggle('is-paused', e.data.isPaused);
+          });
         });
       })
       .catch(() => {
