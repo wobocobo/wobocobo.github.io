@@ -102,12 +102,12 @@
       <div class="header-end">
         <time class="header-time" id="headerTime">--:--:--</time>
         <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a tema claro">
-          <svg class="theme-icon theme-icon--sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-          </svg>
-          <svg class="theme-icon theme-icon--moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          <!-- Interruptor de luz: la tecla sube en claro y baja en oscuro -->
+          <svg class="theme-switch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4.5" y="1.5" width="15" height="21" rx="3"></rect>
+            <rect x="8.5" y="5" width="7" height="14" rx="1.6"></rect>
+            <rect class="theme-switch__lever" x="9.9" y="12.6" width="4.2" height="5" rx="1" fill="currentColor" stroke="none"></rect>
+            <circle class="theme-switch__led" cx="12" cy="3.3" r=".85" stroke="none"></circle>
           </svg>
         </button>
         <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">

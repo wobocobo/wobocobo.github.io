@@ -352,32 +352,38 @@ img {
   border-color: var(--accent);
   color: var(--accent);
 }
-.theme-toggle:hover {
-  transform: rotate(15deg);
+/* Icono del tema: un interruptor de luz. En claro la tecla sube y se
+   enciende el piloto; en oscuro baja. Al pasar el ratón la tecla amaga
+   hacia la otra posición. */
+.theme-switch {
+  width: 20px;
+  height: 20px;
 }
-
-/* Iconos SVG del toggle de tema (sol ↔ luna con crossfade) */
-.theme-toggle .theme-icon {
-  grid-area: 1 / 1;
-  width: 18px;
-  height: 18px;
+.theme-switch__lever {
+  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.theme-toggle:hover .theme-switch__lever {
+  transform: translateY(-1px);
+}
+.light-theme .theme-switch__lever {
+  transform: translateY(-6.2px);
+}
+.light-theme .theme-toggle:hover .theme-switch__lever {
+  transform: translateY(-5.2px);
+}
+.theme-switch__led {
+  fill: #e0a030;
   opacity: 0;
-  transform: scale(0.6) rotate(-90deg);
-  transition:
-    opacity 0.3s,
-    transform 0.35s ease;
+  transition: opacity 0.3s;
 }
-.theme-toggle .theme-icon--sun {
+.light-theme .theme-switch__led {
   opacity: 1;
-  transform: scale(1) rotate(0deg);
 }
-.light-theme .theme-toggle .theme-icon--sun {
-  opacity: 0;
-  transform: scale(0.6) rotate(-90deg);
-}
-.light-theme .theme-toggle .theme-icon--moon {
-  opacity: 1;
-  transform: scale(1) rotate(0deg);
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch__lever,
+  .theme-switch__led {
+    transition: none;
+  }
 }
 /* Hamburguesa: tres barras que se cruzan en una ✕ al abrir */
 .menu-toggle {
