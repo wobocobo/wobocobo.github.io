@@ -1,8 +1,8 @@
 /* ============================================================
    Cine (cine.html)
    Todo sale de data/ratings.json (lo genera el marcador de
-   exportar-cine.html): cifras de la cabecera, mosaico de pósters
-   del fondo y el catálogo completo con buscador y filtros.
+   exportar-cine.html): mosaico de pósters de la cabecera y el
+   catálogo completo con buscador y filtros.
 
    Cada película es una entrada de cine que se gira: delante el
    póster con mi nota y detrás los datos (dirección, país, reparto,
@@ -161,16 +161,6 @@
   /* ---------- cabecera ---------- */
 
   function renderHero(movies) {
-    const stats = document.querySelector('[data-cine-stats]');
-    if (stats) {
-      const avg = movies.reduce((sum, m) => sum + m.rating, 0) / movies.length;
-      const since = movies.reduce((min, m) => (m.ratedAt && m.ratedAt < min ? m.ratedAt : min), '9999');
-      stats.querySelector('[data-stat="total"]').textContent = movies.length.toLocaleString('es-ES');
-      stats.querySelector('[data-stat="avg"]').textContent = decimal(avg);
-      stats.querySelector('[data-stat="since"]').textContent = since.slice(0, 4);
-      stats.hidden = false;
-    }
-
     if (!mosaic) return;
     const pool = movies.filter(m => m.poster).slice(0, MOSAIC_TILES);
     for (let i = 0; i < MOSAIC_TILES && pool.length; i++) {
