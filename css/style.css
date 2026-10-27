@@ -1562,10 +1562,6 @@ img {
   scroll-snap-align: center;
   display: flex;
 }
-.carousel__nav {
-  display: flex;
-  gap: 0.6rem;
-}
 .carousel__arrow {
   background: var(--surface);
   border: 1px solid var(--border-mid);
@@ -1664,8 +1660,8 @@ img {
 
 /* ===================== CASOS — CARDS ===================== */
 /* Un caso a todo el ancho del contenedor: el slide mide el 100% del track y
-   las vecinas quedan ocultas por el overflow del viewport. Las flechas van en
-   la cabecera (.cases-head) y los puntos debajo. */
+   las vecinas quedan ocultas por el overflow del viewport. Las flechas van
+   fuera del bloque, a los lados, y los puntos debajo. */
 .carousel--cases {
   --cw: 100%;
 }
@@ -1686,6 +1682,48 @@ img {
 }
 .cases-head .section-head {
   margin-bottom: 0;
+}
+/* Flechas fuera del bloque del carrusel (son hijas de la sección): centradas
+   en el hueco libre a cada lado del caso y a media altura de la captura.
+   main.js deja en la sección --nav-y y --nav-free (el ancho del hueco). Si el
+   hueco no da para una flecha (portátiles pequeños, tablets y móvil), van
+   montadas sobre el borde de la captura con fondo translúcido
+   (.is-nav-tight). `translate` y no `transform`, que ya lo usa el hundido
+   al pulsar. */
+.cases {
+  position: relative;
+}
+.cases > .carousel__arrow {
+  --size: clamp(38px, calc(var(--nav-free, 60px) - 8px), 52px);
+  position: absolute;
+  top: var(--nav-y, 50%);
+  z-index: 2;
+  width: var(--size);
+  height: var(--size);
+  translate: -50% -50%;
+}
+.cases > .carousel__arrow[data-prev] {
+  left: calc(var(--nav-free, 60px) / 2);
+}
+.cases > .carousel__arrow[data-next] {
+  left: calc(100% - var(--nav-free, 60px) / 2);
+}
+.cases > .carousel__arrow svg {
+  width: 22px;
+  height: 22px;
+}
+.cases.is-nav-tight > .carousel__arrow {
+  --size: 44px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.3);
+}
+.cases.is-nav-tight > .carousel__arrow[data-prev] {
+  left: calc(var(--nav-free) + 8px);
+}
+.cases.is-nav-tight > .carousel__arrow[data-next] {
+  left: calc(100% - var(--nav-free) - 8px);
 }
 
 /* Cada caso, sin tarjeta: marco de navegador grande a la izquierda (__frame)

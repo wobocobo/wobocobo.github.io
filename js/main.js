@@ -238,7 +238,8 @@ if (timeline) {
 /* ============================================================
    Carrusel genérico (hoy, los casos de #cases)
    Uso: <div data-carousel> con track [data-track], flechas
-   [data-prev]/[data-next] y puntos [data-dots].
+   [data-prev]/[data-next] y puntos [data-dots]. Con
+   [data-nav-anchor] las flechas se colocan a los lados (ver placeNav).
    Con [data-wrap] es una RUEDA: no hay principio ni final y no
    se clona nada, solo se rota el orden de los mismos slides en
    el DOM (ver rotateForward/rotateBack).
@@ -542,6 +543,40 @@ function initCarousel(root) {
       clearTimeout(settleTimer);
       settleTimer = setTimeout(keepInterior, 140);
     }, { passive: true });
+  }
+
+  /* Flechas fuera del bloque, a media altura de un elemento de los slides
+     ([data-nav-anchor]; en los casos, la captura): se deja en el root --nav-y
+     y --nav-free (el hueco libre a la izquierda del track). Se toma la mediana
+     de todos los slides para que no salten al cambiar (el del ecosistema
+     tiene la captura más abajo por las pestañas). Si el hueco no da para una
+     flecha, .is-nav-tight las monta sobre el borde (ver CSS). Se mide con
+     offsets y no con getBoundingClientRect: AOS desplaza el viewport mientras
+     aparece y la medida saldría corrida. */
+  const anchorSel = root.dataset.navAnchor;
+  if (anchorSel && 'ResizeObserver' in window) {
+    const offsetIn = (el) => {
+      let x = 0;
+      let y = 0;
+      for (; el && el !== root; el = el.offsetParent) {
+        x += el.offsetLeft;
+        y += el.offsetTop;
+      }
+      return { x, y };
+    };
+    const placeNav = () => {
+      const ys = [...track.querySelectorAll(anchorSel)]
+        .map((a) => offsetIn(a).y + a.offsetHeight / 2)
+        .sort((a, b) => a - b);
+      if (!ys.length) return;
+      const free = offsetIn(track).x;
+      root.style.setProperty('--nav-y', Math.round(ys[Math.floor(ys.length / 2)]) + 'px');
+      root.style.setProperty('--nav-free', Math.round(free) + 'px');
+      root.classList.toggle('is-nav-tight', free < 46);
+    };
+    const ro = new ResizeObserver(placeNav);
+    ro.observe(track);
+    ro.observe(root);
   }
 
   /* Arranque de la rueda: se adelanta una posición para que, con el primer caso
