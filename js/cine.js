@@ -104,7 +104,10 @@
       if (!e.target.closest('a')) card.classList.remove('is-flipped');
     });
     back.appendChild(el('span', 'ticket__kicker', 'Entrada · Cine'));
-    back.appendChild(el('h3', 'ticket__title', movie.title));
+    /* los títulos y el reparto largos se recortan: el title los da enteros */
+    const backTitle = el('h3', 'ticket__title', movie.title);
+    backTitle.title = movie.title;
+    back.appendChild(backTitle);
     const meta = [movie.year, movie.country].filter(Boolean).join(' · ');
     if (meta) back.appendChild(el('p', 'ticket__meta', meta));
     if (movie.directors && movie.directors.length) {
@@ -113,8 +116,9 @@
       back.appendChild(p);
     }
     if (movie.cast && movie.cast.length) {
-      const p = el('p', 'ticket__line');
+      const p = el('p', 'ticket__line ticket__line--cast');
       p.append(el('b', '', 'Reparto '), movie.cast.join(', '));
+      p.title = movie.cast.join(', ');
       back.appendChild(p);
     }
 
@@ -146,7 +150,9 @@
 
     /* Debajo, fuera del giro: título y año, siempre visibles */
     const caption = el('div', 'ticket__caption');
-    caption.append(el('p', 'ticket__name', movie.title), el('p', 'ticket__year', movie.year ? String(movie.year) : ''));
+    const name = el('p', 'ticket__name', movie.title);
+    name.title = movie.title;
+    caption.append(name, el('p', 'ticket__year', movie.year ? String(movie.year) : ''));
     card.appendChild(caption);
     return card;
   }

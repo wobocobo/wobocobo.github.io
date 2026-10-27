@@ -2966,6 +2966,10 @@ a.client-strip__item:hover {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+/* El reparto (tres nombres) se ve entero: encima de las notas sobra hueco */
+.ticket__line--cast {
+  -webkit-line-clamp: 3;
+}
 .ticket__line b {
   margin-right: 0.2rem;
   color: var(--ticket-red);
@@ -3071,6 +3075,9 @@ a.client-strip__item:hover {
   }
   .ticket__line {
     -webkit-line-clamp: 1;
+  }
+  .ticket__line--cast {
+    -webkit-line-clamp: 3;
   }
   .ticket__score {
     padding: 0.15rem;
