@@ -1026,6 +1026,31 @@ img {
 #about .about-media {
   max-height: 430px;
 }
+/* En escritorio los párrafos se reparten a lo alto del panel de la W:
+   centrados dejaban un hueco vacío bajo el título. space-evenly y no
+   space-between (de borde a borde quedaban demasiado separados): el aire
+   sobrante se reparte también arriba y abajo. Si el texto es más alto que
+   el panel, el panel se centra. */
+@media (min-width: 901px) {
+  #about .about-grid {
+    align-items: stretch;
+  }
+  #about .about-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 1.35rem;
+  }
+  #about .about-text p {
+    margin-bottom: 0;
+  }
+  /* sin el margen de 16px que Bootstrap pone a los figure: la fila medía
+     16px más que el panel y el último párrafo quedaba por debajo */
+  #about .about-media {
+    align-self: center;
+    margin-bottom: 0;
+  }
+}
 
 /* Panel con la W en lugar de la foto. Fondo: degradado de los azules de la
    marca que se desplaza despacio (aurora); al salir de var() se adapta solo al
