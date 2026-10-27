@@ -391,25 +391,35 @@ function initCarousel(root) {
     .querySelectorAll('img')
     .forEach((img) => img.setAttribute('draggable', 'false'));
 
+  /* Arrastre propio con ratón y con dedo (el CSS deja al navegador solo el
+     scroll vertical: touch-action: pan-y). Con el dedo se encadenan gestos sin
+     esperar a que pare nada: si el arrastre llega a un extremo del DOM, se
+     rota sobre la marcha y sigue. */
   let isDown = false;
+  let pointerType = 'mouse';
   let startX = 0;
   let startScroll = 0;
+  let startIndex = 0;
   let lastX = 0;
   let lastT = 0;
   let vel = 0;
   let dragged = false;
 
   const onDown = (e) => {
-    if (e.pointerType === 'touch') return;
     if (e.button !== undefined && e.button !== 0) return;
     stopFrame();
     isDown = true;
+    pointerType = e.pointerType;
     dragged = false;
     vel = 0;
     startX = lastX = e.clientX;
     lastT = performance.now();
     startScroll = track.scrollLeft;
-    track.classList.add('dragging', 'no-snap');
+    startIndex = currentIndex();
+    track.classList.add('no-snap');
+    /* con el dedo, la card no se encoge hasta que de verdad se arrastra
+       (un toque o un scroll vertical no deben hacerla parpadear) */
+    if (pointerType !== 'touch') track.classList.add('dragging');
   };
 
   const onMove = (e) => {
@@ -419,15 +429,30 @@ function initCarousel(root) {
     vel = -(e.clientX - lastX) / dt;
     lastX = e.clientX;
     lastT = now;
-    if (Math.abs(e.clientX - startX) > 5) dragged = true;
+    if (!dragged) {
+      if (Math.abs(e.clientX - startX) <= 5) return;
+      dragged = true;
+      track.classList.add('dragging');
+    }
     const x = e.clientX;
     stopFrame();
     frameRaf = requestAnimationFrame(() => {
-      track.scrollLeft = startScroll - (x - startX);
+      frameRaf = null;
+      let to = startScroll - (x - startX);
+      if (wrap && to < 1) {
+        rotateBack();
+        startScroll += step();
+        to += step();
+      } else if (wrap && to > maxScroll() - 1) {
+        rotateForward();
+        startScroll -= step();
+        to -= step();
+      }
+      track.scrollLeft = to;
     });
   };
 
-  const settle = () => {
+  const settle = (cancelled) => {
     if (!dragged) {
       track.classList.remove('no-snap');
       return;
@@ -435,6 +460,15 @@ function initCarousel(root) {
     if (performance.now() - lastT > 60) vel = 0;
 
     stopFrame();
+    /* Con el dedo va como un pasador: cada gesto deja el caso más cercano y,
+       si ha sido un golpe rápido, al menos uno más en ese sentido. Si el
+       navegador se queda el gesto (scroll vertical), vuelve a su sitio. */
+    if (pointerType === 'touch') {
+      let target = currentIndex();
+      if (!cancelled && Math.abs(vel) > 0.3 && target === startIndex) target += Math.sign(vel);
+      goTo(target);
+      return;
+    }
     if (Math.abs(vel) > 0.6) {
       /* Se acota la velocidad: sin tope, un gesto con un delta enorme en un
          solo frame dispara la inercia durante segundos. */
@@ -469,11 +503,11 @@ function initCarousel(root) {
     }
   };
 
-  const onUp = () => {
+  const onUp = (e) => {
     if (!isDown) return;
     isDown = false;
     track.classList.remove('dragging');
-    settle();
+    settle(e.type === 'pointercancel');
   };
 
   track.addEventListener('pointerdown', onDown);
@@ -491,35 +525,23 @@ function initCarousel(root) {
     true
   );
 
-  /* Con el dedo (y con el trackpad) el arrastre es el scroll nativo, que no
-     rota la rueda: al llegar al último slide del DOM se topaba con el final y
-     ya no avanzaba. Cuando el scroll se para en un extremo, se rota (invisible,
-     como siempre) para que quede card a ambos lados. No se toca mientras hay
-     un dedo encima ni durante un movimiento propio (no-snap). */
+  /* Con el trackpad (o la rueda horizontal) el desplazamiento es el scroll
+     nativo, que no rota la rueda: al llegar al último slide del DOM se topaba
+     con el final. Cuando el scroll se para en un extremo, se rota (invisible,
+     como siempre) para que quede card a ambos lados. No se toca durante un
+     arrastre ni durante un movimiento propio (no-snap). */
   if (wrap) {
-    let touching = false;
     let settleTimer = null;
     const keepInterior = () => {
-      if (touching || isDown || track.classList.contains('no-snap')) return;
+      if (isDown || track.classList.contains('no-snap')) return;
       const pos = Math.round(track.scrollLeft / step());
       if (pos <= 0) rotateBack();
       else if (pos >= total - 1) rotateForward();
     };
-    const settleSoon = () => {
+    track.addEventListener('scroll', () => {
       clearTimeout(settleTimer);
       settleTimer = setTimeout(keepInterior, 140);
-    };
-    const release = () => {
-      touching = false;
-      settleSoon();
-    };
-    track.addEventListener('scroll', settleSoon, { passive: true });
-    track.addEventListener('touchstart', () => {
-      touching = true;
-      clearTimeout(settleTimer);
     }, { passive: true });
-    track.addEventListener('touchend', release, { passive: true });
-    track.addEventListener('touchcancel', release, { passive: true });
   }
 
   /* Arranque de la rueda: se adelanta una posición para que, con el primer caso

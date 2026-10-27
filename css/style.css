@@ -1535,6 +1535,9 @@ img {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   cursor: grab;
+  /* el arrastre horizontal (ratón y dedo) lo lleva main.js; el navegador
+     solo hace el scroll vertical de la página y el zoom */
+  touch-action: pan-y pinch-zoom;
   scroll-behavior: auto;
   overscroll-behavior-x: contain;
   padding-block: 0.6rem;
