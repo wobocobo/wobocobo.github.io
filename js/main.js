@@ -1215,6 +1215,12 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
    son los ángulos de tronco, cabeza, brazos y piernas; según el
    tramo se mezcla entre poses (balanceo, salto encogido, bola de
    la voltereta final) y en cada fotograma se recalculan las piezas.
+
+   Sonido: un «thwip» con tirón sintetizado con Web Audio (ruido
+   filtrado y osciladores, sin archivos) al lanzar cada telaraña,
+   como mucho dos veces. Solo al pulsar el botón: el navegador no
+   deja sonar nada antes de que el usuario toque la página, y así
+   la salida automática de Música no pilla a nadie por sorpresa.
    ============================================================ */
 (function spidey() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1224,6 +1230,7 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
   const THETA = (42 * Math.PI) / 180; // amplitud del arco
   const K = 0.45; // cuánto acelera en la parte baja del arco
   const START_DELAY = 700;
+  const MAX_THWIPS = 2;
 
   const RED = '#d0202c';
   const RED_FAR = '#a3141f';
@@ -1386,10 +1393,12 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
   }
 
   let running = false;
+  let audio = null; // AudioContext: se crea en el primer clic, que es cuando el navegador deja sonar
+  let noiseBuf = null;
 
   if (btn) {
     btn.hidden = false;
-    btn.addEventListener('click', run);
+    btn.addEventListener('click', () => run(true));
   }
 
   /* En Música sale solo la primera vez por visita */
@@ -1401,12 +1410,98 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
     } catch {
       /* sin sessionStorage sale en cada visita: no es grave */
     }
-    if (!seen) setTimeout(run, START_DELAY);
+    if (!seen) setTimeout(() => run(false), START_DELAY);
   }
 
-  function run() {
+  function getAudio() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    try {
+      if (!audio) audio = new AC();
+      if (audio.state === 'suspended') audio.resume();
+      return audio;
+    } catch {
+      return null;
+    }
+  }
+
+  /* «Thwip» y tirón (~0,35 s), por capas. El disparo: chasquido, siseo
+     que sube y baja, silbidito y soplo grave. Enseguida, el tirón: un
+     «fuuum» grave del cuerpo arrastrado con un golpe sordo. Elegido de
+     oído entre varias pruebas; THWIP_GAIN lo deja al volumen con el que
+     se comparó. */
+  const THWIP_GAIN = 0.86;
+  function thwip(ctx) {
+    const E = 0.0001; // las rampas exponenciales no pueden llegar a 0
+    const t = ctx.currentTime + 0.01;
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    }
+    const master = ctx.createGain();
+    master.gain.value = THWIP_GAIN;
+    master.connect(ctx.destination);
+
+    /* rampas: [[tiempo, valor], …], la primera fija y el resto exponenciales */
+    const ramp = (param, points) => {
+      param.setValueAtTime(points[0][1], points[0][0]);
+      for (const [at, v] of points.slice(1)) param.exponentialRampToValueAtTime(v, at);
+    };
+    const env = (points) => {
+      const g = ctx.createGain();
+      ramp(g.gain, points);
+      g.connect(master);
+      return g;
+    };
+    const filter = (type, q, freqs, into) => {
+      const f = ctx.createBiquadFilter();
+      f.type = type;
+      f.Q.value = q;
+      ramp(f.frequency, freqs);
+      f.connect(into);
+      return f;
+    };
+    const noise = (t0, dur, into) => {
+      const src = ctx.createBufferSource();
+      src.buffer = noiseBuf;
+      src.connect(into);
+      src.start(t0, Math.random() * 0.5);
+      src.stop(t0 + dur);
+    };
+    const osc = (type, t0, dur, freqs, into) => {
+      const o = ctx.createOscillator();
+      o.type = type;
+      ramp(o.frequency, freqs);
+      o.connect(into);
+      o.start(t0);
+      o.stop(t0 + dur);
+    };
+
+    // disparo
+    noise(t, 0.015, filter('highpass', 0.7, [[t, 3000]], env([[t, 0.56], [t + 0.012, E]])));
+    noise(t, 0.16, filter('bandpass', 3, [[t, 2200], [t + 0.06, 6800], [t + 0.16, 2600]],
+      env([[t, E], [t + 0.035, 0.64], [t + 0.16, E]])));
+    osc('triangle', t, 0.13, [[t, 1300], [t + 0.055, 3400], [t + 0.13, 1900]],
+      env([[t, E], [t + 0.03, 0.096], [t + 0.13, E]]));
+    osc('sine', t, 0.07, [[t, 150], [t + 0.06, 55]], env([[t, E], [t + 0.005, 0.36], [t + 0.07, E]]));
+    // tirón
+    noise(t + 0.12, 0.36, filter('bandpass', 1, [[t + 0.12, 400], [t + 0.26, 1500], [t + 0.48, 600]],
+      env([[t + 0.12, E], [t + 0.26, 0.6], [t + 0.48, E]])));
+    osc('sine', t + 0.25, 0.11, [[t + 0.25, 90], [t + 0.36, 45]], env([[t + 0.25, E], [t + 0.256, 0.5], [t + 0.36, E]]));
+  }
+
+  function run(withSound) {
     if (running) return;
     running = true;
+
+    const sound = withSound ? getAudio() : null;
+    let thwips = 0;
+    const shoot = () => {
+      if (!sound || thwips >= MAX_THWIPS) return;
+      thwips++;
+      thwip(sound);
+    };
 
     const W = window.innerWidth;
     const H = window.innerHeight;
@@ -1474,6 +1569,10 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
           rot = lerp(-THETA, THETA, u);
           pose = u < 0.5 ? mix(POSES.swingB, POSES.tuck, u * 2) : mix(POSES.tuck, POSES.swingA, u * 2 - 1);
           if (u > 0.5) {
+            if (!s.shot) {
+              s.shot = true;
+              shoot();
+            }
             const p = easeOut((u - 0.5) / 0.5);
             webFrom = pos;
             webTo = lerpPt(pos, anchor(s.nextAx), p);
@@ -1520,6 +1619,7 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
       }
       requestAnimationFrame(tick);
     }
+    shoot(); // la primera telaraña, al entrar
     frame(0);
     requestAnimationFrame(tick);
   }
