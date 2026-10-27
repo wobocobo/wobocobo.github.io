@@ -4483,11 +4483,22 @@ a.client-strip__item:hover {
     font-size: 0.75rem;
   }
 }
-/* En pantallas muy estrechas no caben la marca con Spider-Man, la hora, el
-   toggle de tema y el menú: la hora se queda fuera */
-@media (max-width: 359px) {
+/* En móviles estrechos no caben la marca con Spider-Man (~172 px), la hora,
+   el toggle de tema y el menú: la hora se queda fuera (el móvil ya la
+   enseña). Por debajo de 360 px, además, la marca se aprieta un poco. */
+@media (max-width: 400px) {
   .header-time {
     display: none;
+  }
+}
+@media (max-width: 359px) {
+  .brand__link {
+    font-size: 1.05rem;
+  }
+  .brand__spidey {
+    width: 28px;
+    height: 28px;
+    margin-left: 0.25rem;
   }
 }
 @media (max-width: 480px) {
