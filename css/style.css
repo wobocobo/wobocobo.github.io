@@ -2204,6 +2204,295 @@ a.case-frame__url:hover {
   }
 }
 
+/* Caso del catálogo: arriba la cadena por la que pasa cada producto (datos
+   del proveedor, alta, traducción, categoría y stock/PVP) y debajo la consola, que
+   escribe una línea cada vez que el producto llega a un paso. Todo va con el
+   mismo ciclo de 10 s: llega a un paso cada 1,6 s (0 · 16 · 32 · 48 · 64 %),
+   espera y, al acabar, se funde y vuelve a empezar. */
+.cat-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 3.4cqw;
+  height: 100%;
+  padding: 3cqw 4cqw;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    var(--bg-deep);
+  color: var(--text);
+}
+.cat-flow__head {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  font-size: 1.9cqw;
+  font-weight: 600;
+}
+.cat-flow__brand {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+}
+.cat-flow__brand img {
+  width: auto;
+  height: 4.2cqw;
+}
+.cat-flow__ps {
+  border-radius: 1cqw;
+}
+.cat-flow__arrow {
+  width: 2.6cqw;
+  height: 2.6cqw;
+  color: var(--text-faint);
+}
+.cat-flow__chip {
+  margin-left: auto;
+  padding: 0.5cqw 1.3cqw;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  font-size: 1.4cqw;
+  white-space: nowrap;
+}
+/* Cadena: pasos al 0 · 25 · 50 · 75 · 100 % del ancho, con la vía (::before)
+   y la parte recorrida (__fill) a la altura del centro de sus círculos */
+.cat-flow__line {
+  position: relative;
+  flex-shrink: 0;
+  height: 11cqw;
+  margin: 0 3cqw;
+}
+.cat-flow__line::before,
+.cat-flow__fill {
+  content: '';
+  position: absolute;
+  top: 2.5cqw;
+  left: 0;
+  height: 0.4cqw;
+  border-radius: 99px;
+}
+.cat-flow__line::before {
+  right: 0;
+  background: var(--border-mid);
+}
+.cat-flow__fill {
+  width: 0;
+  background: var(--accent);
+  box-shadow: 0 0 1.5cqw color-mix(in srgb, var(--accent) 50%, transparent);
+  animation: cat-fill 10s infinite;
+}
+.cat-flow__steps {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cat-flow__steps li {
+  position: absolute;
+  top: 0;
+  left: calc(var(--i) * 25%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2cqw;
+  color: var(--text-muted);
+  font-size: 1.6cqw;
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.cat-flow__steps li::before {
+  content: '';
+  width: 2.6cqw;
+  height: 2.6cqw;
+  margin-top: 1.4cqw;
+  border: 0.35cqw solid var(--border-mid);
+  border-radius: 50%;
+  background: var(--bg-deep);
+  animation: cat-step 10s calc(var(--i) * 1.6s) infinite;
+}
+/* El producto, encima de la vía */
+.cat-flow__item {
+  position: absolute;
+  top: -2.4cqw;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 3.6cqw;
+  height: 3.6cqw;
+  border-radius: 0.8cqw;
+  background: var(--accent);
+  color: var(--bg-deep);
+  box-shadow: 0 0 2cqw color-mix(in srgb, var(--accent) 45%, transparent);
+  transform: translateX(-50%);
+  animation: cat-move 10s infinite;
+}
+.cat-flow__item svg {
+  width: 2.4cqw;
+  height: 2.4cqw;
+}
+/* Consola: las líneas miden 3cqw y la caja va creciendo de línea en línea
+   (step-end: salta justo al llegar a cada paso) */
+.cat-flow__log {
+  flex: 1;
+  min-height: 0;
+  padding: 1.4cqw 1.8cqw;
+  border: 1px solid var(--border-mid);
+  border-radius: 1.2cqw;
+  background: color-mix(in srgb, var(--surface) 60%, var(--bg-deep));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.7cqw;
+  line-height: 3cqw;
+}
+.cat-flow__lines {
+  height: 3cqw;
+  overflow: hidden;
+  animation: cat-log 10s step-end infinite;
+}
+.cat-flow__lines p {
+  margin: 0;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.cat-flow__lines b {
+  display: inline-block;
+  width: 2.4cqw;
+  color: var(--accent);
+}
+@keyframes cat-move {
+  0%,
+  6% {
+    left: 0;
+    opacity: 1;
+  }
+  16%,
+  22% {
+    left: 25%;
+  }
+  32%,
+  38% {
+    left: 50%;
+  }
+  48%,
+  54% {
+    left: 75%;
+  }
+  64%,
+  90% {
+    left: 100%;
+    opacity: 1;
+  }
+  96%,
+  97% {
+    left: 100%;
+    opacity: 0;
+  }
+  98% {
+    left: 0;
+    opacity: 0;
+  }
+  100% {
+    left: 0;
+    opacity: 1;
+  }
+}
+@keyframes cat-fill {
+  0%,
+  6% {
+    width: 0;
+    opacity: 1;
+  }
+  16%,
+  22% {
+    width: 25%;
+  }
+  32%,
+  38% {
+    width: 50%;
+  }
+  48%,
+  54% {
+    width: 75%;
+  }
+  64%,
+  90% {
+    width: 100%;
+    opacity: 1;
+  }
+  96%,
+  97% {
+    width: 100%;
+    opacity: 0;
+  }
+  98%,
+  100% {
+    width: 0;
+    opacity: 0;
+  }
+}
+@keyframes cat-step {
+  0%,
+  6% {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 1.8cqw color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  20%,
+  100% {
+    border-color: var(--border-mid);
+    background: var(--bg-deep);
+    box-shadow: none;
+  }
+}
+@keyframes cat-log {
+  0% {
+    height: 3cqw;
+    opacity: 1;
+  }
+  16% {
+    height: 6cqw;
+  }
+  32% {
+    height: 9cqw;
+  }
+  48% {
+    height: 12cqw;
+  }
+  64% {
+    height: 15cqw;
+  }
+  90% {
+    height: 15cqw;
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  96% {
+    height: 15cqw;
+    opacity: 0;
+  }
+  100% {
+    height: 3cqw;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-flow__item,
+  .cat-flow__fill,
+  .cat-flow__steps li::before,
+  .cat-flow__lines {
+    animation: none;
+  }
+  .cat-flow__item {
+    left: 100%;
+  }
+  .cat-flow__fill {
+    width: 100%;
+  }
+  .cat-flow__lines {
+    height: auto;
+  }
+}
+
 /* Caso del informe: tres páginas del PDF en imagen (portada delante, dos
    interiores detrás) que se abren en abanico al pasar por el marco. */
 .doc-preview {

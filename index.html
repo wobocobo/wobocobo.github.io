@@ -300,7 +300,7 @@
                                     >
                                         <div class="timeline-logo-box">
                                             <img
-                                                src="assets/logos/shipping.png"
+                                                src="assets/logos/z-bombilla.png"
                                                 alt="Z-Bombilla"
                                                 onerror="this.style.display = 'none'"
                                             />
@@ -332,8 +332,21 @@
                                             Evolución del core de PrestaShop y de la web corporativa.
                                         </li>
                                         <li>
+                                            Tienda online de Sanjoma (sanjoma.es): desarrollo y
+                                            mantenimiento en PrestaShop.
+                                        </li>
+                                        <li>
+                                            Integración de agentes de IA en el flujo de desarrollo y
+                                            en la automatización de procesos.
+                                        </li>
+                                        <li>
                                             Integración de APIs externas: Amazon SP-API, UPS,
                                             Envialia/Ontime, TikTok, AliExpress y servicios de correo.
+                                        </li>
+                                        <li>
+                                            Automatización del catálogo en PrestaShop: alta de productos
+                                            a partir de los datos de los proveedores, sincronización
+                                            de stock, precios y PVP, traducciones y categorías.
                                         </li>
                                         <li>
                                             Auditoría de seguridad para Amazon SP-API: documentación
@@ -634,7 +647,49 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 2: Shipping en el centro y los paquetes viajando
+                            <!-- CASO 2: tienda online de Sanjoma (captura de su portada) -->
+                            <div class="carousel__slide">
+                                <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <a class="case-frame__url" href="https://sanjoma.es" target="_blank" rel="noopener">sanjoma.es</a>
+                                        </div>
+                                        <div class="case-frame__view">
+                                            <img
+                                                class="case-frame__shot"
+                                                src="assets/img/cases/sanjoma.jpg"
+                                                alt="Portada de sanjoma.es, tienda online de Sanjoma Chemical Solutions"
+                                                width="1600"
+                                                height="800"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="case-body">
+                                        <div class="case-header">
+                                            <div class="case-tag">E-commerce · PrestaShop</div>
+                                            <div class="case-company">Z-Bombilla · Sanjoma</div>
+                                        </div>
+                                        <h3 class="case-title">Tienda online de Sanjoma</h3>
+                                        <p class="case-desc">
+                                            Desarrollo y mantenimiento de la tienda online de Sanjoma
+                                            sobre PrestaShop: un único proveedor con productos
+                                            profesionales para cada sector.
+                                        </p>
+                                        <a
+                                            href="https://sanjoma.es"
+                                            target="_blank"
+                                            rel="noopener"
+                                            class="btn btn--subtle btn--sm case-doc"
+                                            >Visitar sanjoma.es ↗</a
+                                        >
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- CASO 3: Shipping en el centro y los paquetes viajando
                                  por la API hasta cada transportista (y vuelta) -->
                             <div class="carousel__slide">
                                 <article class="case-card">
@@ -703,7 +758,7 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 3: sin captura; panel de validación en HTML/CSS -->
+                            <!-- CASO 4: sin captura; panel de validación en HTML/CSS -->
                             <div class="carousel__slide">
                                 <article class="case-card">
                                     <div class="case-frame">
@@ -780,7 +835,70 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 4: vista previa del informe (páginas sueltas en
+                            <!-- CASO 5: catálogo automático. Arriba la cadena (el producto
+                                 avanza paso a paso) y debajo la consola, que escribe una
+                                 línea cada vez que llega a uno -->
+                            <div class="carousel__slide">
+                                <article class="case-card">
+                                    <div class="case-frame">
+                                        <div class="case-frame__bar">
+                                            <span class="case-frame__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                            <span class="case-frame__url">Catálogo de proveedores</span>
+                                        </div>
+                                        <div class="case-frame__view case-frame__view--panel">
+                                            <div
+                                                class="cat-flow"
+                                                role="img"
+                                                aria-label="Sincronización con proveedores: con los datos del proveedor, PrestaShop da de alta el producto, lo traduce, le asigna categoría y mantiene al día stock, precios y PVP"
+                                            >
+                                                <div class="cat-flow__head">
+                                                    <span class="cat-flow__brand"><img src="assets/logos/z-bombilla.png" alt="" width="144" height="171" loading="lazy" decoding="async" />Z-Bombilla</span>
+                                                    <svg class="cat-flow__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                                                    <span class="cat-flow__brand"><img class="cat-flow__ps" src="assets/logos/prestashop.jpg" alt="" width="160" height="160" loading="lazy" decoding="async" />PrestaShop</span>
+                                                    <span class="cat-flow__chip">Sincronización automática</span>
+                                                </div>
+                                                <div class="cat-flow__line">
+                                                    <span class="cat-flow__fill"></span>
+                                                    <ol class="cat-flow__steps">
+                                                        <li style="--i: 0">Proveedor</li>
+                                                        <li style="--i: 1">Alta</li>
+                                                        <li style="--i: 2">Traducción</li>
+                                                        <li style="--i: 3">Categoría</li>
+                                                        <li style="--i: 4">Stock · PVP</li>
+                                                    </ol>
+                                                    <span class="cat-flow__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><path d="M4 7.5l8 4.5 8-4.5M12 12v9"></path></svg></span>
+                                                </div>
+                                                <div class="cat-flow__log">
+                                                    <div class="cat-flow__lines">
+                                                        <p><b>↓</b>catálogo del proveedor recibido</p>
+                                                        <p><b>+</b>productos nuevos dados de alta</p>
+                                                        <p><b>✓</b>traducciones generadas</p>
+                                                        <p><b>✓</b>categorías asignadas</p>
+                                                        <p><b>↻</b>stock, precios y PVP sincronizados</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="case-body">
+                                        <div class="case-header">
+                                            <div class="case-tag">Automatización · Catálogo</div>
+                                            <div class="case-company">Z-Bombilla</div>
+                                        </div>
+                                        <h3 class="case-title">Catálogo conectado con proveedores</h3>
+                                        <p class="case-desc">
+                                            Los productos se daban de alta solos en PrestaShop a partir
+                                            de los datos de los proveedores.
+                                        </p>
+                                        <p class="case-desc">
+                                            Stock, precios y PVP sincronizados, con las traducciones y
+                                            las categorías automatizadas, sin tocar el catálogo a mano.
+                                        </p>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- CASO 6: vista previa del informe (páginas sueltas en
                                  imagen, no el PDF); al pasar por encima se abren -->
                             <div class="carousel__slide">
                                 <article class="case-card">
@@ -827,7 +945,7 @@
                                 </article>
                             </div>
 
-                            <!-- CASO 5: la tira de clientes de debajo cambia la captura
+                            <!-- CASO 7: la tira de clientes de debajo cambia la captura
                                  y la URL del marco (main.js, [data-frame-clients]). Los
                                  clientes sin captura son enlaces a su web (pestaña nueva). -->
                             <div class="carousel__slide">
