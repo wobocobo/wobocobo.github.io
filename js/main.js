@@ -28,6 +28,32 @@ AOS.init({
 })();
 
 /* ============================================================
+   Animaciones solo en pantalla: cada sección (y el footer) lleva
+   .is-offscreen mientras no se ve; el CSS pausa sus animaciones
+   en bucle y aquí se pausan las de SVG (los paquetes de Trabajo).
+   Mismo aspecto, menos CPU y batería en móvil. El header y el
+   reproductor de Música van fuera y no se pausan nunca.
+   ============================================================ */
+(function pauseOffscreen() {
+  if (!('IntersectionObserver' in window)) return;
+  const areas = document.querySelectorAll('body > section, main > section, body > footer');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        target.classList.toggle('is-offscreen', !isIntersecting);
+        target.querySelectorAll('svg').forEach((svg) => {
+          if (!svg.querySelector('animate, animateMotion, animateTransform')) return;
+          if (isIntersecting) svg.unpauseAnimations();
+          else svg.pauseAnimations();
+        });
+      });
+    },
+    { rootMargin: '150px 0px' }
+  );
+  areas.forEach((area) => io.observe(area));
+})();
+
+/* ============================================================
    Reloj en vivo (hora de España, Europe/Madrid)
    ============================================================ */
 (function clock() {

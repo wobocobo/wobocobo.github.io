@@ -152,6 +152,17 @@ img {
   scroll-margin-top: calc(var(--header-h) + 8px);
 }
 
+/* Fuera de pantalla, las animaciones en bucle se paran (main.js pone
+   .is-offscreen en la sección o el footer que no se ve) */
+.is-offscreen,
+.is-offscreen::before,
+.is-offscreen::after,
+.is-offscreen *,
+.is-offscreen *::before,
+.is-offscreen *::after {
+  animation-play-state: paused !important;
+}
+
 /* Banda de color a lo ancho de pantalla */
 .section--alt {
   background: var(--bg-deep);
