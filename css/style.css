@@ -4418,6 +4418,42 @@ a.client-strip__item:hover {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+/* Detrás de la cabeza, un resplandor rojo muy suave que respira despacio:
+   invita a pulsarla sin llamar la atención. Al pasar el ratón se aviva. */
+.brand__spidey {
+  position: relative;
+  isolation: isolate;
+}
+.brand__spidey::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(208 32 44 / 0.5), rgb(208 32 44 / 0) 68%);
+  animation: spidey-glow 3.6s ease-in-out infinite;
+}
+.brand__spidey:hover::before {
+  opacity: 0.85;
+  animation: none;
+}
+@keyframes spidey-glow {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.05);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand__spidey::before {
+    opacity: 0.35;
+    animation: none;
+  }
+}
 @keyframes spidey-dangle {
   0%,
   100% {
