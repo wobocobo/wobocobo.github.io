@@ -393,7 +393,8 @@ function initCarousel(root) {
     .forEach((img) => img.setAttribute('draggable', 'false'));
 
   /* Arrastre propio con ratón y con dedo (el CSS deja al navegador solo el
-     scroll vertical: touch-action: pan-y). Con el dedo se encadenan gestos sin
+     scroll vertical: touch-action: pan-y, y en táctiles el track sin scroll
+     propio, que Safari se quedaba el gesto). Con el dedo se encadenan gestos sin
      esperar a que pare nada: si el arrastre llega a un extremo del DOM, se
      rota sobre la marcha y sigue. */
   let isDown = false;

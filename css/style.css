@@ -1368,6 +1368,16 @@ img {
   overscroll-behavior-x: contain;
   padding-block: 0.6rem;
 }
+/* En pantallas táctiles el track no tiene scroll propio (hidden: main.js lo
+   sigue moviendo con scrollLeft). Safari (iPhone) se quedaba el gesto
+   horizontal para su scroll aunque llevara touch-action: pan-y, cancelaba el
+   arrastre (pointercancel) y el caso volvía a su sitio. */
+@media (hover: none) and (pointer: coarse) {
+  .carousel__track {
+    overflow-x: hidden;
+    -webkit-touch-callout: none;
+  }
+}
 .carousel__track.dragging {
   cursor: grabbing;
   user-select: none;
