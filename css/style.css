@@ -4,6 +4,131 @@
    Layout boxed: contenido a ancho completo con padding lateral.
    ============================================================ */
 
+/* ===================== RESET ===================== */
+/* Lo que la web usaba del reset de Bootstrap (ya no se carga: solo se
+   aprovechaba esto y .visually-hidden). Comprobado elemento a elemento en
+   las tres páginas, en escritorio y móvil: mismo resultado sin él. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+ol,
+ul {
+  padding-left: 2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+b,
+strong {
+  font-weight: bolder;
+}
+small {
+  font-size: 0.875em;
+}
+img,
+svg {
+  vertical-align: middle;
+}
+figure {
+  margin: 0 0 1rem;
+}
+label {
+  display: inline-block;
+}
+button {
+  border-radius: 0;
+}
+input,
+button,
+select,
+optgroup,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+button:not(:disabled),
+[type='button']:not(:disabled),
+[type='reset']:not(:disabled),
+[type='submit']:not(:disabled) {
+  cursor: pointer;
+}
+textarea {
+  resize: vertical;
+}
+iframe {
+  border: 0;
+}
+[tabindex='-1']:focus:not(:focus-visible) {
+  outline: 0 !important;
+}
+button:focus:not(:focus-visible) {
+  outline: 0;
+}
+::-moz-focus-inner {
+  padding: 0;
+  border-style: none;
+}
+select {
+  word-wrap: normal;
+}
+[type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+[hidden] {
+  display: none !important;
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 /* ===================== VARIABLES ===================== */
 :root {
   --bg: #0a0f1e;
@@ -702,6 +827,10 @@ img {
   font-family: var(--font-body);
   font-size: 0.92rem;
   font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
   padding: 0.7rem 1.5rem;
   border-radius: 12px;
   border: 1px solid transparent;
