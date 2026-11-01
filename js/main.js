@@ -716,6 +716,8 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
     const img = document.createElement('img');
     img.alt = '';
     img.decoding = 'async';
+    /* va casi al final de la portada: que no compita con la carga inicial */
+    img.loading = 'lazy';
     img.src = thumb(video.id, 'maxresdefault');
     img.addEventListener('error', () => {
       if (!img.src.includes('hqdefault')) img.src = thumb(video.id, 'hqdefault');
