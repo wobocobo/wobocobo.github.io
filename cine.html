@@ -169,16 +169,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
             <input type="search" name="q" placeholder="Título, dirección o reparto" autocomplete="off">
           </label>
-          <label class="cine-filters__field">
-            <span>Nota</span>
-            <select name="rating">
-              <option value="">Todas</option>
-              <option value="9-10">9 y 10</option>
-              <option value="7-8">7 y 8</option>
-              <option value="5-6">5 y 6</option>
-              <option value="1-4">De 1 a 4</option>
-            </select>
-          </label>
+          <div class="cine-filters__field rate-filter" data-rate-filter>
+            <span id="rateFilterLabel">Mi nota</span>
+            <button type="button" class="rate-filter__toggle" aria-expanded="false" aria-controls="rateFilterMenu" aria-labelledby="rateFilterLabel rateFilterValue">
+              <span class="rate-filter__value" id="rateFilterValue">Todas</span>
+            </button>
+            <div class="rate-filter__menu" id="rateFilterMenu" role="group" aria-labelledby="rateFilterLabel" hidden></div>
+          </div>
           <label class="cine-filters__field" data-genre-field hidden>
             <span>Género</span>
             <select name="genre"><option value="">Todos</option></select>

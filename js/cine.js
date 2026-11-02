@@ -65,12 +65,14 @@
     return img;
   }
 
-  /* Tramo de color de la nota (rojo, ámbar, verde, dorado) */
-  function tier(rating) {
-    if (rating >= 9) return 'top';
-    if (rating >= 7) return 'good';
-    if (rating >= 5) return 'mid';
-    return 'low';
+  /* Las palabras de FilmAffinity para cada nota. El color va por data-rate
+     (del rojo del 1 al oro del 9 y el holográfico del 10, en style.css) */
+  const RATING_WORDS = ['', 'Muy mala', 'Mala', 'Floja', 'Regular', 'Pasable', 'Interesante', 'Buena', 'Notable', 'Muy buena', 'Excelente'];
+
+  function rateDisc(className, rating) {
+    const disc = el('span', `${className} rate-disc`, String(rating));
+    disc.dataset.rate = rating;
+    return disc;
   }
 
   function formatDate(iso) {
@@ -89,7 +91,7 @@
     /* Delante: póster con mi nota; el botón cubre la cara y la gira */
     const front = el('div', 'ticket__face ticket__front');
     front.appendChild(posterImg(movie, 320));
-    const badge = el('span', `ticket__rating ticket__rating--${tier(movie.rating)}`, String(movie.rating));
+    const badge = rateDisc('ticket__rating', movie.rating);
     badge.setAttribute('aria-hidden', 'true');
     front.appendChild(badge);
     const flip = el('button', 'ticket__flip');
@@ -124,7 +126,8 @@
 
     const scores = el('div', 'ticket__scores');
     const mine = el('span', 'ticket__score');
-    mine.append(el('small', '', 'Mi nota'), el('strong', `ticket__score--${tier(movie.rating)}`, String(movie.rating)));
+    mine.dataset.rate = movie.rating;
+    mine.append(el('small', '', 'Mi nota'), el('strong', '', String(movie.rating)), el('span', 'ticket__verdict', RATING_WORDS[movie.rating]));
     scores.appendChild(mine);
     if (movie.avg != null) {
       const fa = el('span', 'ticket__score');
@@ -185,6 +188,104 @@
   let page = 1;
   let size = 0;
 
+  /* Desplegable «Mi nota»: la leyenda del 10 al 1 (disco, palabra y cuántas
+     hay) y a la vez el filtro. Se marcan varias y se queda abierto hasta
+     tocar fuera o pulsar Esc; ninguna marcada = todas. */
+  const rateFilter = document.querySelector('[data-rate-filter]');
+  const rateToggle = rateFilter && rateFilter.querySelector('.rate-filter__toggle');
+  const rateMenu = rateFilter && rateFilter.querySelector('.rate-filter__menu');
+  const rateValue = rateFilter && rateFilter.querySelector('.rate-filter__value');
+  const rateOptions = new Map();
+  const picked = new Set();
+  let rateAll = null;
+
+  function rateOption(className, content) {
+    const btn = el('button', `rate-option ${className}`);
+    btn.type = 'button';
+    btn.append(...content, el('span', 'rate-option__check'));
+    return btn;
+  }
+
+  function showRateValue() {
+    rateAll.setAttribute('aria-pressed', String(!picked.size));
+    rateOptions.forEach(({ btn }, n) => btn.setAttribute('aria-pressed', String(picked.has(n))));
+    if (!picked.size) {
+      rateValue.textContent = 'Todas';
+      return;
+    }
+    const chosen = [...picked].sort((a, b) => b - a);
+    rateValue.replaceChildren(...chosen.slice(0, 4).map(n => rateDisc('rate-filter__mini', n)));
+    if (chosen.length > 4) rateValue.appendChild(el('span', 'rate-filter__more', `+${chosen.length - 4}`));
+    rateValue.appendChild(el('span', 'visually-hidden', chosen.join(', ')));
+  }
+
+  function openRateMenu(open) {
+    rateMenu.hidden = !open;
+    rateToggle.setAttribute('aria-expanded', String(open));
+  }
+
+  function setupRateFilter() {
+    rateAll = rateOption('rate-option--all', [el('span', 'rate-option__word', 'Todas')]);
+    rateAll.addEventListener('click', () => {
+      picked.clear();
+      showRateValue();
+      apply();
+    });
+    rateMenu.appendChild(rateAll);
+
+    for (let n = 10; n >= 1; n--) {
+      const count = el('span', 'rate-option__count');
+      const btn = rateOption('', [rateDisc('rate-option__disc', n), el('span', 'rate-option__word', RATING_WORDS[n]), count]);
+      btn.dataset.rate = n;
+      btn.addEventListener('click', () => {
+        if (picked.has(n)) picked.delete(n);
+        else picked.add(n);
+        showRateValue();
+        apply();
+      });
+      rateOptions.set(n, { btn, count });
+      rateMenu.appendChild(btn);
+    }
+    showRateValue();
+
+    rateToggle.addEventListener('click', () => openRateMenu(rateMenu.hidden));
+    document.addEventListener('click', e => {
+      if (!rateMenu.hidden && !rateFilter.contains(e.target)) openRateMenu(false);
+    });
+    rateFilter.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !rateMenu.hidden) {
+        openRateMenu(false);
+        rateToggle.focus();
+        return;
+      }
+      /* Flechas arriba y abajo entre las opciones */
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      const items = [...rateMenu.querySelectorAll('.rate-option')];
+      if (rateMenu.hidden) openRateMenu(true);
+      const i = items.indexOf(document.activeElement);
+      const next = e.key === 'ArrowDown' ? i + 1 : (i < 0 ? items.length : i) - 1;
+      items[(next + items.length) % items.length].focus();
+      e.preventDefault();
+    });
+    /* Con el tabulador fuera del desplegable, se cierra (sin destino, como
+       al pulsar en Safari, que no enfoca botones, ya lo cierra el clic) */
+    rateFilter.addEventListener('focusout', e => {
+      if (e.relatedTarget && !rateFilter.contains(e.relatedTarget)) openRateMenu(false);
+    });
+  }
+
+  /* Cuántas hay de cada nota con la búsqueda y el género de ahora */
+  function updateRateCounts(list) {
+    const byRate = new Map();
+    list.forEach(m => byRate.set(m.rating, (byRate.get(m.rating) || 0) + 1));
+    rateOptions.forEach(({ btn, count }, n) => {
+      const total = byRate.get(n) || 0;
+      count.textContent = String(total);
+      btn.classList.toggle('is-empty', !total);
+      btn.setAttribute('aria-label', `${n}, ${RATING_WORDS[n]}: ${total} ${total === 1 ? 'película' : 'películas'}`);
+    });
+  }
+
   function fillSelect(name, values) {
     const select = form.elements[name];
     values.forEach(([value, label]) => {
@@ -202,6 +303,7 @@
       fillSelect('genre', [...byGenre].sort((a, b) => b[1] - a[1]).map(([g, n]) => [g, `${g} (${n})`]));
       form.querySelector('[data-genre-field]').hidden = false;
     }
+    if (rateFilter) setupRateFilter();
 
     /* Cambiar cuántas por página no vuelve a la primera: se queda donde estabas */
     form.addEventListener('input', e => (e.target.name === 'per' ? render() : apply()));
@@ -221,14 +323,14 @@
   function apply() {
     const f = form.elements;
     const q = normalize(f.q.value.trim());
-    const [rMin, rMax] = f.rating.value ? f.rating.value.split('-').map(Number) : [1, 10];
     const genre = f.genre.value;
 
-    results = movies.filter(m =>
-      m.rating >= rMin && m.rating <= rMax &&
+    const matching = movies.filter(m =>
       (!genre || (m.genres || []).includes(genre)) &&
       (!q || m._search.includes(q))
     );
+    updateRateCounts(matching);
+    results = picked.size ? matching.filter(m => picked.has(m.rating)) : matching;
     /* sort es estable: con «recent» (0) se queda el orden del JSON */
     results.sort(SORTS[f.sort.value] || SORTS.recent);
 
