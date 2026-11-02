@@ -1527,16 +1527,18 @@ img {
   scroll-snap-type: none;
 }
 .carousel__track.dragging .carousel__slide {
-  transition: transform 0.25s ease;
   transform: scale(0.985);
 }
 .carousel__track::-webkit-scrollbar {
   display: none;
 }
+/* La transición va aquí y no solo en .dragging: al soltar, el caso también
+   vuelve a su tamaño suave (antes daba un saltito) */
 .carousel__slide {
   flex: 0 0 var(--cw, min(880px, 92vw));
   scroll-snap-align: center;
   display: flex;
+  transition: transform 0.25s ease;
 }
 .carousel__arrow {
   background: var(--surface);

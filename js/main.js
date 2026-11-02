@@ -316,6 +316,8 @@ function initCarousel(root) {
   };
 
   let frameRaf = null;
+  /* Caso al que va un goTo mientras se desliza (null si está quieto) */
+  let aim = null;
   const stopFrame = () => {
     if (frameRaf) {
       cancelAnimationFrame(frameRaf);
@@ -331,6 +333,7 @@ function initCarousel(root) {
       ? (((logical % total) + total) % total)
       : Math.max(0, Math.min(total - 1, logical));
     if (target === currentIndex() && Math.abs(track.scrollLeft % step()) < 1) {
+      aim = null;
       track.classList.remove('no-snap');
       return;
     }
@@ -365,6 +368,7 @@ function initCarousel(root) {
     }
 
     stopFrame();
+    aim = target;
     const from = track.scrollLeft;
     const to = pos * step();
     const steps = Math.max(1, Math.round(Math.abs(to - from) / step()));
@@ -378,6 +382,7 @@ function initCarousel(root) {
         frameRaf = requestAnimationFrame(frame);
       } else {
         frameRaf = null;
+        aim = null;
         track.classList.remove('no-snap');
         sync();
       }
@@ -428,13 +433,30 @@ function initCarousel(root) {
   let startX = 0;
   let startScroll = 0;
   let startIndex = 0;
+  let resumeTo = null;
   let lastX = 0;
   let lastT = 0;
   let vel = 0;
+  let samples = [];
   let dragged = false;
+
+  /* Velocidad de los últimos 100 ms (px/ms, positiva hacia delante). Con un
+     solo movimiento salía errática: Safari agrupa los eventos y el último antes
+     de levantar el dedo suele ser corto. Parado antes de soltar = 0. */
+  const velocity = () => {
+    const first = samples[0];
+    const last = samples[samples.length - 1];
+    if (!first || last.t === first.t || performance.now() - last.t > 80) return 0;
+    return -(last.x - first.x) / (last.t - first.t);
+  };
 
   const onDown = (e) => {
     if (e.button !== undefined && e.button !== 0) return;
+    /* Si se toca mientras se desliza hacia un caso, se parte de ese caso: así
+       varios gestos rápidos seguidos avanzan uno cada uno (antes se partía de
+       la posición a medio camino y uno de ellos se perdía) */
+    resumeTo = aim;
+    aim = null;
     stopFrame();
     isDown = true;
     pointerType = e.pointerType;
@@ -442,8 +464,9 @@ function initCarousel(root) {
     vel = 0;
     startX = lastX = e.clientX;
     lastT = performance.now();
+    samples = [{ t: lastT, x: startX }];
     startScroll = track.scrollLeft;
-    startIndex = currentIndex();
+    startIndex = resumeTo !== null ? resumeTo : currentIndex();
     track.classList.add('no-snap');
     /* con el dedo, la card no se encoge hasta que de verdad se arrastra
        (un toque o un scroll vertical no deben hacerla parpadear) */
@@ -453,10 +476,10 @@ function initCarousel(root) {
   const onMove = (e) => {
     if (!isDown) return;
     const now = performance.now();
-    const dt = Math.max(now - lastT, 1);
-    vel = -(e.clientX - lastX) / dt;
     lastX = e.clientX;
     lastT = now;
+    samples.push({ t: now, x: lastX });
+    while (samples.length > 2 && now - samples[0].t > 100) samples.shift();
     if (!dragged) {
       if (Math.abs(e.clientX - startX) <= 5) return;
       dragged = true;
@@ -482,19 +505,32 @@ function initCarousel(root) {
 
   const settle = (cancelled) => {
     if (!dragged) {
-      track.classList.remove('no-snap');
+      /* un toque a medio deslizamiento no lo deja a medias: termina el viaje */
+      if (resumeTo !== null) goTo(resumeTo);
+      else track.classList.remove('no-snap');
       return;
     }
-    if (performance.now() - lastT > 60) vel = 0;
+    vel = velocity();
 
     stopFrame();
-    /* Con el dedo va como un pasador: cada gesto deja el caso más cercano y,
-       si ha sido un golpe rápido, al menos uno más en ese sentido. Si el
-       navegador se queda el gesto (scroll vertical), vuelve a su sitio. */
+    /* Con el dedo va como un pasador: pasa al siguiente en cuanto se arrastra
+       una quinta parte del caso o con un golpe rápido en ese sentido (antes
+       pedía medio caso y, si no, volvía atrás). Un golpe en contra se queda en
+       el último caso entero arrastrado. Si el navegador se queda el gesto
+       (scroll vertical), va al más cercano. */
     if (pointerType === 'touch') {
-      let target = currentIndex();
-      if (!cancelled && Math.abs(vel) > 0.3 && target === startIndex) target += Math.sign(vel);
-      goTo(target);
+      const moved = (startX - lastX) / step();
+      let n = cancelled ? Math.round(moved) : Math.trunc(moved);
+      if (!cancelled) {
+        const rest = moved - n;
+        const flick = Math.abs(vel) > 0.3 ? Math.sign(vel) : 0;
+        if (flick) {
+          if (!rest || Math.sign(rest) === flick) n += flick;
+        } else if (Math.abs(rest) > 0.2) {
+          n += Math.sign(rest);
+        }
+      }
+      goTo(startIndex + n);
       return;
     }
     if (Math.abs(vel) > 0.6) {
@@ -534,6 +570,8 @@ function initCarousel(root) {
   const onUp = (e) => {
     if (!isDown) return;
     isDown = false;
+    /* pointercancel no trae una posición fiable */
+    if (e.type === 'pointerup') lastX = e.clientX;
     track.classList.remove('dragging');
     settle(e.type === 'pointercancel');
   };
