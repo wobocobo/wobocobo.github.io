@@ -1508,25 +1508,31 @@ img {
   overscroll-behavior-x: contain;
   padding-block: 0.6rem;
 }
-/* En pantallas táctiles el track no tiene scroll propio (hidden: main.js lo
-   sigue moviendo con scrollLeft). Safari (iPhone) se quedaba el gesto
-   horizontal para su scroll aunque llevara touch-action: pan-y, cancelaba el
-   arrastre (pointercancel) y el caso volvía a su sitio. */
-@media (hover: none) and (pointer: coarse) {
-  .carousel__track {
-    overflow-x: hidden;
-    -webkit-touch-callout: none;
-  }
+/* En pantallas táctiles (.is-translated, lo pone main.js) el track no tiene
+   scroll propio: se mueve con translate3d y lo recorta .carousel__viewport.
+   Con scroll, Safari (iPhone) se quedaba el gesto o se trababa al repintar.
+   Cada caso en su capa, ya pintado: al arrastrar no se repinta nada. */
+.carousel__track.is-translated {
+  overflow: visible;
+  scroll-snap-type: none;
+  will-change: transform;
+  -webkit-touch-callout: none;
+}
+.carousel__track.is-translated .carousel__slide {
+  scroll-snap-align: none;
+  transition: none;
+  will-change: transform;
 }
 .carousel__track.dragging {
   cursor: grabbing;
+  -webkit-user-select: none;
   user-select: none;
   scroll-behavior: auto;
 }
 .carousel__track.no-snap {
   scroll-snap-type: none;
 }
-.carousel__track.dragging .carousel__slide {
+.carousel__track.dragging:not(.is-translated) .carousel__slide {
   transform: scale(0.985);
 }
 .carousel__track::-webkit-scrollbar {
@@ -1696,6 +1702,15 @@ img {
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-shadow: 0 4px 14px rgb(0 0 0 / 0.3);
+}
+/* En táctiles sin desenfoque: va encima del caso que se arrastra y Safari
+   tendría que recalcularlo en cada fotograma */
+@media (hover: none) and (pointer: coarse) {
+  .cases.is-nav-tight > .carousel__arrow {
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 .cases.is-nav-tight > .carousel__arrow[data-prev] {
   left: calc(var(--nav-free) + 8px);

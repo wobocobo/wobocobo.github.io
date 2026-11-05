@@ -36,15 +36,17 @@ AOS.init({
    ============================================================ */
 (function pauseOffscreen() {
   if (!('IntersectionObserver' in window)) return;
-  const areas = document.querySelectorAll('body > section, main > section, body > footer');
+  /* cada caso del carrusel cuenta aparte: los que quedan a los lados, recortados
+     por su contenedor, tampoco se animan aunque la sección esté en pantalla */
+  const areas = document.querySelectorAll('body > section, main > section, body > footer, .carousel__slide');
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach(({ target, isIntersecting }) => {
         target.classList.toggle('is-offscreen', !isIntersecting);
         target.querySelectorAll('svg').forEach((svg) => {
           if (!svg.querySelector('animate, animateMotion, animateTransform')) return;
-          if (isIntersecting) svg.unpauseAnimations();
-          else svg.pauseAnimations();
+          if (svg.closest('.is-offscreen')) svg.pauseAnimations();
+          else svg.unpauseAnimations();
         });
       });
     },
@@ -283,12 +285,43 @@ function initCarousel(root) {
   const total = slides.length;
   const wrap = root.hasAttribute('data-wrap') && total > 1;
 
+  /* En táctiles la rueda no usa scroll: el track se mueve con translate3d y
+     cada caso va en su propia capa, así el dedo no repinta nada. Con scrollLeft
+     en un track sin scroll propio (overflow: hidden, porque Safari se quedaba
+     el gesto), Safari en iPhone se trababa; en la emulación del escritorio no
+     se nota. Tampoco se rota el DOM: el caso que queda lejos da una vuelta con
+     su propio transform (`laps`) y la posición sigue contando sin fin. */
+  const translated = wrap && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (translated) track.classList.add('is-translated');
+
   /* Con slides que ocupan el ancho del track (o con un sangrado simétrico de
      `padding-inline`), el slide de la posición p queda centrado justo con
      scrollLeft = p * step(), y el recorrido va de 0 a (total - 1) * step(). */
-  const step = () =>
+  const measureStep = () =>
     slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 0);
+  let stepPx = measureStep();
+  const step = () => (translated ? stepPx : measureStep());
   const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+  let offset = 0;
+  const laps = slides.map(() => 0);
+  const getScroll = () => (translated ? offset : track.scrollLeft);
+  const setScroll = (value) => {
+    if (!translated) {
+      track.scrollLeft = value;
+      return;
+    }
+    offset = value;
+    track.style.transform = `translate3d(${-value}px, 0, 0)`;
+    const span = total * stepPx;
+    slides.forEach((slide, i) => {
+      const lap = Math.round((value - i * stepPx) / span);
+      if (lap === laps[i]) return;
+      laps[i] = lap;
+      slide.style.transform = lap ? `translate3d(${lap * span}px, 0, 0)` : '';
+    });
+    onScroll();
+  };
 
   /* Ruedas: `order` es el índice lógico del slide que ocupa la posición 0 del
      DOM. Rotar reordena los MISMOS nodos (nada de clones) y compensa el
@@ -297,7 +330,7 @@ function initCarousel(root) {
      cards parece no tener fin. */
   let order = 0;
   const domOf = (logical) => ((logical - order) % total + total) % total;
-  const currentIndex = () => (Math.round(track.scrollLeft / step()) + order) % total;
+  const currentIndex = () => (((Math.round(getScroll() / step()) + order) % total) + total) % total;
 
   /* Ojo: el scroll se guarda ANTES de tocar el DOM y se escribe como valor
      absoluto. Si se leyera después, el reflow ya habría re-snapeado el track y
@@ -332,16 +365,22 @@ function initCarousel(root) {
     const target = wrap
       ? (((logical % total) + total) % total)
       : Math.max(0, Math.min(total - 1, logical));
-    if (target === currentIndex() && Math.abs(track.scrollLeft % step()) < 1) {
+    if (target === currentIndex() && Math.abs(getScroll() % step()) < 1) {
       aim = null;
       track.classList.remove('no-snap');
       return;
     }
 
-    const here = Math.round(track.scrollLeft / step());
+    const here = Math.round(getScroll() / step());
     let pos = target;
 
-    if (wrap) {
+    if (translated) {
+      /* por el camino más corto: no hay extremos que evitar */
+      let d = target - (((here % total) + total) % total);
+      if (d > total / 2) d -= total;
+      if (d < -total / 2) d += total;
+      pos = here + d;
+    } else if (wrap) {
       /* Se prueban todas las rotaciones posibles (hacia delante y hacia atrás)
          y se elige la que deja el slide pedido en una posición INTERIOR —con
          card a ambos lados, nunca un hueco— y con el salto más corto. La
@@ -369,7 +408,7 @@ function initCarousel(root) {
 
     stopFrame();
     aim = target;
-    const from = track.scrollLeft;
+    const from = getScroll();
     const to = pos * step();
     const steps = Math.max(1, Math.round(Math.abs(to - from) / step()));
     track.classList.add('no-snap');
@@ -377,7 +416,7 @@ function initCarousel(root) {
     const ms = 260 + (steps - 1) * 150;
     const frame = (now) => {
       const t = Math.min((now - start) / ms, 1);
-      track.scrollLeft = from + (to - from) * easeOutQuint(t);
+      setScroll(from + (to - from) * easeOutQuint(t));
       if (t < 1) {
         frameRaf = requestAnimationFrame(frame);
       } else {
@@ -424,13 +463,14 @@ function initCarousel(root) {
     .forEach((img) => img.setAttribute('draggable', 'false'));
 
   /* Arrastre propio con ratón y con dedo (el CSS deja al navegador solo el
-     scroll vertical: touch-action: pan-y, y en táctiles el track sin scroll
-     propio, que Safari se quedaba el gesto). Con el dedo se encadenan gestos sin
-     esperar a que pare nada: si el arrastre llega a un extremo del DOM, se
-     rota sobre la marcha y sigue. */
+     scroll vertical: touch-action: pan-y). Con el dedo se encadenan gestos sin
+     esperar a que pare nada. */
   let isDown = false;
+  let activeId = null;
   let pointerType = 'mouse';
   let startX = 0;
+  let startY = 0;
+  let axis = null;
   let startScroll = 0;
   let startIndex = 0;
   let resumeTo = null;
@@ -450,8 +490,20 @@ function initCarousel(root) {
     return -(last.x - first.x) / (last.t - first.t);
   };
 
+  /* Hacia dónde va el dedo: se decide una vez por gesto. En vertical es scroll
+     de la página y el carrusel no se mueve; en horizontal es todo del carrusel
+     (ver touchmove más abajo). */
+  const lockAxis = (x, y, min) => {
+    if (!axis) {
+      const dx = Math.abs(x - startX);
+      const dy = Math.abs(y - startY);
+      if (dx + dy >= min) axis = dx >= dy ? 'x' : 'y';
+    }
+    return axis;
+  };
+
   const onDown = (e) => {
-    if (e.button !== undefined && e.button !== 0) return;
+    if ((e.button !== undefined && e.button !== 0) || e.isPrimary === false) return;
     /* Si se toca mientras se desliza hacia un caso, se parte de ese caso: así
        varios gestos rápidos seguidos avanzan uno cada uno (antes se partía de
        la posición a medio camino y uno de ellos se perdía) */
@@ -459,13 +511,16 @@ function initCarousel(root) {
     aim = null;
     stopFrame();
     isDown = true;
+    activeId = e.pointerId;
     pointerType = e.pointerType;
     dragged = false;
     vel = 0;
+    axis = null;
     startX = lastX = e.clientX;
+    startY = e.clientY;
     lastT = performance.now();
     samples = [{ t: lastT, x: startX }];
-    startScroll = track.scrollLeft;
+    startScroll = getScroll();
     startIndex = resumeTo !== null ? resumeTo : currentIndex();
     track.classList.add('no-snap');
     /* con el dedo, la card no se encoge hasta que de verdad se arrastra
@@ -474,18 +529,31 @@ function initCarousel(root) {
   };
 
   const onMove = (e) => {
-    if (!isDown) return;
+    if (!isDown || e.pointerId !== activeId) return;
     const now = performance.now();
     lastX = e.clientX;
     lastT = now;
     samples.push({ t: now, x: lastX });
     while (samples.length > 2 && now - samples[0].t > 100) samples.shift();
     if (!dragged) {
+      if (pointerType === 'touch') {
+        const direction = lockAxis(e.clientX, e.clientY, 6);
+        if (direction === 'y') {
+          isDown = false;
+          settle(true);
+          return;
+        }
+        if (!direction) return;
+      }
       if (Math.abs(e.clientX - startX) <= 5) return;
       dragged = true;
       track.classList.add('dragging');
     }
     const x = e.clientX;
+    if (translated) {
+      setScroll(startScroll - (x - startX));
+      return;
+    }
     stopFrame();
     frameRaf = requestAnimationFrame(() => {
       frameRaf = null;
@@ -518,7 +586,7 @@ function initCarousel(root) {
        pedía medio caso y, si no, volvía atrás). Un golpe en contra se queda en
        el último caso entero arrastrado. Si el navegador se queda el gesto
        (scroll vertical), va al más cercano. */
-    if (pointerType === 'touch') {
+    if (translated || pointerType === 'touch') {
       const moved = (startX - lastX) / step();
       let n = cancelled ? Math.round(moved) : Math.trunc(moved);
       if (!cancelled) {
@@ -568,7 +636,7 @@ function initCarousel(root) {
   };
 
   const onUp = (e) => {
-    if (!isDown) return;
+    if (!isDown || e.pointerId !== activeId) return;
     isDown = false;
     /* pointercancel no trae una posición fiable */
     if (e.type === 'pointerup') lastX = e.clientX;
@@ -580,6 +648,19 @@ function initCarousel(root) {
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerup', onUp);
   window.addEventListener('pointercancel', onUp);
+  /* Safari decide con el primer touchmove si el gesto es scroll de la página y,
+     aunque el dedo vaya en diagonal, con pan-y se lo podía quedar a medio arrastre
+     (pointercancel: el caso se paraba en seco). Cancelar el touchmove horizontal
+     se lo impide. */
+  track.addEventListener(
+    'touchmove',
+    (e) => {
+      if (!isDown || pointerType !== 'touch' || e.touches.length > 1) return;
+      const touch = e.touches[0];
+      if (lockAxis(touch.clientX, touch.clientY, 1) === 'x' && e.cancelable) e.preventDefault();
+    },
+    { passive: false }
+  );
   track.addEventListener(
     'click',
     (e) => {
@@ -596,7 +677,7 @@ function initCarousel(root) {
      con el final. Cuando el scroll se para en un extremo, se rota (invisible,
      como siempre) para que quede card a ambos lados. No se toca durante un
      arrastre ni durante un movimiento propio (no-snap). */
-  if (wrap) {
+  if (wrap && !translated) {
     let settleTimer = null;
     const keepInterior = () => {
       if (isDown || track.classList.contains('no-snap')) return;
@@ -608,6 +689,32 @@ function initCarousel(root) {
       clearTimeout(settleTimer);
       settleTimer = setTimeout(keepInterior, 140);
     }, { passive: true });
+  }
+
+  if (translated) {
+    /* Al girar el móvil cambia el ancho: se queda en el mismo caso */
+    const realign = () => {
+      const measured = measureStep();
+      if (measured === stepPx) return;
+      const at = Math.round(offset / stepPx);
+      stepPx = measured;
+      stopFrame();
+      aim = null;
+      laps.fill(null);
+      setScroll(at * measured);
+    };
+    if ('ResizeObserver' in window) new ResizeObserver(realign).observe(track);
+    else window.addEventListener('resize', realign);
+    /* El foco (teclado, VoiceOver) en un caso que no se ve haría scroll en el
+       contenedor recortado y lo descuadraría: se lleva ese caso al centro */
+    const viewport = track.parentElement;
+    viewport.addEventListener('scroll', () => {
+      viewport.scrollLeft = 0;
+    });
+    track.addEventListener('focusin', (e) => {
+      const i = slides.findIndex((slide) => slide.contains(e.target));
+      if (!isDown && i >= 0 && i !== currentIndex()) goTo(i);
+    });
   }
 
   /* Flechas fuera del bloque, a media altura de un elemento de los slides
@@ -646,7 +753,8 @@ function initCarousel(root) {
 
   /* Arranque de la rueda: se adelanta una posición para que, con el primer caso
      ya centrado, la última card asome por la izquierda (y no un hueco). */
-  if (wrap) rotateBack();
+  if (translated) setScroll(0);
+  else if (wrap) rotateBack();
 
   sync();
 
