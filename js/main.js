@@ -1245,6 +1245,7 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
   const K = 0.45; // cuánto acelera en la parte baja del arco
   const START_DELAY = 700;
   const MAX_THWIPS = 2;
+  const HANG_MAX_WIDTH = 900; // el corte del menú móvil
 
   const RED = '#d0202c';
   const RED_FAR = '#a3141f';
@@ -1263,7 +1264,12 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
     swingM: { tor: 175, head: 162, a1u: 180, a1f: 180, a2u: -15, a2f: 35, l1t: 35, l1s: -10, l2t: 12, l2s: -28 },
     swingB: { tor: 166, head: 152, a1u: 180, a1f: 180, a2u: 35, a2f: 80, l1t: 85, l1s: 30, l2t: 60, l2s: 8 },
     tuck: { tor: 160, head: 140, a1u: 150, a1f: 135, a2u: 60, a2f: 115, l1t: 110, l1s: -5, l2t: 95, l2s: -25 },
-    ball: { tor: 150, head: 118, a1u: 85, a1f: 150, a2u: 70, a2f: 135, l1t: 140, l1s: 5, l2t: 128, l2s: -8 }
+    ball: { tor: 150, head: 118, a1u: 85, a1f: 150, a2u: 70, a2f: 135, l1t: 140, l1s: 5, l2t: 128, l2s: -8 },
+    /* colgando boca abajo (se pinta girado 180°): la telaraña sale del tobillo
+       de la pierna estirada, la otra en cuatro y los brazos caen hacia la cabeza */
+    hang: { tor: 180, head: 184, a1u: 170, a1f: 178, a2u: 192, a2f: 184, l1t: 0, l1s: 0, l2t: 50, l2s: -40 },
+    hangFall: { tor: 176, head: 170, a1u: 115, a1f: 80, a2u: 245, a2f: 285, l1t: 0, l1s: 0, l2t: 70, l2s: -60 },
+    hangWave: { tor: 180, head: 176, a1u: 170, a1f: 178, a2u: 98, a2f: 130, l1t: 0, l1s: 0, l2t: 50, l2s: -40 }
   };
 
   /* piezas en orden de pintado: [pose, desde, hasta, radio1, radio2, color] */
@@ -1332,8 +1338,9 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
     return out;
   };
 
-  /* articulaciones de una pose, con la mano de la telaraña en (0, 0) */
-  function rig(p) {
+  /* articulaciones de una pose, con el punto de la telaraña (la mano o el
+     tobillo) en (0, 0) */
+  function rig(p, hold) {
     const j = {};
     j.pelvis = { x: 0, y: 0 };
     j.hip = add(j.pelvis, p.tor, 1.5);
@@ -1358,9 +1365,17 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
       j[`b${n}`] = lerpPt(j[`k${n}`], j[`an${n}`], 0.45);
       j[`toe${n}`] = add(j[`an${n}`], s + 75, SEG.foot);
     }
-    const { x, y } = j.h1;
+    const { x, y } = j[hold];
     for (const k in j) j[k] = { x: j[k].x - x, y: j[k].y - y };
     return j;
+  }
+
+  function drawMan(el, pose, hold, pos, rot, scale) {
+    const j = rig(pose, hold);
+    for (const [path, from, to, r1, r2] of el.segs) path.setAttribute('d', capsule(j[from], j[to], r1, r2));
+    el.head.setAttribute('transform', `translate(${j.head.x} ${j.head.y}) rotate(${180 - pose.head})`);
+    el.emblem.setAttribute('transform', `translate(${j.emblem.x} ${j.emblem.y}) rotate(${180 - pose.tor})`);
+    el.man.setAttribute('transform', `translate(${pos.x} ${pos.y}) rotate(${(rot * 180) / Math.PI}) scale(${scale})`);
   }
 
   /* pieza redondeada entre dos puntos, más gruesa en un extremo */
@@ -1412,7 +1427,8 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
 
   if (btn) {
     btn.hidden = false;
-    btn.addEventListener('click', () => run(true));
+    /* en móvil no cruza: baja colgado sobre el botón y vuelve a subir */
+    btn.addEventListener('click', () => (window.innerWidth <= HANG_MAX_WIDTH ? hang() : run(true)));
   }
 
   /* En Música sale solo la primera vez por visita */
@@ -1602,11 +1618,7 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
         }
       }
 
-      const j = rig(pose);
-      for (const [path, from, to, r1, r2] of el.segs) path.setAttribute('d', capsule(j[from], j[to], r1, r2));
-      el.head.setAttribute('transform', `translate(${j.head.x} ${j.head.y}) rotate(${180 - pose.head})`);
-      el.emblem.setAttribute('transform', `translate(${j.emblem.x} ${j.emblem.y}) rotate(${180 - pose.tor})`);
-      el.man.setAttribute('transform', `translate(${pos.x} ${pos.y}) rotate(${(rot * 180) / Math.PI}) scale(${scale})`);
+      drawMan(el, pose, 'h1', pos, rot, scale);
 
       if (webFrom) {
         el.line.setAttribute('x1', webFrom.x);
@@ -1634,6 +1646,80 @@ document.querySelectorAll('[data-frame-clients]').forEach((root) => {
       requestAnimationFrame(tick);
     }
     shoot(); // la primera telaraña, al entrar
+    frame(0);
+    requestAnimationFrame(tick);
+  }
+
+  /* Móvil: baja colgado de la telaraña desde arriba, sobre el botón; rebota
+     como una goma, se mece, saluda y vuelve a subir con un tirón. */
+  function hang() {
+    if (running) return;
+    running = true;
+
+    const sound = getAudio();
+    if (sound) thwip(sound);
+
+    const DROP = 850;
+    const RISE_AT = 2350;
+    const RISE = 480;
+    const WAVE_FADE = 250;
+    const scale = 0.72;
+    const gone = -100; // tobillo aquí: el muñeco entero queda por encima de la ventana
+    const webTop = gone - 20;
+    const rest = Math.round(window.innerHeight * 0.24);
+    const box = btn.getBoundingClientRect();
+    const ax = Math.max(60, Math.min(window.innerWidth - 60, box.left + box.width / 2));
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const el = build();
+    el.line.setAttribute('x2', ax);
+    el.line.setAttribute('y2', webTop);
+
+    function frame(t) {
+      let y = rest;
+      let pose;
+      let settled = 1; // 0 durante los tirones, 1 meciéndose
+      if (t < DROP) {
+        const u = t / DROP;
+        y = gone + (rest - gone) * (1 - Math.exp(-5 * u) * Math.cos(2.5 * Math.PI * u));
+        pose = mix(POSES.hangFall, POSES.hang, clamp01(u * 1.6));
+        settled = clamp01(t / 300);
+      } else if (t < RISE_AT) {
+        const on = clamp01((t - DROP + 100) / WAVE_FADE) * clamp01((RISE_AT - t) / WAVE_FADE);
+        pose = mix(POSES.hang, POSES.hangWave, on);
+        pose.a2f += on * 32 * Math.sin((2 * Math.PI * (t - DROP)) / 400);
+      } else {
+        const v = clamp01((t - RISE_AT) / RISE);
+        y = rest + (gone - rest) * v * v * (2.7 * v - 1.7); // amaga hacia abajo y sale disparado
+        pose = mix(POSES.hang, POSES.hangFall, clamp01(v * 2));
+        settled = 1 - v;
+      }
+
+      const phi = 0.08 * settled * Math.sin((2 * Math.PI * t) / 1500);
+      const length = y - webTop;
+      const pos = { x: ax + length * Math.sin(phi), y: webTop + length * Math.cos(phi) };
+      drawMan(el, pose, 'an1', pos, Math.PI - phi, scale);
+      el.line.setAttribute('x1', pos.x);
+      el.line.setAttribute('y1', pos.y);
+    }
+
+    let start = null;
+    let pulled = false;
+    function tick(now) {
+      if (start === null) start = now;
+      const t = now - start;
+      if (t >= RISE_AT + RISE) {
+        el.root.remove();
+        running = false;
+        return;
+      }
+      if (t >= RISE_AT && !pulled) {
+        pulled = true;
+        if (sound) thwip(sound);
+      }
+      frame(t);
+      requestAnimationFrame(tick);
+    }
     frame(0);
     requestAnimationFrame(tick);
   }
