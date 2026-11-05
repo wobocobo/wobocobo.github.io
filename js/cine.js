@@ -189,34 +189,29 @@
   let size = 0;
 
   /* Desplegable «Mi nota»: la leyenda del 10 al 1 (disco, palabra y cuántas
-     hay) y a la vez el filtro. Se marcan varias y se queda abierto hasta
-     tocar fuera o pulsar Esc; ninguna marcada = todas. */
+     hay) y a la vez el filtro. Se elige una, como en un select, y se cierra;
+     «Todas» o volver a pulsar la elegida quita el filtro. */
   const rateFilter = document.querySelector('[data-rate-filter]');
   const rateToggle = rateFilter && rateFilter.querySelector('.rate-filter__toggle');
   const rateMenu = rateFilter && rateFilter.querySelector('.rate-filter__menu');
   const rateValue = rateFilter && rateFilter.querySelector('.rate-filter__value');
   const rateOptions = new Map();
-  const picked = new Set();
+  let picked = null;
   let rateAll = null;
 
   function rateOption(className, content) {
     const btn = el('button', `rate-option ${className}`);
     btn.type = 'button';
+    btn.setAttribute('role', 'menuitemradio');
     btn.append(...content, el('span', 'rate-option__check'));
     return btn;
   }
 
   function showRateValue() {
-    rateAll.setAttribute('aria-pressed', String(!picked.size));
-    rateOptions.forEach(({ btn }, n) => btn.setAttribute('aria-pressed', String(picked.has(n))));
-    if (!picked.size) {
-      rateValue.textContent = 'Todas';
-      return;
-    }
-    const chosen = [...picked].sort((a, b) => b - a);
-    rateValue.replaceChildren(...chosen.slice(0, 4).map(n => rateDisc('rate-filter__mini', n)));
-    if (chosen.length > 4) rateValue.appendChild(el('span', 'rate-filter__more', `+${chosen.length - 4}`));
-    rateValue.appendChild(el('span', 'visually-hidden', chosen.join(', ')));
+    rateAll.setAttribute('aria-checked', String(picked === null));
+    rateOptions.forEach(({ btn }, n) => btn.setAttribute('aria-checked', String(picked === n)));
+    if (picked === null) rateValue.textContent = 'Todas';
+    else rateValue.replaceChildren(rateDisc('rate-filter__mini', picked), RATING_WORDS[picked]);
   }
 
   function openRateMenu(open) {
@@ -224,25 +219,24 @@
     rateToggle.setAttribute('aria-expanded', String(open));
   }
 
+  function pickRate(n) {
+    picked = n;
+    showRateValue();
+    openRateMenu(false);
+    rateToggle.focus({ preventScroll: true });
+    apply();
+  }
+
   function setupRateFilter() {
     rateAll = rateOption('rate-option--all', [el('span', 'rate-option__word', 'Todas')]);
-    rateAll.addEventListener('click', () => {
-      picked.clear();
-      showRateValue();
-      apply();
-    });
+    rateAll.addEventListener('click', () => pickRate(null));
     rateMenu.appendChild(rateAll);
 
     for (let n = 10; n >= 1; n--) {
       const count = el('span', 'rate-option__count');
       const btn = rateOption('', [rateDisc('rate-option__disc', n), el('span', 'rate-option__word', RATING_WORDS[n]), count]);
       btn.dataset.rate = n;
-      btn.addEventListener('click', () => {
-        if (picked.has(n)) picked.delete(n);
-        else picked.add(n);
-        showRateValue();
-        apply();
-      });
+      btn.addEventListener('click', () => pickRate(picked === n ? null : n));
       rateOptions.set(n, { btn, count });
       rateMenu.appendChild(btn);
     }
@@ -330,7 +324,7 @@
       (!q || m._search.includes(q))
     );
     updateRateCounts(matching);
-    results = picked.size ? matching.filter(m => picked.has(m.rating)) : matching;
+    results = picked === null ? matching : matching.filter(m => m.rating === picked);
     /* sort es estable: con «recent» (0) se queda el orden del JSON */
     results.sort(SORTS[f.sort.value] || SORTS.recent);
 
